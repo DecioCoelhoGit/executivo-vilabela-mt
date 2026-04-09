@@ -1,1 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel Executivo</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <h1>ExecutivoVilaBelaMT</h1>
+      <p>Painel Executivo</p>
+    </div>
+    <nav>
+      <a href="../index.html">Início</a>
+      <a class="active" href="executivo.html">Executivo</a>
+      <a href="legislativo.html">Legislativo</a>
+      <a href="controle.html">Controle</a>
+    </nav>
+  </header>
 
+  <main class="dashboard-shell">
+    <section class="dashboard-head">
+      <div>
+        <span class="badge">Gestão Integrada das Secretarias</span>
+        <h2>Painel Executivo</h2>
+        <p>Leitura consolidada de receita, despesa, saldo, execução e insights por IA.</p>
+      </div>
+      <div class="card">
+        <strong>Atualizado em:</strong> <span id="atualizado-em">carregando...</span>
+      </div>
+    </section>
+
+    <section id="kpis" class="kpis"></section>
+
+    <section class="layout">
+      <article class="card table-wrap">
+        <h3>Execução por Secretaria</h3>
+        <div id="tabela-secretarias"></div>
+      </article>
+
+      <aside class="insights">
+        <article class="card">
+          <h3>Resumo Estratégico</h3>
+          <div id="resumo-extra"></div>
+        </article>
+        <article class="card">
+          <h3>Insights da IA</h3>
+          <div id="insights"></div>
+        </article>
+      </aside>
+    </section>
+  </main>
+
+  <script src="../script.js"></script>
+  <script>
+    App.initDashboard('executivo').catch(console.error);
+  </script>
+</body>
+</html>
