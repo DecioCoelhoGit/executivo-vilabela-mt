@@ -2,6 +2,11 @@ const App = (() => {
   let dadosGlobais = [];
   let indicadoresGlobais = null;
 
+  let chartReceitaDespesa = null;
+  let chartSaldo = null;
+  let chartExecucao = null;
+  let chartRisco = null;
+
   function parseCSV(text) {
     const lines = text.trim().split(/\r?\n/);
     if (!lines.length) return [];
@@ -257,6 +262,7 @@ const App = (() => {
 
     renderTable(target, filtrado, mode);
     gerarAlertas(filtrado, mode);
+    renderCharts(filtrado);
   }
 
   function gerarAlertas(data, mode) {
@@ -437,6 +443,112 @@ const App = (() => {
     `;
   }
 
+  function destroyCharts() {
+    if (chartReceitaDespesa) chartReceitaDespesa.destroy();
+    if (chartSaldo) chartSaldo.destroy();
+    if (chartExecucao) chartExecucao.destroy();
+    if (chartRisco) chartRisco.destroy();
+  }
+
+  function renderCharts(data) {
+    if (typeof Chart === "undefined") return;
+
+    const elReceitaDespesa = document.getElementById("chartReceitaDespesa");
+    const elSaldo = document.getElementById("chartSaldo");
+    const elExecucao = document.getElementById("chartExecucao");
+    const elRisco = document.getElementById("chartRisco");
+
+    if (!elReceitaDespesa || !elSaldo || !elExecucao || !elRisco) return;
+
+    destroyCharts();
+
+    const labels = data.map(item => item.secretaria);
+    const receitas = data.map(item => item.receita_arrecadada);
+    const despesas = data.map(item => item.despesa_paga);
+    const saldos = data.map(item => item.saldo);
+    const execucoes = data.map(item => Number(item.execucao.toFixed(2)));
+
+    const riscoCounts = { alto: 0, medio: 0, baixo: 0 };
+    data.forEach(item => {
+      const r = String(item.risco || "").toLowerCase();
+      if (r === "alto") riscoCounts.alto += 1;
+      else if (r === "medio" || r === "médio") riscoCounts.medio += 1;
+      else riscoCounts.baixo += 1;
+    });
+
+    chartReceitaDespesa = new Chart(elReceitaDespesa, {
+      type: "bar",
+      data: {
+        labels,
+        datasets: [
+          {
+            label: "Receita",
+            data: receitas
+          },
+          {
+            label: "Despesa paga",
+            data: despesas
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
+
+    chartSaldo = new Chart(elSaldo, {
+      type: "bar",
+      data: {
+        labels,
+        datasets: [
+          {
+            label: "Saldo",
+            data: saldos
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
+
+    chartExecucao = new Chart(elExecucao, {
+      type: "line",
+      data: {
+        labels,
+        datasets: [
+          {
+            label: "Execução %",
+            data: execucoes,
+            fill: false
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
+
+    chartRisco = new Chart(elRisco, {
+      type: "doughnut",
+      data: {
+        labels: ["Risco alto", "Risco médio", "Risco baixo"],
+        datasets: [
+          {
+            data: [riscoCounts.alto, riscoCounts.medio, riscoCounts.baixo]
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
+  }
+
   async function initDashboard(mode) {
     const receitasLocal = lerBaseLocal("evb_receitas");
     const despesasLocal = lerBaseLocal("evb_despesas");
@@ -514,6 +626,7 @@ const App = (() => {
     preencherFiltro(aggregate, mode);
     gerarAlertas(aggregate, mode);
     prepararUploadLocal();
+    renderCharts(aggregate);
 
     if (mode === "executivo") {
       renderInsights(insightsTarget, gerarInsightsExecutivo(aggregate, painelGeral));
