@@ -5,23 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin • ExecutivoVilaBelaMT</title>
   <link rel="stylesheet" href="/executivo-vilabela-mt/style.css" />
-</head>
-<body>
-  <main style="width:min(900px,calc(100% - 24px));margin:40px auto;color:#eef4ff;font-family:Inter,Arial,sans-serif;">
-    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:24px;padding:24px;">
-      <h1 style="margin-top:0;">Admin • ExecutivoVilaBelaMT</h1>
-      <p style="color:#b8c4db;">Painel administrativo mínimo para validação do caminho.</p>
-
-      <div style="display:grid;gap:12px;margin-top:20px;">
-        <a href="/executivo-vilabela-mt/index.html" style="padding:14px 16px;border:1px solid rgba(255,255,255,0.12);border-radius:14px;color:#eef4ff;text-decoration:none;display:block;">Ir para Início</a>
-        <a href="/executivo-vilabela-mt/login.html" style="padding:14px 16px;border:1px solid rgba(255,255,255,0.12);border-radius:14px;color:#eef4ff;text-decoration:none;display:block;">Ir para Login</a>
-        <button onclick="localStorage.clear(); alert('Sessão e base local limpas.');" style="padding:14px 16px;border:none;border-radius:14px;background:#c89f1d;color:#0b1320;font-weight:700;">Limpar base local</button>
-      </div>
-
-      <div style="margin-top:22px;padding:14px 16px;border-radius:16px;background:rgba(46,170,220,0.08);border:1px solid rgba(46,170,220,0.18);">
-        <strong>Status:</strong> admin mínimo carregado com sucesso.
-      </div>
-    </div>
-  </main>
-</body>
-</html>
+  <style>
+    .admin-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between
