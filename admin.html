@@ -1,80 +1,28 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Administração Local • ExecutivoVilaBelaMT</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin • ExecutivoVilaBelaMT</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <h1>ExecutivoVilaBelaMT</h1>
-      <p>Painel Administrativo Local</p>
-    </div>
-    <nav>
-      <a href="index.html">Início</a>
-      <a href="login.html">Login</a>
-    </nav>
-  </header>
 
-  <main class="dashboard-shell">
-    <section class="dashboard-head">
-      <div>
-        <span class="badge">Administração local</span>
-        <h2>Painel administrativo</h2>
-        <p>Gerenciamento temporário das bases salvas no navegador.</p>
-      </div>
-      <div class="card">
-        <strong>Status do navegador</strong><br>
-        armazenamento local ativo
-      </div>
-    </section>
+<header class="header">
+  <h1>Administração</h1>
+  <nav>
+    <a href="/executivo-vilabela-mt/index.html">Início</a>
+    <a href="/executivo-vilabela-mt/login.html">Login</a>
+  </nav>
+</header>
 
-    <section class="grid cards-2">
-      <article class="card">
-        <h3>Estado atual das bases</h3>
-        <p><strong>Receitas locais:</strong> <span id="st-receitas"></span></p>
-        <p><strong>Despesas locais:</strong> <span id="st-despesas"></span></p>
-        <p><strong>Servidores locais:</strong> <span id="st-servidores"></span></p>
-      </article>
+<main class="container">
+  <h2>Painel Administrativo</h2>
 
-      <article class="card">
-        <h3>Ações administrativas</h3>
-        <div class="hero-actions">
-          <button class="btn" onclick="limparBase()">Limpar base local</button>
-          <button class="btn btn-secondary" onclick="window.location.href='login.html'">Ir para login</button>
-        </div>
-      </article>
-    </section>
+  <button class="btn" onclick="sairSistema()">Sair</button>
+</main>
 
-    <section class="section">
-      <article class="card">
-        <h3>Observação</h3>
-        <p>
-          Esta área é útil para testes locais enquanto o sistema ainda opera sem banco externo.
-          Quando a integração com banco for ativada, esta camada poderá continuar como ambiente de contingência.
-        </p>
-      </article>
-    </section>
-  </main>
+<script src="config.js"></script>
 
-  <script>
-    function status(chave) {
-      return localStorage.getItem(chave) ? "sim" : "não";
-    }
-
-    document.getElementById("st-receitas").textContent = status("evb_receitas");
-    document.getElementById("st-despesas").textContent = status("evb_despesas");
-    document.getElementById("st-servidores").textContent = status("evb_servidores");
-
-    function limparBase() {
-      localStorage.removeItem("evb_receitas");
-      localStorage.removeItem("evb_despesas");
-      localStorage.removeItem("evb_servidores");
-      alert("Base local removida com sucesso.");
-      window.location.reload();
-    }
-  </script>
 </body>
 </html>
