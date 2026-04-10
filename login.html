@@ -1,164 +1,50 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login • ExecutivoVilaBelaMT</title>
-  <link rel="stylesheet" href="style.css" />
-  <style>
-    .login-shell {
-      width: min(560px, calc(100% - 32px));
-      margin: 8vh auto;
-    }
-
-    .login-card {
-      display: grid;
-      gap: 18px;
-    }
-
-    .form-grid {
-      display: grid;
-      gap: 14px;
-    }
-
-    .form-group {
-      display: grid;
-      gap: 8px;
-    }
-
-    .form-group label {
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    .input {
-      width: 100%;
-      padding: 14px 16px;
-      border-radius: 16px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.05);
-      color: var(--text);
-      font-size: 1rem;
-      outline: none;
-    }
-
-    .input:focus {
-      border-color: rgba(212,175,55,0.55);
-      box-shadow: 0 0 0 3px rgba(212,175,55,0.12);
-    }
-
-    .error-box {
-      display: none;
-      border-radius: 14px;
-      padding: 12px 14px;
-      background: rgba(255,93,93,0.12);
-      border: 1px solid rgba(255,93,93,0.28);
-      color: #ffb0b0;
-    }
-
-    .helper {
-      color: var(--muted);
-      font-size: 0.94rem;
-      line-height: 1.5;
-    }
-
-    .login-actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .login-footer {
-      color: var(--muted);
-      font-size: 0.9rem;
-      border-top: 1px solid var(--line);
-      padding-top: 14px;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="login-shell">
-    <section class="card login-card">
-      <div>
-        <span class="badge">Acesso institucional</span>
-        <h1>ExecutivoVilaBelaMT</h1>
-        <p>
-          Plataforma de Governança Pública Inteligente para Vila Bela da Santíssima Trindade - MT.
-        </p>
-      </div>
 
-      <div class="helper">
-        Selecione o perfil de acesso e entre no ambiente correspondente do sistema.
-      </div>
+<main class="container">
+  <h2>Login do Sistema</h2>
 
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="perfil">Perfil</label>
-          <select id="perfil" class="input">
-            <option value="prefeito">Prefeito / Executivo</option>
-            <option value="vereador">Vereador / Legislativo</option>
-            <option value="controle">Controle / Auditoria</option>
-          </select>
-        </div>
+  <select id="perfil" class="input">
+    <option value="prefeito">Prefeito / Executivo</option>
+    <option value="vereador">Vereador / Legislativo</option>
+    <option value="controle">Controle</option>
+  </select>
 
-        <div class="form-group">
-          <label for="usuario">Usuário</label>
-          <input id="usuario" class="input" type="text" placeholder="Digite o usuário" />
-        </div>
+  <input id="usuario" class="input" placeholder="Usuário">
+  <input id="senha" type="password" class="input" placeholder="Senha">
 
-        <div class="form-group">
-          <label for="senha">Senha</label>
-          <input id="senha" class="input" type="password" placeholder="Digite a senha" />
-        </div>
-      </div>
+  <button class="btn" onclick="entrar()">Entrar</button>
 
-      <div class="login-actions">
-        <button class="btn" onclick="entrar()">Entrar no sistema</button>
-        <a class="btn btn-secondary" href="index.html">Voltar ao portal</a>
-      </div>
+  <p id="erro" style="color:red; display:none;"></p>
 
-      <div id="erro" class="error-box"></div>
+  <br>
+  <a href="/executivo-vilabela-mt/index.html">Voltar</a>
+</main>
 
-      <div class="login-footer">
-        Perfis de teste atuais: Executivo, Legislativo e Controle.
-      </div>
-    </section>
-  </main>
+<script src="config.js"></script>
+<script>
+  function entrar() {
+    const perfil = document.getElementById("perfil").value;
+    const usuario = document.getElementById("usuario").value;
+    const senha = document.getElementById("senha").value;
 
-  <script src="config.js"></script>
-  <script>
-    if (localStorage.getItem("evb_logado") === "true") {
-      const perfilAtual = localStorage.getItem("evb_perfil");
-      const destino = PERFIS[perfilAtual]?.destino;
-      if (destino) {
-        window.location.href = destino;
-      }
-    }
-
-    function entrar() {
-      const perfil = document.getElementById("perfil").value;
-      const usuario = document.getElementById("usuario").value.trim();
-      const senha = document.getElementById("senha").value.trim();
-      const erro = document.getElementById("erro");
-
-      erro.style.display = "none";
-      erro.textContent = "";
-
-      if (!usuario || !senha) {
-        erro.textContent = "Preencha usuário e senha.";
-        erro.style.display = "block";
-        return;
-      }
-
-      if (!PERFIS[perfil] || PERFIS[perfil].senha !== senha) {
-        erro.textContent = "Usuário ou senha inválidos para o perfil selecionado.";
-        erro.style.display = "block";
-        return;
-      }
-
+    if (PERFIS[perfil] && senha === PERFIS[perfil].senha) {
       salvarSessao(usuario, perfil);
       window.location.href = PERFIS[perfil].destino;
+    } else {
+      const erro = document.getElementById("erro");
+      erro.textContent = "Login inválido";
+      erro.style.display = "block";
     }
-  </script>
+  }
+</script>
+
 </body>
 </html>
