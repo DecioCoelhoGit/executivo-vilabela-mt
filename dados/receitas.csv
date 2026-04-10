@@ -1,11 +1,11 @@
-secretaria,fonte,valor
-Administração,FPM,850000
-Finanças,ICMS,920000
-Saúde,SUS,1450000
-Educação,FUNDEB,2100000
-Assistência Social,FNAS,640000
-Obras,Convênios,980000
-Cultura e Turismo,Eventos e Convênios,420000
-Meio Ambiente,Projetos,310000
-Agricultura,Convênios,390000
-Planejamento,Transferências,280000
+id,ano,mes,data_lancamento,secretaria,orgao,unidade_orcamentaria,fonte_recurso,categoria_receita,tipo_receita,descricao,valor_previsto,valor_arrecadado,status
+1,2026,1,2026-01-10,Administração,Prefeitura Municipal,Secretaria de Administração,Recursos Próprios,Receitas Correntes,Tributária,IPTU,120000,118500,arrecadado
+2,2026,1,2026-01-12,Finanças,Prefeitura Municipal,Secretaria de Finanças,Recursos Próprios,Receitas Correntes,Tributária,ISSQN,180000,176300,arrecadado
+3,2026,1,2026-01-15,Saúde,Prefeitura Municipal,Secretaria de Saúde,Fundo a Fundo,Transferências Correntes,Transferências SUS,PAB Fixo,240000,240000,arrecadado
+4,2026,1,2026-01-16,Educação,Prefeitura Municipal,Secretaria de Educação,FUNDEB,Transferências Correntes,Transferências Educação,Cota FUNDEB,420000,420000,arrecadado
+5,2026,1,2026-01-18,Assistência Social,Prefeitura Municipal,Secretaria de Assistência Social,FNAS,Transferências Correntes,Transferências Assistenciais,Proteção Social Básica,95000,95000,arrecadado
+6,2026,1,2026-01-20,Obras,Prefeitura Municipal,Secretaria de Obras,Convênio Estadual,Receitas de Capital,Transferências de Capital,Convênio pavimentação,300000,150000,parcial
+7,2026,1,2026-01-22,Cultura e Turismo,Prefeitura Municipal,Secretaria de Cultura e Turismo,Recursos Próprios,Receitas Correntes,Serviços,Taxas de eventos,35000,28700,arrecadado
+8,2026,1,2026-01-24,Meio Ambiente,Prefeitura Municipal,Secretaria de Meio Ambiente,Recursos Próprios,Receitas Correntes,Taxas,Licenciamento ambiental,28000,25100,arrecadado
+9,2026,1,2026-01-26,Agricultura,Prefeitura Municipal,Secretaria de Agricultura,Convênio Federal,Receitas de Capital,Transferências de Capital,Apoio à agricultura familiar,80000,40000,parcial
+10,2026,1,2026-01-28,Planejamento,Prefeitura Municipal,Secretaria de Planejamento,Recursos Próprios,Receitas Correntes,Serviços,Análises e projetos,22000,18300,arrecadado
