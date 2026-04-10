@@ -491,3 +491,77 @@ code.inline {
     font-size: 0.9rem;
   }
   }
+.hero-com-imagem {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px;
+  min-height: 70vh;
+  padding: 0;
+  margin-top: 20px;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(7,16,29,0.92) 0%, rgba(7,16,29,0.76) 45%, rgba(7,16,29,0.58) 100%),
+    url("assets/capa-home.jpg") center/cover no-repeat;
+}
+
+.hero-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 20px;
+  align-items: center;
+  min-height: 70vh;
+  padding: 44px;
+}
+
+.hero-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-holograma-card {
+  width: min(100%, 460px);
+  padding: 20px;
+  border-radius: 28px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 24px 50px rgba(0,0,0,0.34);
+}
+
+.hero-holograma {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 0 24px rgba(46,170,220,0.22));
+}
+
+@media (max-width: 980px) {
+  .hero-com-imagem {
+    min-height: auto;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    padding: 26px 18px;
+  }
+
+  .hero-visual {
+    order: -1;
+  }
+
+  .hero-holograma-card {
+    max-width: 280px;
+    margin: 0 auto;
+  }
+}
