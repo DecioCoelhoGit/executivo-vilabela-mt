@@ -125,6 +125,17 @@
       line-height: 1.5;
     }
 
+    .erro-painel {
+      width: min(1180px, calc(100% - 32px));
+      margin: 20px auto;
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,93,93,0.28);
+      background: rgba(255,93,93,0.08);
+      color: #ffb0b0;
+      display: none;
+    }
+
     @media (max-width: 980px) {
       .toolbar-grid {
         grid-template-columns: 1fr;
@@ -178,13 +189,15 @@
       <a href="/executivo-vilabela-mt/dashboard/legislativo.html">Legislativo</a>
       <a class="active" href="/executivo-vilabela-mt/dashboard/controle.html">Controle</a>
       <a href="/executivo-vilabela-mt/admin.html">Admin</a>
-      <button onclick="sairSistema()">Sair</button>
+      <button type="button" onclick="sairSistema()">Sair</button>
     </nav>
   </header>
 
   <div class="panel-userbar">
     <div id="usuario-logado" class="usuario-chip"></div>
   </div>
+
+  <div id="erro-painel" class="erro-painel"></div>
 
   <main class="dashboard-shell">
     <section class="dashboard-head">
@@ -212,7 +225,7 @@
 
         <article class="card">
           <h3>Exportação</h3>
-          <button class="btn" onclick="window.print()">Exportar relatório</button>
+          <button class="btn" type="button" onclick="window.print()">Exportar relatório</button>
           <div class="mini-note">Gera versão pronta para impressão ou PDF.</div>
         </article>
       </div>
@@ -239,20 +252,50 @@
     </section>
   </main>
 
-  <script src="/executivo-vilabela-mt/config.js"></script>
-  <script src="/executivo-vilabela-mt/script.js"></script>
   <script>
-    verificarSessao(["controle"]);
-    App.initDashboard("controle").catch(console.error);
-
     const panelToggle = document.getElementById("panel-menu-toggle");
     const panelNav = document.getElementById("panel-nav");
 
     if (panelToggle && panelNav) {
-      panelToggle.addEventListener("click", () => {
+      panelToggle.addEventListener("click", function () {
         panelNav.classList.toggle("open");
       });
     }
+  </script>
+
+  <script src="/executivo-vilabela-mt/config.js"></script>
+  <script src="/executivo-vilabela-mt/script.js"></script>
+  <script>
+    (function () {
+      const erroBox = document.getElementById("erro-painel");
+
+      try {
+        if (typeof verificarSessao === "function") {
+          verificarSessao(["controle"]);
+        }
+
+        if (typeof App !== "undefined" && App && typeof App.initDashboard === "function") {
+          App.initDashboard("controle").catch(function (err) {
+            console.error(err);
+            if (erroBox) {
+              erroBox.style.display = "block";
+              erroBox.textContent = "O painel abriu, mas os dados de Controle não foram carregados corretamente.";
+            }
+          });
+        } else {
+          if (erroBox) {
+            erroBox.style.display = "block";
+            erroBox.textContent = "O painel abriu, mas o script principal não foi carregado.";
+          }
+        }
+      } catch (err) {
+        console.error(err);
+        if (erroBox) {
+          erroBox.style.display = "block";
+          erroBox.textContent = "Houve um erro ao inicializar o painel de Controle.";
+        }
+      }
+    })();
   </script>
 </body>
 </html>
