@@ -1,13 +1,13 @@
-nome,secretaria,cargo
-Servidor 01,Administração,Analista
-Servidor 02,Finanças,Contador
-Servidor 03,Saúde,Coordenador
-Servidor 04,Saúde,Técnico
-Servidor 05,Educação,Professor
-Servidor 06,Educação,Coordenador
-Servidor 07,Assistência Social,Assistente Social
-Servidor 08,Obras,Engenheiro
-Servidor 09,Cultura e Turismo,Gestor
-Servidor 10,Meio Ambiente,Analista Ambiental
-Servidor 11,Agricultura,Técnico Rural
-Servidor 12,Planejamento,Assessor
+id,matricula,nome,cargo,secretaria,lotacao,vinculo,situacao,carga_horaria,data_admissao,remuneracao_bruta,remuneracao_liquida
+1,1001,Ana Paula da Silva,Assistente Administrativo,Administração,Secretaria de Administração,Efetivo,Ativo,40,2018-03-12,4850.00,3920.00
+2,1002,Carlos Henrique Souza,Contador,Finanças,Secretaria de Finanças,Comissionado,Ativo,40,2021-01-10,7200.00,5810.00
+3,1003,Mariana Lopes Santos,Enfermeira,Saúde,Unidade Básica Central,Efetivo,Ativo,40,2019-07-08,6900.00,5480.00
+4,1004,João Pedro Almeida,Professor,Educação,Escola Municipal 1,Efetivo,Ativo,30,2017-02-15,5400.00,4310.00
+5,1005,Luciana Ferreira Costa,Assistente Social,Assistência Social,CRAS Central,Efetivo,Ativo,30,2020-08-01,5800.00,4620.00
+6,1006,Roberto Gomes Lima,Engenheiro Civil,Obras,Secretaria de Obras,Contrato Temporário,Ativo,40,2024-01-05,8900.00,7025.00
+7,1007,Patrícia Mendes Rocha,Turismóloga,Cultura e Turismo,Departamento de Turismo,Comissionado,Ativo,40,2023-05-18,5200.00,4180.00
+8,1008,Diego Martins Oliveira,Técnico Ambiental,Meio Ambiente,Secretaria de Meio Ambiente,Efetivo,Ativo,40,2022-06-20,4600.00,3710.00
+9,1009,José Antônio Barros,Técnico Agrícola,Agricultura,Secretaria de Agricultura,Efetivo,Ativo,40,2016-09-14,4700.00,3795.00
+10,1010,Renata Alves Pereira,Analista de Planejamento,Planejamento,Secretaria de Planejamento,Comissionado,Ativo,40,2022-11-03,7600.00,6090.00
+11,1011,Fernando Nunes Costa,Motorista,Saúde,Transporte Sanitário,Efetivo,Afastado,40,2015-04-22,3200.00,2710.00
+12,1012,Silvia Regina Melo,Auxiliar Administrativo,Educação,Secretaria de Educação,Contrato Temporário,Ativo,40,2025-02-01,2900.00,2460.00
