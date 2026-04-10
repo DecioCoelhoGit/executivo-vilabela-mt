@@ -6,6 +6,93 @@
   <title>Painel Executivo • ExecutivoVilaBelaMT</title>
   <link rel="stylesheet" href="../style.css" />
   <style>
+    .panel-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      backdrop-filter: blur(14px);
+      background: rgba(8,17,32,0.88);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-brand h1 {
+      margin: 0;
+      font-size: 1.12rem;
+    }
+
+    .panel-brand p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .panel-badge {
+      display: inline-flex;
+      margin-top: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(212,175,55,0.35);
+      background: rgba(212,175,55,0.08);
+      color: #f6df93;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .panel-menu-toggle {
+      display: none;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor: pointer;
+    }
+
+    .panel-nav {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .panel-nav a,
+    .panel-nav button {
+      padding: 9px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .panel-nav a:hover,
+    .panel-nav a.active,
+    .panel-nav button:hover {
+      color: var(--text);
+      border-color: rgba(212,175,55,0.45);
+      background: rgba(212,175,55,0.08);
+    }
+
+    .panel-userbar {
+      width: min(1180px, calc(100% - 32px));
+      margin: 14px auto 0;
+    }
+
+    .usuario-chip {
+      display: inline-flex;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      background: rgba(255,255,255,0.04);
+      font-size: 0.92rem;
+    }
+
     .toolbar {
       display: grid;
       gap: 16px;
@@ -33,41 +120,69 @@
       color: var(--muted);
       font-size: 0.92rem;
       margin-top: 8px;
-    }
-
-    .usuario-chip {
-      display: inline-flex;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      color: var(--muted);
-      background: rgba(255,255,255,0.04);
-      margin-top: 10px;
+      line-height: 1.5;
     }
 
     @media (max-width: 980px) {
       .toolbar-grid {
         grid-template-columns: 1fr;
       }
+
+      .panel-menu-toggle {
+        display: inline-flex;
+      }
+
+      .panel-nav {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        margin-top: 10px;
+      }
+
+      .panel-nav.open {
+        display: flex;
+      }
+
+      .panel-topbar {
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .panel-nav a,
+      .panel-nav button {
+        width: 100%;
+        text-align: center;
+      }
     }
   </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
+  <header class="panel-topbar">
+    <div class="panel-brand">
       <h1>ExecutivoVilaBelaMT</h1>
       <p>Painel Executivo</p>
-      <div id="usuario-logado" class="usuario-chip"></div>
+      <span class="panel-badge">Perfil Executivo</span>
     </div>
-    <nav>
+
+    <button class="panel-menu-toggle" id="panel-menu-toggle" aria-label="Abrir menu">
+      ☰
+    </button>
+
+    <nav class="panel-nav" id="panel-nav">
       <a href="../index.html">Início</a>
+      <a href="../login.html">Login</a>
       <a class="active" href="executivo.html">Executivo</a>
       <a href="legislativo.html">Legislativo</a>
       <a href="controle.html">Controle</a>
       <a href="../admin.html">Admin</a>
-      <button class="btn btn-secondary" onclick="sairSistema()">Sair</button>
+      <button onclick="sairSistema()">Sair</button>
     </nav>
   </header>
+
+  <div class="panel-userbar">
+    <div id="usuario-logado" class="usuario-chip"></div>
+  </div>
 
   <main class="dashboard-shell">
     <section class="dashboard-head">
@@ -133,6 +248,15 @@
   <script>
     verificarSessao(["prefeito"]);
     App.initDashboard("executivo").catch(console.error);
+
+    const panelToggle = document.getElementById("panel-menu-toggle");
+    const panelNav = document.getElementById("panel-nav");
+
+    if (panelToggle && panelNav) {
+      panelToggle.addEventListener("click", () => {
+        panelNav.classList.toggle("open");
+      });
+    }
   </script>
 </body>
 </html>
