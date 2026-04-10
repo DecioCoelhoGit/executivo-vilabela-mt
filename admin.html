@@ -5,94 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin • ExecutivoVilaBelaMT</title>
   <link rel="stylesheet" href="/executivo-vilabela-mt/style.css" />
-  <style>
-    .admin-topbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 16px;
-      backdrop-filter: blur(14px);
-      background: rgba(8,17,32,0.88);
-      border-bottom: 1px solid var(--line);
-    }
+</head>
+<body>
+  <main style="width:min(900px,calc(100% - 24px));margin:40px auto;color:#eef4ff;font-family:Inter,Arial,sans-serif;">
+    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:24px;padding:24px;">
+      <h1 style="margin-top:0;">Admin • ExecutivoVilaBelaMT</h1>
+      <p style="color:#b8c4db;">Painel administrativo mínimo para validação do caminho.</p>
 
-    .admin-brand h1 {
-      margin: 0;
-      font-size: 1.12rem;
-    }
+      <div style="display:grid;gap:12px;margin-top:20px;">
+        <a href="/executivo-vilabela-mt/index.html" style="padding:14px 16px;border:1px solid rgba(255,255,255,0.12);border-radius:14px;color:#eef4ff;text-decoration:none;display:block;">Ir para Início</a>
+        <a href="/executivo-vilabela-mt/login.html" style="padding:14px 16px;border:1px solid rgba(255,255,255,0.12);border-radius:14px;color:#eef4ff;text-decoration:none;display:block;">Ir para Login</a>
+        <button onclick="localStorage.clear(); alert('Sessão e base local limpas.');" style="padding:14px 16px;border:none;border-radius:14px;background:#c89f1d;color:#0b1320;font-weight:700;">Limpar base local</button>
+      </div>
 
-    .admin-brand p {
-      margin: 4px 0 0;
-      color: var(--muted);
-      font-size: 0.88rem;
-    }
-
-    .admin-badge {
-      display: inline-flex;
-      margin-top: 8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(46,170,220,0.35);
-      background: rgba(46,170,220,0.08);
-      color: #bdefff;
-      font-size: 0.8rem;
-      font-weight: 700;
-    }
-
-    .admin-menu-toggle {
-      display: none;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.05);
-      color: var(--text);
-      border-radius: 12px;
-      padding: 10px 12px;
-      cursor: pointer;
-    }
-
-    .admin-nav {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .admin-nav a,
-    .admin-nav button {
-      padding: 9px 13px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: transparent;
-      color: var(--muted);
-      cursor: pointer;
-      text-decoration: none;
-      font: inherit;
-    }
-
-    .admin-nav a:hover,
-    .admin-nav a.active,
-    .admin-nav button:hover {
-      color: var(--text);
-      border-color: rgba(212,175,55,0.45);
-      background: rgba(212,175,55,0.08);
-    }
-
-    .admin-shell {
-      width: min(1180px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 24px 0 40px;
-    }
-
-    .admin-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-      margin-top: 20px;
-    }
-
-    .admin-actions {
-      display: flex;
-      gap: 12px
+      <div style="margin-top:22px;padding:14px 16px;border-radius:16px;background:rgba(46,170,220,0.08);border:1px solid rgba(46,170,220,0.18);">
+        <strong>Status:</strong> admin mínimo carregado com sucesso.
+      </div>
+    </div>
+  </main>
+</body>
+</html>
