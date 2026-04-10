@@ -1,20 +1,26 @@
+const BASE_PATH = "/executivo-vilabela-mt";
+
 const PERFIS = {
   prefeito: {
     senha: "1234",
-    destino: "dashboard/executivo.html",
+    destino: `${BASE_PATH}/dashboard/executivo.html`,
     label: "Prefeito / Executivo"
   },
   vereador: {
     senha: "1234",
-    destino: "dashboard/legislativo.html",
+    destino: `${BASE_PATH}/dashboard/legislativo.html`,
     label: "Vereador / Legislativo"
   },
   controle: {
     senha: "1234",
-    destino: "dashboard/controle.html",
+    destino: `${BASE_PATH}/dashboard/controle.html`,
     label: "Controle / Auditoria"
   }
 };
+
+function urlProjeto(caminho = "") {
+  return `${BASE_PATH}${caminho}`;
+}
 
 function salvarSessao(usuario, perfil) {
   localStorage.setItem("evb_usuario", usuario);
@@ -30,8 +36,7 @@ function limparSessao() {
 
 function sairSistema() {
   limparSessao();
-  const naPastaDashboard = window.location.pathname.includes("/dashboard/");
-  window.location.href = naPastaDashboard ? "../login.html" : "login.html";
+  window.location.href = urlProjeto("/login.html");
 }
 
 function verificarSessao(perfisPermitidos = []) {
@@ -39,16 +44,14 @@ function verificarSessao(perfisPermitidos = []) {
   const perfil = localStorage.getItem("evb_perfil");
 
   if (!logado) {
-    const naPastaDashboard = window.location.pathname.includes("/dashboard/");
-    window.location.href = naPastaDashboard ? "../login.html" : "login.html";
+    window.location.href = urlProjeto("/login.html");
     return;
   }
 
   if (perfisPermitidos.length > 0 && !perfisPermitidos.includes(perfil)) {
     const destino = PERFIS[perfil]?.destino;
     if (destino) {
-      const naPastaDashboard = window.location.pathname.includes("/dashboard/");
-      window.location.href = naPastaDashboard ? `../${destino}` : destino;
+      window.location.href = destino;
     } else {
       sairSistema();
     }
