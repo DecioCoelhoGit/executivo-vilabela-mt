@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Painel de Controle • ExecutivoVilaBelaMT</title>
-  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="/executivo-vilabela-mt/style.css" />
   <style>
     .panel-topbar {
       position: sticky;
@@ -68,6 +68,8 @@
       background: transparent;
       color: var(--muted);
       cursor: pointer;
+      text-decoration: none;
+      font: inherit;
     }
 
     .panel-nav a:hover,
@@ -170,12 +172,12 @@
     </button>
 
     <nav class="panel-nav" id="panel-nav">
-      <a href="../index.html">Início</a>
-      <a href="../login.html">Login</a>
-      <a href="executivo.html">Executivo</a>
-      <a href="legislativo.html">Legislativo</a>
-      <a class="active" href="controle.html">Controle</a>
-      <a href="../admin.html">Admin</a>
+      <a href="/executivo-vilabela-mt/index.html">Início</a>
+      <a href="/executivo-vilabela-mt/login.html">Login</a>
+      <a href="/executivo-vilabela-mt/dashboard/executivo.html">Executivo</a>
+      <a href="/executivo-vilabela-mt/dashboard/legislativo.html">Legislativo</a>
+      <a class="active" href="/executivo-vilabela-mt/dashboard/controle.html">Controle</a>
+      <a href="/executivo-vilabela-mt/admin.html">Admin</a>
       <button onclick="sairSistema()">Sair</button>
     </nav>
   </header>
@@ -237,8 +239,8 @@
     </section>
   </main>
 
-  <script src="../config.js"></script>
-  <script src="../script.js"></script>
+  <script src="/executivo-vilabela-mt/config.js"></script>
+  <script src="/executivo-vilabela-mt/script.js"></script>
   <script>
     verificarSessao(["controle"]);
     App.initDashboard("controle").catch(console.error);
