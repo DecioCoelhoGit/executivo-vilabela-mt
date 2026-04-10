@@ -1,28 +1,98 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin • ExecutivoVilaBelaMT</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+  <link rel="stylesheet" href="/executivo-vilabela-mt/style.css" />
+  <style>
+    .admin-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      backdrop-filter: blur(14px);
+      background: rgba(8,17,32,0.88);
+      border-bottom: 1px solid var(--line);
+    }
 
-<header class="header">
-  <h1>Administração</h1>
-  <nav>
-    <a href="/executivo-vilabela-mt/index.html">Início</a>
-    <a href="/executivo-vilabela-mt/login.html">Login</a>
-  </nav>
-</header>
+    .admin-brand h1 {
+      margin: 0;
+      font-size: 1.12rem;
+    }
 
-<main class="container">
-  <h2>Painel Administrativo</h2>
+    .admin-brand p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
 
-  <button class="btn" onclick="sairSistema()">Sair</button>
-</main>
+    .admin-badge {
+      display: inline-flex;
+      margin-top: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(46,170,220,0.35);
+      background: rgba(46,170,220,0.08);
+      color: #bdefff;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
 
-<script src="config.js"></script>
+    .admin-menu-toggle {
+      display: none;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor: pointer;
+    }
 
-</body>
-</html>
+    .admin-nav {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .admin-nav a,
+    .admin-nav button {
+      padding: 9px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      text-decoration: none;
+      font: inherit;
+    }
+
+    .admin-nav a:hover,
+    .admin-nav a.active,
+    .admin-nav button:hover {
+      color: var(--text);
+      border-color: rgba(212,175,55,0.45);
+      background: rgba(212,175,55,0.08);
+    }
+
+    .admin-shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 40px;
+    }
+
+    .admin-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .admin-actions {
+      display: flex;
+      gap: 12px
