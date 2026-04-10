@@ -125,6 +125,17 @@
       line-height: 1.5;
     }
 
+    .erro-painel {
+      width: min(1180px, calc(100% - 32px));
+      margin: 20px auto;
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,93,93,0.28);
+      background: rgba(255,93,93,0.08);
+      color: #ffb0b0;
+      display: none;
+    }
+
     @media (max-width: 980px) {
       .toolbar-grid {
         grid-template-columns: 1fr;
@@ -174,4 +185,123 @@
     <nav class="panel-nav" id="panel-nav">
       <a href="/executivo-vilabela-mt/index.html">Início</a>
       <a href="/executivo-vilabela-mt/login.html">Login</a>
-      <a class="active" href="/executivo-vilabela-mt
+      <a class="active" href="/executivo-vilabela-mt/dashboard/executivo.html">Executivo</a>
+      <a href="/executivo-vilabela-mt/dashboard/legislativo.html">Legislativo</a>
+      <a href="/executivo-vilabela-mt/dashboard/controle.html">Controle</a>
+      <a href="/executivo-vilabela-mt/admin.html">Admin</a>
+      <button type="button" onclick="sairSistema()">Sair</button>
+    </nav>
+  </header>
+
+  <div class="panel-userbar">
+    <div id="usuario-logado" class="usuario-chip"></div>
+  </div>
+
+  <div id="erro-painel" class="erro-painel"></div>
+
+  <main class="dashboard-shell">
+    <section class="dashboard-head">
+      <div>
+        <span class="badge">Gestão Integrada das Secretarias</span>
+        <h2>Painel Executivo</h2>
+        <p>Leitura consolidada de receita, despesa, saldo, execução e insights por IA.</p>
+      </div>
+      <div class="card">
+        <strong>Atualizado em:</strong> <span id="atualizado-em">carregando...</span>
+      </div>
+    </section>
+
+    <section id="kpis" class="kpis"></section>
+
+    <section class="toolbar">
+      <div class="toolbar-grid">
+        <article class="card">
+          <h3>Filtro por secretaria</h3>
+          <select id="filtro-secretaria" class="input">
+            <option value="">Todas as Secretarias</option>
+          </select>
+          <div class="mini-note">Use o filtro para focar a leitura de uma secretaria específica.</div>
+        </article>
+
+        <article class="card">
+          <h3>Exportação</h3>
+          <button class="btn" type="button" onclick="window.print()">Exportar relatório</button>
+          <div class="mini-note">Gera versão pronta para impressão ou PDF pelo navegador.</div>
+        </article>
+
+        <article class="card">
+          <h3>Atualização local</h3>
+          <input type="file" id="upload-arquivo" class="input" accept=".csv" />
+          <div id="upload-status" class="mini-note"></div>
+        </article>
+      </div>
+
+      <div id="alertas"></div>
+    </section>
+
+    <section class="layout">
+      <article class="card table-wrap">
+        <h3>Execução por Secretaria</h3>
+        <div id="tabela-secretarias"></div>
+      </article>
+
+      <aside class="insights">
+        <article class="card">
+          <h3>Resumo Estratégico</h3>
+          <div id="resumo-extra"></div>
+        </article>
+        <article class="card">
+          <h3>Insights da IA</h3>
+          <div id="insights"></div>
+        </article>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const panelToggle = document.getElementById("panel-menu-toggle");
+    const panelNav = document.getElementById("panel-nav");
+
+    if (panelToggle && panelNav) {
+      panelToggle.addEventListener("click", function () {
+        panelNav.classList.toggle("open");
+      });
+    }
+  </script>
+
+  <script src="/executivo-vilabela-mt/config.js"></script>
+  <script src="/executivo-vilabela-mt/script.js"></script>
+  <script>
+    (function () {
+      const erroBox = document.getElementById("erro-painel");
+
+      try {
+        if (typeof verificarSessao === "function") {
+          verificarSessao(["prefeito"]);
+        }
+
+        if (typeof App !== "undefined" && App && typeof App.initDashboard === "function") {
+          App.initDashboard("executivo").catch(function (err) {
+            console.error(err);
+            if (erroBox) {
+              erroBox.style.display = "block";
+              erroBox.textContent = "O painel abriu, mas os dados não foram carregados corretamente. Vamos corrigir o script.js no próximo passo.";
+            }
+          });
+        } else {
+          if (erroBox) {
+            erroBox.style.display = "block";
+            erroBox.textContent = "O painel abriu, mas o script principal não foi carregado.";
+          }
+        }
+      } catch (err) {
+        console.error(err);
+        if (erroBox) {
+          erroBox.style.display = "block";
+          erroBox.textContent = "Houve um erro ao inicializar o painel.";
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
