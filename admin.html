@@ -11,4 +11,324 @@
       top: 0;
       z-index: 100;
       display: flex;
-      justify-content: space-between
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      backdrop-filter: blur(14px);
+      background: rgba(8,17,32,0.88);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .admin-brand h1 {
+      margin: 0;
+      font-size: 1.12rem;
+    }
+
+    .admin-brand p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .admin-badge {
+      display: inline-flex;
+      margin-top: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(46,170,220,0.35);
+      background: rgba(46,170,220,0.08);
+      color: #bdefff;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .admin-menu-toggle {
+      display: none;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor: pointer;
+    }
+
+    .admin-nav {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .admin-nav a,
+    .admin-nav button {
+      padding: 9px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      text-decoration: none;
+      font: inherit;
+    }
+
+    .admin-nav a:hover,
+    .admin-nav a.active,
+    .admin-nav button:hover {
+      color: var(--text);
+      border-color: rgba(212,175,55,0.45);
+      background: rgba(212,175,55,0.08);
+    }
+
+    .admin-shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 40px;
+    }
+
+    .admin-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .admin-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .admin-status {
+      display: grid;
+      gap: 10px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-top: 10px;
+    }
+
+    .admin-status strong {
+      color: var(--text);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-left: 8px;
+    }
+
+    .status-pill.ok {
+      background: rgba(53,196,106,0.14);
+      color: #8ff0b2;
+    }
+
+    .status-pill.off {
+      background: rgba(255,255,255,0.08);
+      color: #cdd7ea;
+    }
+
+    .admin-note {
+      margin-top: 18px;
+    }
+
+    .erro-admin {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,93,93,0.28);
+      background: rgba(255,93,93,0.08);
+      color: #ffb0b0;
+      display: none;
+    }
+
+    @media (max-width: 980px) {
+      .admin-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .admin-menu-toggle {
+        display: inline-flex;
+      }
+
+      .admin-nav {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        margin-top: 10px;
+      }
+
+      .admin-nav.open {
+        display: flex;
+      }
+
+      .admin-topbar {
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .admin-nav a,
+      .admin-nav button {
+        width: 100%;
+        text-align: center;
+      }
+
+      .admin-actions {
+        display: grid;
+      }
+
+      .admin-actions .btn,
+      .admin-actions .btn-secondary {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="admin-topbar">
+    <div class="admin-brand">
+      <h1>ExecutivoVilaBelaMT</h1>
+      <p>Painel Administrativo Local</p>
+      <span class="admin-badge">Administração</span>
+    </div>
+
+    <button class="admin-menu-toggle" id="admin-menu-toggle" aria-label="Abrir menu">
+      ☰
+    </button>
+
+    <nav class="admin-nav" id="admin-nav">
+      <a href="/executivo-vilabela-mt/index.html">Início</a>
+      <a href="/executivo-vilabela-mt/login.html">Login</a>
+      <a class="active" href="/executivo-vilabela-mt/admin.html">Admin</a>
+      <button type="button" onclick="localStorage.clear(); window.location.href='/executivo-vilabela-mt/login.html';">Sair</button>
+    </nav>
+  </header>
+
+  <main class="admin-shell">
+    <section class="dashboard-head">
+      <div>
+        <span class="badge">Administração local</span>
+        <h2>Painel Administrativo</h2>
+        <p>Gerenciamento temporário das bases salvas no navegador.</p>
+      </div>
+      <div class="card">
+        <strong>Status do navegador</strong><br />
+        armazenamento local ativo
+      </div>
+    </section>
+
+    <div id="erro-admin" class="erro-admin"></div>
+
+    <section class="admin-grid">
+      <article class="card">
+        <h3>Estado atual das bases</h3>
+        <div class="admin-status">
+          <div>
+            <strong>Receitas locais:</strong>
+            <span id="st-receitas" class="status-pill off">carregando</span>
+          </div>
+          <div>
+            <strong>Despesas locais:</strong>
+            <span id="st-despesas" class="status-pill off">carregando</span>
+          </div>
+          <div>
+            <strong>Servidores locais:</strong>
+            <span id="st-servidores" class="status-pill off">carregando</span>
+          </div>
+          <div>
+            <strong>Sessão ativa:</strong>
+            <span id="st-sessao" class="status-pill off">carregando</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3>Ações administrativas</h3>
+        <p>
+          Utilize esta área para testes locais, limpeza do navegador e retorno rápido ao sistema.
+        </p>
+
+        <div class="admin-actions">
+          <button class="btn" type="button" onclick="limparBaseLocal()">Limpar base local</button>
+          <button class="btn btn-secondary" type="button" onclick="limparSessaoAtual()">Limpar sessão</button>
+          <a class="btn btn-secondary" href="/executivo-vilabela-mt/login.html">Ir para login</a>
+          <a class="btn btn-secondary" href="/executivo-vilabela-mt/index.html">Voltar ao portal</a>
+        </div>
+      </article>
+    </section>
+
+    <section class="section admin-note">
+      <article class="card">
+        <h3>Observação</h3>
+        <p>
+          Esta área funciona como ambiente administrativo local e de contingência.
+          Enquanto o sistema opera sem banco externo, as informações podem ser salvas
+          e limpas diretamente do navegador para testes e validações.
+        </p>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const adminToggle = document.getElementById("admin-menu-toggle");
+    const adminNav = document.getElementById("admin-nav");
+
+    if (adminToggle && adminNav) {
+      adminToggle.addEventListener("click", function () {
+        adminNav.classList.toggle("open");
+      });
+    }
+  </script>
+
+  <script>
+    (function () {
+      const erroBox = document.getElementById("erro-admin");
+
+      function statusTexto(chave) {
+        return localStorage.getItem(chave) ? "ativo" : "inativo";
+      }
+
+      function aplicarStatus(id, ativo) {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        el.textContent = ativo ? "ativo" : "inativo";
+        el.className = `status-pill ${ativo ? "ok" : "off"}`;
+      }
+
+      try {
+        aplicarStatus("st-receitas", !!localStorage.getItem("evb_receitas"));
+        aplicarStatus("st-despesas", !!localStorage.getItem("evb_despesas"));
+        aplicarStatus("st-servidores", !!localStorage.getItem("evb_servidores"));
+        aplicarStatus("st-sessao", localStorage.getItem("evb_logado") === "true");
+
+        window.limparBaseLocal = function () {
+          localStorage.removeItem("evb_receitas");
+          localStorage.removeItem("evb_despesas");
+          localStorage.removeItem("evb_servidores");
+          alert("Base local removida com sucesso.");
+          window.location.reload();
+        };
+
+        window.limparSessaoAtual = function () {
+          localStorage.removeItem("evb_usuario");
+          localStorage.removeItem("evb_perfil");
+          localStorage.removeItem("evb_logado");
+          alert("Sessão removida com sucesso.");
+          window.location.reload();
+        };
+      } catch (err) {
+        console.error(err);
+        if (erroBox) {
+          erroBox.style.display = "block";
+          erroBox.textContent = "Houve um erro ao inicializar o painel administrativo.";
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
