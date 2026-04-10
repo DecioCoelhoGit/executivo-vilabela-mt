@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Painel Executivo • ExecutivoVilaBelaMT</title>
-  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="/executivo-vilabela-mt/style.css" />
   <style>
     .panel-topbar {
       position: sticky;
@@ -68,6 +68,8 @@
       background: transparent;
       color: var(--muted);
       cursor: pointer;
+      text-decoration: none;
+      font: inherit;
     }
 
     .panel-nav a:hover,
@@ -170,93 +172,6 @@
     </button>
 
     <nav class="panel-nav" id="panel-nav">
-      <a href="../index.html">Início</a>
-      <a href="../login.html">Login</a>
-      <a class="active" href="executivo.html">Executivo</a>
-      <a href="legislativo.html">Legislativo</a>
-      <a href="controle.html">Controle</a>
-      <a href="../admin.html">Admin</a>
-      <button onclick="sairSistema()">Sair</button>
-    </nav>
-  </header>
-
-  <div class="panel-userbar">
-    <div id="usuario-logado" class="usuario-chip"></div>
-  </div>
-
-  <main class="dashboard-shell">
-    <section class="dashboard-head">
-      <div>
-        <span class="badge">Gestão Integrada das Secretarias</span>
-        <h2>Painel Executivo</h2>
-        <p>Leitura consolidada de receita, despesa, saldo, execução e insights por IA.</p>
-      </div>
-      <div class="card">
-        <strong>Atualizado em:</strong> <span id="atualizado-em">carregando...</span>
-      </div>
-    </section>
-
-    <section id="kpis" class="kpis"></section>
-
-    <section class="toolbar">
-      <div class="toolbar-grid">
-        <article class="card">
-          <h3>Filtro por secretaria</h3>
-          <select id="filtro-secretaria" class="input">
-            <option value="">Todas as Secretarias</option>
-          </select>
-          <div class="mini-note">Use o filtro para focar a leitura de uma secretaria específica.</div>
-        </article>
-
-        <article class="card">
-          <h3>Exportação</h3>
-          <button class="btn" onclick="window.print()">Exportar relatório</button>
-          <div class="mini-note">Gera versão pronta para impressão ou PDF pelo navegador.</div>
-        </article>
-
-        <article class="card">
-          <h3>Atualização local</h3>
-          <input type="file" id="upload-arquivo" class="input" accept=".csv" />
-          <div id="upload-status" class="mini-note"></div>
-        </article>
-      </div>
-
-      <div id="alertas"></div>
-    </section>
-
-    <section class="layout">
-      <article class="card table-wrap">
-        <h3>Execução por Secretaria</h3>
-        <div id="tabela-secretarias"></div>
-      </article>
-
-      <aside class="insights">
-        <article class="card">
-          <h3>Resumo Estratégico</h3>
-          <div id="resumo-extra"></div>
-        </article>
-        <article class="card">
-          <h3>Insights da IA</h3>
-          <div id="insights"></div>
-        </article>
-      </aside>
-    </section>
-  </main>
-
-  <script src="../config.js"></script>
-  <script src="../script.js"></script>
-  <script>
-    verificarSessao(["prefeito"]);
-    App.initDashboard("executivo").catch(console.error);
-
-    const panelToggle = document.getElementById("panel-menu-toggle");
-    const panelNav = document.getElementById("panel-nav");
-
-    if (panelToggle && panelNav) {
-      panelToggle.addEventListener("click", () => {
-        panelNav.classList.toggle("open");
-      });
-    }
-  </script>
-</body>
-</html>
+      <a href="/executivo-vilabela-mt/index.html">Início</a>
+      <a href="/executivo-vilabela-mt/login.html">Login</a>
+      <a class="active" href="/executivo-vilabela-mt
