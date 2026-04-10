@@ -1,13 +1,18 @@
 const App = (() => {
+  let dadosGlobais = [];
+
   function parseCSV(text) {
     const lines = text.trim().split(/\r?\n/);
     const headers = lines[0].split(',').map(h => h.trim());
+
     return lines.slice(1).filter(Boolean).map(line => {
       const cols = line.split(',').map(c => c.trim());
       const row = {};
+
       headers.forEach((h, i) => {
         row[h] = cols[i] ?? '';
       });
+
       return row;
     });
   }
@@ -94,9 +99,11 @@ const App = (() => {
   function generateLegislativeInsights(data) {
     const out = [];
     const topExpense = [...data].sort((a, b) => b.despesa - a.despesa).slice(0, 3);
+
     if (topExpense.length) {
       out.push(`As maiores despesas concentram-se em ${topExpense.map(x => x.secretaria).join(', ')}.`);
     }
+
     out.push('Sugestão de IA: criar roteiro automático de fiscalização por comissão temática.');
     out.push('Sugestão de governança: vincular despesa, meta física e programa de governo na mesma consulta.');
     return out;
@@ -105,9 +112,11 @@ const App = (() => {
   function generateControlInsights(data) {
     const out = [];
     const alerts = data.filter(item => item.execucao >= 95 || item.saldo < 0);
+
     if (alerts.length) {
       out.push(`Foram detectadas ${alerts.length} ocorrência(s) com potencial risco de conformidade ou pressão orçamentária.`);
     }
+
     out.push('Sugestão de IA: emitir parecer preventivo com ranking de risco por secretaria.');
     out.push('Próximo passo: integrar contratos, licitações e restos a pagar para análise ampliada.');
     return out;
@@ -140,6 +149,7 @@ const App = (() => {
           ${rows.map(row => {
             const status = classifyExecution(row.execucao);
             const safePercent = Math.min(Math.max(row.execucao, 0), 100);
+
             return `
               <tr>
                 <td>${row.secretaria}</td>
@@ -163,15 +173,164 @@ const App = (() => {
     target.innerHTML = items.map(text => `<div class="insight">${text}</div>`).join('');
   }
 
+  function preencherFiltro(secretarias) {
+    const select = document.getElementById("filtro-secretaria");
+    if (!select) return;
+
+    select.innerHTML = `<option value="">Todas as Secretarias</option>`;
+
+    const nomes = [...new Set(secretarias.map(s => s.secretaria))];
+
+    nomes.forEach(nome => {
+      const opt = document.createElement("option");
+      opt.value = nome;
+      opt.textContent = nome;
+      select.appendChild(opt);
+    });
+
+    select.addEventListener("change", () => {
+      aplicarFiltro(select.value);
+    });
+  }
+
+  function aplicarFiltro(secretaria) {
+    const target = document.getElementById("tabela-secretarias");
+    if (!target) return;
+
+    const filtrado = secretaria
+      ? dadosGlobais.filter(d => d.secretaria === secretaria)
+      : dadosGlobais;
+
+    renderTable(target, filtrado);
+    gerarAlertas(filtrado);
+  }
+
+  function gerarAlertas(data) {
+    const container = document.getElementById("alertas");
+    if (!container) return;
+
+    const alertas = data.filter(d => d.execucao >= 90 || d.saldo < 0);
+
+    if (!alertas.length) {
+      container.innerHTML = `
+        <div class="insight">
+          Nenhum alerta crítico foi identificado na leitura atual.
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = alertas.map(a => `
+      <div class="insight">
+        <strong>Alerta:</strong> ${a.secretaria} com execução de ${a.execucao.toFixed(1)}% e saldo de ${currencyBRL(a.saldo)}.
+      </div>
+    `).join("");
+  }
+
+  function salvarBaseLocal(chave, dados) {
+    localStorage.setItem(chave, JSON.stringify(dados));
+  }
+
+  function lerBaseLocal(chave) {
+    const raw = localStorage.getItem(chave);
+    return raw ? JSON.parse(raw) : null;
+  }
+
+  function prepararUploadLocal() {
+    const input = document.getElementById("upload-arquivo");
+    const status = document.getElementById("upload-status");
+
+    if (!input || !status) return;
+
+    input.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          const texto = evt.target.result;
+          const dados = parseCSV(texto);
+
+          if (!dados.length) {
+            status.textContent = "Arquivo vazio ou inválido.";
+            return;
+          }
+
+          const nome = file.name.toLowerCase();
+
+          if (nome.includes("receita")) {
+            salvarBaseLocal("evb_receitas", dados);
+            status.textContent = "Arquivo de receitas salvo localmente.";
+          } else if (nome.includes("despesa")) {
+            salvarBaseLocal("evb_despesas", dados);
+            status.textContent = "Arquivo de despesas salvo localmente.";
+          } else if (nome.includes("servidor")) {
+            salvarBaseLocal("evb_servidores", dados);
+            status.textContent = "Arquivo de servidores salvo localmente.";
+          } else {
+            status.textContent = "Nome do arquivo não identificado. Use receita, despesa ou servidor no nome.";
+            return;
+          }
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 800);
+        } catch (error) {
+          console.error(error);
+          status.textContent = "Erro ao processar arquivo.";
+        }
+      };
+
+      reader.readAsText(file);
+    });
+  }
+
+  function gerarRelatorioExecutivoFormal(data, totalReceita, totalDespesa, saldo, execucaoTotal) {
+    const criticas = data.filter(item => item.execucao >= 95).map(item => item.secretaria);
+    const atencao = data.filter(item => item.execucao >= 75 && item.execucao < 95).map(item => item.secretaria);
+
+    return `
+      <div class="insight">
+        <strong>Relatório Automático de IA</strong><br><br>
+        Receita consolidada: ${currencyBRL(totalReceita)}.<br>
+        Despesa consolidada: ${currencyBRL(totalDespesa)}.<br>
+        Saldo apurado: ${currencyBRL(saldo)}.<br>
+        Execução geral: ${execucaoTotal.toFixed(1)}%.<br><br>
+        ${
+          criticas.length
+            ? `Secretarias em condição crítica: ${criticas.join(", ")}.`
+            : "Não foram identificadas secretarias em condição crítica nesta leitura."
+        }<br>
+        ${
+          atencao.length
+            ? `Secretarias em atenção: ${atencao.join(", ")}.`
+            : "Não foram identificadas secretarias em faixa intermediária de atenção."
+        }<br><br>
+        Recomendação: manter rotina de monitoramento, conciliar execução financeira com metas físicas e registrar justificativas gerenciais por secretaria.
+      </div>
+    `;
+  }
+
   async function initDashboard(mode) {
-    const [receitas, despesas, servidores, indicadores] = await Promise.all([
-      loadCSV('../dados/receitas.csv'),
-      loadCSV('../dados/despesas.csv'),
-      loadCSV('../dados/servidores.csv'),
-      loadJSON('../dados/indicadores.json')
+    const receitasLocal = lerBaseLocal("evb_receitas");
+    const despesasLocal = lerBaseLocal("evb_despesas");
+    const servidoresLocal = lerBaseLocal("evb_servidores");
+
+    const [receitasPadrao, despesasPadrao, servidoresPadrao, indicadores] = await Promise.all([
+      loadCSV("../dados/receitas.csv"),
+      loadCSV("../dados/despesas.csv"),
+      loadCSV("../dados/servidores.csv"),
+      loadJSON("../dados/indicadores.json")
     ]);
 
+    const receitas = receitasLocal || receitasPadrao;
+    const despesas = despesasLocal || despesasPadrao;
+    const servidores = servidoresLocal || servidoresPadrao;
+
     const aggregate = groupBySecretaria(receitas, despesas);
+    dadosGlobais = aggregate;
+
     const totalReceita = sumBy(receitas, 'valor');
     const totalDespesa = sumBy(despesas, 'valor');
     const saldo = totalReceita - totalDespesa;
@@ -182,8 +341,11 @@ const App = (() => {
     const tableTarget = document.getElementById('tabela-secretarias');
     const insightsTarget = document.getElementById('insights');
     const updatedAt = document.getElementById('atualizado-em');
+    const resumo = document.getElementById('resumo-extra');
 
-    updatedAt.textContent = indicadores.atualizado_em || 'sem data';
+    if (updatedAt) {
+      updatedAt.textContent = indicadores.atualizado_em || 'sem data';
+    }
 
     renderKPIs(kpiTarget, [
       { label: 'Receita Total', value: currencyBRL(totalReceita), sub: 'Base consolidada do período' },
@@ -193,22 +355,35 @@ const App = (() => {
     ]);
 
     renderTable(tableTarget, aggregate);
+    preencherFiltro(aggregate);
+    gerarAlertas(aggregate);
+    prepararUploadLocal();
 
     if (mode === 'executivo') {
       renderInsights(insightsTarget, generateExecutiveInsights(aggregate));
+      insightsTarget.innerHTML += gerarRelatorioExecutivoFormal(
+        aggregate,
+        totalReceita,
+        totalDespesa,
+        saldo,
+        execucaoTotal
+      );
     } else if (mode === 'legislativo') {
       renderInsights(insightsTarget, generateLegislativeInsights(aggregate));
     } else {
       renderInsights(insightsTarget, generateControlInsights(aggregate));
     }
 
-    const resumo = document.getElementById('resumo-extra');
     if (resumo) {
       resumo.innerHTML = `
         <strong>Execução geral:</strong> ${execucaoTotal.toFixed(1)}%<br>
         <strong>Meta fiscal monitorada:</strong> ${indicadores.meta_fiscal}<br>
         <strong>Observação:</strong> ${indicadores.observacao}
       `;
+    }
+
+    if (typeof preencherCabecalhoUsuario === "function") {
+      preencherCabecalhoUsuario();
     }
   }
 
