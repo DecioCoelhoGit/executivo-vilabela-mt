@@ -1,5 +1,97 @@
 {
-  "atualizado_em": "09/04/2026",
-  "meta_fiscal": "Equilíbrio entre expansão de serviços e controle da execução",
-  "observacao": "Base inicial simulada para estruturação da plataforma. Pronta para substituição por dados reais."
+  "municipio": "Vila Bela da Santíssima Trindade - MT",
+  "periodo_referencia": "2026-01",
+  "atualizado_em": "2026-01-31",
+  "fonte": "Base local estruturada para governança pública inteligente",
+  "secretarias": [
+    {
+      "nome": "Administração",
+      "meta_execucao_percentual": 85,
+      "execucao_percentual": 87.4,
+      "risco": "baixo",
+      "alerta": "sem alerta crítico",
+      "observacao": "Execução dentro da faixa esperada."
+    },
+    {
+      "nome": "Finanças",
+      "meta_execucao_percentual": 90,
+      "execucao_percentual": 89.1,
+      "risco": "baixo",
+      "alerta": "acompanhar arrecadação própria",
+      "observacao": "Desempenho próximo da meta."
+    },
+    {
+      "nome": "Saúde",
+      "meta_execucao_percentual": 85,
+      "execucao_percentual": 91.0,
+      "risco": "medio",
+      "alerta": "execução acima da meta",
+      "observacao": "Exige verificação de empenho e liquidação."
+    },
+    {
+      "nome": "Educação",
+      "meta_execucao_percentual": 85,
+      "execucao_percentual": 84.3,
+      "risco": "baixo",
+      "alerta": "sem alerta crítico",
+      "observacao": "Execução equilibrada."
+    },
+    {
+      "nome": "Assistência Social",
+      "meta_execucao_percentual": 80,
+      "execucao_percentual": 86.5,
+      "risco": "baixo",
+      "alerta": "monitorar expansão de atendimento",
+      "observacao": "Boa execução com atenção à demanda."
+    },
+    {
+      "nome": "Obras",
+      "meta_execucao_percentual": 75,
+      "execucao_percentual": 103.1,
+      "risco": "alto",
+      "alerta": "execução acima da meta",
+      "observacao": "Requer análise física e financeira do convênio."
+    },
+    {
+      "nome": "Cultura e Turismo",
+      "meta_execucao_percentual": 80,
+      "execucao_percentual": 81.2,
+      "risco": "baixo",
+      "alerta": "sem alerta crítico",
+      "observacao": "Desempenho estável."
+    },
+    {
+      "nome": "Meio Ambiente",
+      "meta_execucao_percentual": 80,
+      "execucao_percentual": 95.2,
+      "risco": "medio",
+      "alerta": "execução elevada",
+      "observacao": "Monitorar disponibilidade orçamentária."
+    },
+    {
+      "nome": "Agricultura",
+      "meta_execucao_percentual": 80,
+      "execucao_percentual": 110.3,
+      "risco": "alto",
+      "alerta": "saldo negativo observado",
+      "observacao": "Necessária revisão do cronograma financeiro."
+    },
+    {
+      "nome": "Planejamento",
+      "meta_execucao_percentual": 85,
+      "execucao_percentual": 86.6,
+      "risco": "baixo",
+      "alerta": "sem alerta crítico",
+      "observacao": "Boa aderência às metas."
+    }
+  ],
+  "painel_geral": {
+    "receita_total": 1517900,
+    "despesa_empenhada_total": 2315000,
+    "despesa_liquidada_total": 2054000,
+    "despesa_paga_total": 2019000,
+    "saldo_apurado": -501100,
+    "execucao_media_percentual": 91.47,
+    "quantidade_servidores": 12
+  }
 }
