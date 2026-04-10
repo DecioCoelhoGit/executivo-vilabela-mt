@@ -1,40 +1,545 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ExecutivoVilaBelaMT</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ExecutivoVilaBelaMT • Governança Pública Inteligente</title>
+
+  <meta name="description" content="Plataforma estratégica de governança pública inteligente para Vila Bela da Santíssima Trindade - MT, integrando Executivo, Legislativo, Controle e IA Generativa." />
+  <meta name="theme-color" content="#081120" />
+
+  <meta property="og:title" content="ExecutivoVilaBelaMT" />
+  <meta property="og:description" content="Integração entre Secretarias, Legislativo e Órgãos de Controle com governança visual, indicadores e IA." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://deciocoelhogit.github.io/executivo-vilabela-mt/" />
+  <meta property="og:image" content="https://deciocoelhogit.github.io/executivo-vilabela-mt/og-executivo-vilabela-mt.png" />
+
+  <link rel="icon" href="/executivo-vilabela-mt/favicon.png" />
+  <link rel="stylesheet" href="/executivo-vilabela-mt/style.css" />
+
+  <style>
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .hero-card,
+    .side-card,
+    .gov-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before,
+    .side-card::before,
+    .gov-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at top right, rgba(46,170,220,0.12), transparent 34%),
+        radial-gradient(circle at bottom left, rgba(212,175,55,0.08), transparent 28%);
+      pointer-events: none;
+    }
+
+    .hero-card > *,
+    .side-card > *,
+    .gov-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-card h2 {
+      margin-top: 12px;
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      line-height: 1.03;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-card p {
+      max-width: 720px;
+      font-size: 1.08rem;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    .pill-line {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(46,170,220,0.22);
+      background: rgba(46,170,220,0.08);
+      color: #d8f5ff;
+      font-size: 0.92rem;
+      margin-bottom: 6px;
+    }
+
+    .quick-kpis {
+      display: grid;
+      gap: 14px;
+    }
+
+    .quick-kpi {
+      padding: 18px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .quick-kpi .label {
+      font-size: 0.94rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .quick-kpi .value {
+      font-size: clamp(1.6rem, 3vw, 2.3rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .quick-kpi .sub {
+      color: var(--muted);
+      margin-top: 6px;
+      line-height: 1.5;
+      font-size: 0.94rem;
+    }
+
+    .gov-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .gov-card h3,
+    .access-card h3,
+    .section-title {
+      margin-top: 0;
+    }
+
+    .gov-card p,
+    .access-card p,
+    .reading-card p {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .mini-list {
+      margin: 12px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .section-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .risk-strip {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .risk-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .risk-name {
+      font-weight: 700;
+    }
+
+    .risk-note {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .risk-badge {
+      white-space: nowrap;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .risk-high {
+      background: rgba(255,93,93,0.12);
+      color: #ffb7b7;
+      border: 1px solid rgba(255,93,93,0.22);
+    }
+
+    .risk-mid {
+      background: rgba(212,175,55,0.12);
+      color: #f3de93;
+      border: 1px solid rgba(212,175,55,0.22);
+    }
+
+    .risk-low {
+      background: rgba(53,196,106,0.12);
+      color: #9ff2be;
+      border: 1px solid rgba(53,196,106,0.22);
+    }
+
+    .access-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .access-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .access-card .btn,
+    .access-card .btn-secondary {
+      width: 100%;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .institutional-note {
+      margin-top: 18px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .loading-muted {
+      color: var(--muted);
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .section-split,
+      .access-grid,
+      .gov-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-actions {
+        display: grid;
+      }
+
+      .hero-actions .btn,
+      .hero-actions .btn-secondary {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+      }
+    }
+  </style>
 </head>
 <body>
+  <header class="site-header">
+    <div>
+      <h1>ExecutivoVilaBelaMT</h1>
+      <p>Marco Inicial da Governança Pública Inteligente</p>
+    </div>
 
-<header class="header">
-  <h1>ExecutivoVilaBelaMT</h1>
-  <nav>
-    <a href="/executivo-vilabela-mt/index.html">Início</a>
-    <a href="/executivo-vilabela-mt/login.html">Login</a>
-    <a href="/executivo-vilabela-mt/admin.html">Admin</a>
-  </nav>
-</header>
+    <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">
+      ☰
+    </button>
 
-<main class="container">
+    <nav class="site-nav" id="site-nav">
+      <a href="/executivo-vilabela-mt/index.html" class="active">Início</a>
+      <a href="/executivo-vilabela-mt/login.html">Login</a>
+      <a href="/executivo-vilabela-mt/admin.html">Admin</a>
+    </nav>
+  </header>
 
-  <section class="hero">
-    <h2>Integração entre Secretarias, Legislativo e Controle</h2>
-    <p>Plataforma estratégica de gestão pública com IA.</p>
+  <main class="container">
+    <section class="hero-grid section">
+      <article class="card hero-card">
+        <div class="pill-line">Vila Bela • 1ª Capital de MT • Governança orientada por dados</div>
+        <h2>Integração entre Secretarias, Legislativo e Órgãos de Controle</h2>
+        <p>
+          Plataforma estratégica para gestão municipal, transparência, planejamento,
+          monitoramento fiscal e apoio à decisão com IA Generativa, estruturada para
+          apoiar a administração pública com leitura executiva, conformidade e visão institucional.
+        </p>
 
-    <a class="btn" href="/executivo-vilabela-mt/login.html">Entrar no Sistema</a>
-    <a class="btn btn-secondary" href="/executivo-vilabela-mt/login.html">Abrir Login</a>
-  </section>
+        <div class="hero-actions">
+          <a class="btn" href="/executivo-vilabela-mt/login.html">Entrar no Sistema</a>
+          <a class="btn btn-secondary" href="#governanca">Ver Governança Visual</a>
+        </div>
 
-  <section class="cards">
-    <div class="card">Secretarias Municipais</div>
-    <div class="card">Poder Legislativo</div>
-    <div class="card">Órgãos de Controle</div>
-  </section>
+        <div class="institutional-note">
+          Vila Bela, pela sua relevância histórica como 1ª Capital de Mato Grosso,
+          torna-se o ponto de partida de um modelo replicável de governança pública inteligente.
+        </div>
+      </article>
 
-</main>
+      <aside class="card side-card">
+        <h3 class="section-title">Situação Fiscal do Município</h3>
+        <div class="quick-kpis" id="home-kpis">
+          <div class="quick-kpi">
+            <div class="label">Receita total</div>
+            <div class="value loading-muted">carregando...</div>
+            <div class="sub">Base consolidada do período</div>
+          </div>
+        </div>
+      </aside>
+    </section>
 
-<script src="config.js"></script>
+    <section class="section" id="governanca">
+      <h2 class="section-title">Governança Visual e Inteligência Institucional</h2>
+      <div class="gov-grid">
+        <article class="card gov-card">
+          <h3>Gestão Integrada das Secretarias</h3>
+          <p>
+            Monitoramento consolidado de receita, despesa, saldo, execução e leitura setorial,
+            permitindo visão gerencial rápida sobre cada secretaria municipal.
+          </p>
+          <ul class="mini-list">
+            <li>Receita arrecadada por secretaria</li>
+            <li>Despesa empenhada, liquidada e paga</li>
+            <li>Saldo e pressão orçamentária</li>
+            <li>Execução média e alertas críticos</li>
+          </ul>
+        </article>
+
+        <article class="card gov-card">
+          <h3>Leitura para o Poder Legislativo</h3>
+          <p>
+            Painel preparado para fiscalização temática, acompanhamento da execução,
+            requerimentos, comissões e interpretação resumida dos números.
+          </p>
+          <ul class="mini-list">
+            <li>Execução observada por secretaria</li>
+            <li>Áreas com maior despesa paga</li>
+            <li>Faixas de atenção para fiscalização</li>
+            <li>Roteiros automáticos de leitura executiva</li>
+          </ul>
+        </article>
+
+        <article class="card gov-card">
+          <h3>Conformidade e Controle</h3>
+          <p>
+            Base para auditoria preventiva, classificação de risco, análise de saldo,
+            identificação de pressão orçamentária e suporte à integridade das informações.
+          </p>
+          <ul class="mini-list">
+            <li>Risco alto, médio e baixo</li>
+            <li>Execução crítica ou acima da meta</li>
+            <li>Saldo negativo por secretaria</li>
+            <li>Parecer preventivo orientado por dados</li>
+          </ul>
+        </article>
+
+        <article class="card gov-card">
+          <h3>IA Generativa Aplicada à Gestão Pública</h3>
+          <p>
+            Geração de insights, resumos executivos, relatórios automáticos e apoio à decisão,
+            com potencial para integração futura com dados oficiais, fluxos e banco externo.
+          </p>
+          <ul class="mini-list">
+            <li>Resumo estratégico automático</li>
+            <li>Alertas e leitura institucional</li>
+            <li>Relatórios por perfil de acesso</li>
+            <li>Escalabilidade para integrações futuras</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section section-split">
+      <article class="card reading-card">
+        <h3>Monitoramento por Secretaria</h3>
+        <p>
+          Abaixo, leitura sintética das secretarias com maior necessidade de atenção
+          nesta base demonstrativa. Esse bloco dá à home um caráter executivo real.
+        </p>
+        <div class="risk-strip" id="risk-strip">
+          <div class="risk-item">
+            <div>
+              <div class="risk-name loading-muted">carregando...</div>
+              <div class="risk-note">aguarde a leitura dos indicadores</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card reading-card">
+        <h3>Quadro Institucional de Leitura</h3>
+        <p>
+          Este ambiente foi concebido para contemplar Secretarias Municipais,
+          entidades correlatas e futuras integrações com Legislativo, Controle Interno,
+          TCE-MT, TCU e AMM.
+        </p>
+        <ul class="mini-list">
+          <li>Prefeitura Municipal</li>
+          <li>Câmara Municipal</li>
+          <li>Controle Interno</li>
+          <li>TCE-MT</li>
+          <li>TCU</li>
+          <li>AMM</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Acesso ao Sistema</h2>
+      <div class="access-grid">
+        <article class="card access-card">
+          <h3>Executivo</h3>
+          <p>
+            Visão consolidada para acompanhamento gerencial, metas, execução,
+            equilíbrio financeiro e tomada de decisão.
+          </p>
+          <a class="btn" href="/executivo-vilabela-mt/login.html">Abrir Login Executivo</a>
+        </article>
+
+        <article class="card access-card">
+          <h3>Legislativo</h3>
+          <p>
+            Leitura estruturada para fiscalização, acompanhamento de despesas
+            e interpretação institucional do orçamento.
+          </p>
+          <a class="btn btn-secondary" href="/executivo-vilabela-mt/login.html">Abrir Login Legislativo</a>
+        </article>
+
+        <article class="card access-card">
+          <h3>Controle</h3>
+          <p>
+            Visão de conformidade, risco, integridade e prevenção, com apoio
+            à auditoria orientada por indicadores.
+          </p>
+          <a class="btn btn-secondary" href="/executivo-vilabela-mt/login.html">Abrir Login Controle</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <article class="card">
+        <h3>Marco Estratégico</h3>
+        <p>
+          O ExecutivoVilaBelaMT representa um ambiente-base para evolução de painéis,
+          governança visual, controle por perfil, leitura pública, apoio legislativo
+          e integração futura com dados reais, automações e banco institucional.
+        </p>
+      </article>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    Curadoria estratégica: Décio Coelho • ExecutivoVilaBelaMT • Ecossistema de Governança Inteligente
+  </footer>
+
+  <script>
+    const menuToggle = document.getElementById("menu-toggle");
+    const siteNav = document.getElementById("site-nav");
+
+    if (menuToggle && siteNav) {
+      menuToggle.addEventListener("click", function () {
+        siteNav.classList.toggle("open");
+      });
+    }
+  </script>
+
+  <script>
+    function currencyBRL(value) {
+      return new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+      }).format(Number(value) || 0);
+    }
+
+    function numberBR(value, decimals = 0) {
+      return new Intl.NumberFormat("pt-BR", {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+      }).format(Number(value) || 0);
+    }
+
+    function riscoClass(risco) {
+      const r = String(risco || "").toLowerCase();
+      if (r === "alto") return "risk-high";
+      if (r === "medio" || r === "médio") return "risk-mid";
+      return "risk-low";
+    }
+
+    async function carregarHomeGovernanca() {
+      try {
+        const res = await fetch("/executivo-vilabela-mt/dados/indicadores.json");
+        if (!res.ok) throw new Error("Falha ao carregar indicadores.");
+        const indicadores = await res.json();
+
+        const painel = indicadores.painel_geral || {};
+        const secretarias = Array.isArray(indicadores.secretarias) ? indicadores.secretarias : [];
+
+        const kpiTarget = document.getElementById("home-kpis");
+        const riskTarget = document.getElementById("risk-strip");
+
+        if (kpiTarget) {
+          kpiTarget.innerHTML = `
+            <div class="quick-kpi">
+              <div class="label">Receita total</div>
+              <div class="value">${currencyBRL(painel.receita_total || 0)}</div>
+              <div class="sub">Arrecadação consolidada do período</div>
+            </div>
+            <div class="quick-kpi">
+              <div class="label">Despesa paga</div>
+              <div class="value">${currencyBRL(painel.despesa_paga_total || 0)}</div>
+              <div class="sub">Execução financeira registrada</div>
+            </div>
+            <div class="quick-kpi">
+              <div class="label">Saldo apurado</div>
+              <div class="value">${currencyBRL(painel.saldo_apurado || 0)}</div>
+              <div class="sub">${(painel.saldo_apurado || 0) >= 0 ? "Situação positiva" : "Pressão orçamentária"}</div>
+            </div>
+            <div class="quick-kpi">
+              <div class="label">Execução média</div>
+              <div class="value">${numberBR(painel.execucao_media_percentual || 0, 2)}%</div>
+              <div class="sub">Leitura institucional do período</div>
+            </div>
+          `;
+        }
+
+        const ordenadas = [...secretarias].sort((a, b) => {
+          const riscoPeso = { alto: 3, medio: 2, médio: 2, baixo: 1 };
+          const pa = riscoPeso[String(a.risco || "").toLowerCase()] || 0;
+          const pb = riscoPeso[String(b.risco || "").toLowerCase()] || 0;
+          if (pb !== pa) return pb - pa;
+          return (Number(b.execucao_percentual) || 0) - (Number(a.execucao_percentual) || 0);
+        }).slice(0, 4);
+
+        if (riskTarget) {
+          riskTarget.innerHTML = ordenadas.map(item => `
+            <div class="risk-item">
+              <div>
+                <div class="risk-name">${item.nome}</div>
+                <div class="risk-note">${item.alerta || "sem alerta"} • Execução: ${numberBR(item.execucao_percentual || 0, 1)}%</div>
+              </div>
+              <span class="risk-badge ${riscoClass(item.risco)}">${String(item.risco || "baixo").toUpperCase()}</span>
+            </div>
+          `).join("");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    carregarHomeGovernanca();
+  </script>
 </body>
-</html>
+      </html>
