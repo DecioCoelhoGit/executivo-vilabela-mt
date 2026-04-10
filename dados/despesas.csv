@@ -1,11 +1,11 @@
-secretaria,categoria,valor
-Administração,Pessoal,720000
-Finanças,Custeio,610000
-Saúde,Serviços,1320000
-Educação,Pessoal,1780000
-Assistência Social,Programas,520000
-Obras,Infraestrutura,1010000
-Cultura e Turismo,Eventos,350000
-Meio Ambiente,Ações Ambientais,295000
-Agricultura,Insumos,430000
-Planejamento,Consultoria Técnica,190000
+id,ano,mes,data_empenho,data_pagamento,secretaria,orgao,unidade_orcamentaria,funcao,subfuncao,programa,acao,fonte_recurso,grupo_despesa,elemento_despesa,descricao,valor_empenhado,valor_liquidado,valor_pago,status
+1,2026,1,2026-01-08,2026-01-20,Administração,Prefeitura Municipal,Secretaria de Administração,Administração,Administração Geral,Gestão Administrativa,Manutenção da Secretaria,Recursos Próprios,Pessoal e Encargos,Contratação por Tempo Determinado,Folha administrativa,210000,210000,205000,pago
+2,2026,1,2026-01-09,2026-01-22,Finanças,Prefeitura Municipal,Secretaria de Finanças,Administração,Administração Financeira,Gestão Fiscal,Arrecadação e Controle,Recursos Próprios,Outras Despesas Correntes,Serviços de Terceiros PJ,Sistema contábil,85000,82000,82000,pago
+3,2026,1,2026-01-11,2026-01-25,Saúde,Prefeitura Municipal,Secretaria de Saúde,Saúde,Atenção Básica,Saúde para Todos,Unidades Básicas,Fundo a Fundo,Outras Despesas Correntes,Material de Consumo,Medicamentos básicos,320000,300000,295000,pago
+4,2026,1,2026-01-12,2026-01-26,Educação,Prefeitura Municipal,Secretaria de Educação,Educação,Ensino Fundamental,Escola de Qualidade,Manutenção da Rede,FUNDEB,Pessoal e Encargos,Vencimentos e Vantagens,Professores e apoio,780000,775000,770000,pago
+5,2026,1,2026-01-14,2026-01-28,Assistência Social,Prefeitura Municipal,Secretaria de Assistência Social,Assistência Social,Assistência Comunitária,Proteção Social,Serviços Socioassistenciais,FNAS,Outras Despesas Correntes,Serviços de Terceiros PJ,Atendimento às famílias,130000,120000,118000,pago
+6,2026,1,2026-01-16,2026-01-29,Obras,Prefeitura Municipal,Secretaria de Obras,Urbanismo,Infraestrutura Urbana,Obras Urbanas,Pavimentação de vias,Convênio Estadual,Investimentos,Obras e Instalações,Pavimentação bairro central,480000,310000,300000,parcial
+7,2026,1,2026-01-18,2026-01-30,Cultura e Turismo,Prefeitura Municipal,Secretaria de Cultura e Turismo,Cultura,Difusão Cultural,Patrimônio e Turismo,Eventos e promoção,Recursos Próprios,Outras Despesas Correntes,Serviços de Terceiros PJ,Promoção turística,90000,70000,68000,pago
+8,2026,1,2026-01-19,2026-01-30,Meio Ambiente,Prefeitura Municipal,Secretaria de Meio Ambiente,Gestão Ambiental,Preservação Ambiental,Sustentabilidade,Monitoramento ambiental,Recursos Próprios,Outras Despesas Correntes,Material de Consumo,Insumos de campo,60000,55000,52000,pago
+9,2026,1,2026-01-21,2026-01-31,Agricultura,Prefeitura Municipal,Secretaria de Agricultura,Agricultura,Extensão Rural,Produção Sustentável,Apoio ao produtor,Convênio Federal,Outras Despesas Correntes,Material de Distribuição Gratuita,Insumos para pequenos produtores,110000,90000,87000,pago
+10,2026,1,2026-01-23,2026-01-31,Planejamento,Prefeitura Municipal,Secretaria de Planejamento,Planejamento,Planejamento e Orçamento,Governança Pública,Monitoramento de metas,Recursos Próprios,Outras Despesas Correntes,Serviços de Terceiros PJ,Painel e monitoramento,50000,42000,40000,pago
