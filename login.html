@@ -1,50 +1,269 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login • ExecutivoVilaBelaMT</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/executivo-vilabela-mt/style.css" />
+  <style>
+    .login-shell {
+      width: min(980px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 28px 0 40px;
+    }
+
+    .login-card {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .login-head {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .login-head h1 {
+      margin: 0;
+    }
+
+    .login-head p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .login-form {
+      display: grid;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .field-group {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field-group label {
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .login-input,
+    .login-select {
+      width: 100%;
+      min-height: 56px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    .login-input:focus,
+    .login-select:focus {
+      border-color: rgba(212,175,55,0.45);
+      box-shadow: 0 0 0 3px rgba(212,175,55,0.10);
+    }
+
+    .login-actions {
+      display: grid;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .login-actions .btn,
+    .login-actions .btn-secondary {
+      width: 100%;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .perfil-ajuda {
+      color: var(--muted);
+      font-size: 0.94rem;
+      line-height: 1.6;
+    }
+
+    .credenciais-box {
+      margin-top: 14px;
+      padding: 16px;
+      border-radius: 20px;
+      border: 1px solid rgba(46,170,220,0.18);
+      background: rgba(46,170,220,0.08);
+    }
+
+    .credenciais-box h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+
+    .credenciais-box p {
+      margin: 6px 0;
+      color: var(--muted);
+    }
+
+    .erro-login {
+      display: none;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,93,93,0.28);
+      background: rgba(255,93,93,0.08);
+      color: #ffb0b0;
+      line-height: 1.5;
+    }
+
+    .login-top-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .login-top-actions a {
+      text-decoration: none;
+    }
+
+    @media (max-width: 680px) {
+      .login-shell {
+        width: min(100%, calc(100% - 20px));
+        padding: 18px 0 28px;
+      }
+
+      .login-card {
+        max-width: 100%;
+      }
+
+      .login-input,
+      .login-select {
+        min-height: 54px;
+        font-size: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
+  <main class="login-shell">
+    <div class="login-top-actions">
+      <a class="btn btn-secondary" href="/executivo-vilabela-mt/index.html">Voltar ao portal</a>
+      <a class="btn btn-secondary" href="/executivo-vilabela-mt/admin.html">Área Admin</a>
+    </div>
 
-<main class="container">
-  <h2>Login do Sistema</h2>
+    <section class="card login-card">
+      <div class="login-head">
+        <span class="badge">Acesso institucional</span>
+        <h1>Login do Sistema</h1>
+        <p>
+          Selecione o perfil de acesso e entre no ambiente correspondente
+          do ExecutivoVilaBelaMT.
+        </p>
+      </div>
 
-  <select id="perfil" class="input">
-    <option value="prefeito">Prefeito / Executivo</option>
-    <option value="vereador">Vereador / Legislativo</option>
-    <option value="controle">Controle</option>
-  </select>
+      <div id="erro" class="erro-login"></div>
 
-  <input id="usuario" class="input" placeholder="Usuário">
-  <input id="senha" type="password" class="input" placeholder="Senha">
+      <form class="login-form" onsubmit="event.preventDefault(); entrar();">
+        <div class="field-group">
+          <label for="perfil">Perfil</label>
+          <select id="perfil" class="login-select">
+            <option value="prefeito">Prefeito / Executivo</option>
+            <option value="vereador">Vereador / Legislativo</option>
+            <option value="controle">Controle / Auditoria</option>
+          </select>
+          <div class="perfil-ajuda">
+            Escolha o ambiente institucional correspondente ao seu acesso.
+          </div>
+        </div>
 
-  <button class="btn" onclick="entrar()">Entrar</button>
+        <div class="field-group">
+          <label for="usuario">Usuário</label>
+          <input
+            id="usuario"
+            class="login-input"
+            type="text"
+            placeholder="Digite o usuário"
+            autocomplete="username"
+          />
+        </div>
 
-  <p id="erro" style="color:red; display:none;"></p>
+        <div class="field-group">
+          <label for="senha">Senha</label>
+          <input
+            id="senha"
+            class="login-input"
+            type="password"
+            placeholder="Digite a senha"
+            autocomplete="current-password"
+          />
+        </div>
 
-  <br>
-  <a href="/executivo-vilabela-mt/index.html">Voltar</a>
-</main>
+        <div class="login-actions">
+          <button class="btn" type="submit">Entrar no sistema</button>
+          <a class="btn btn-secondary" href="/executivo-vilabela-mt/index.html">Cancelar</a>
+        </div>
+      </form>
 
-<script src="config.js"></script>
-<script>
-  function entrar() {
-    const perfil = document.getElementById("perfil").value;
-    const usuario = document.getElementById("usuario").value;
-    const senha = document.getElementById("senha").value;
+      <div class="credenciais-box">
+        <h3>Perfis de teste atuais</h3>
+        <p><strong>Executivo:</strong> usuário livre + senha <code>1234</code></p>
+        <p><strong>Legislativo:</strong> usuário livre + senha <code>1234</code></p>
+        <p><strong>Controle:</strong> usuário livre + senha <code>1234</code></p>
+      </div>
+    </section>
+  </main>
 
-    if (PERFIS[perfil] && senha === PERFIS[perfil].senha) {
-      salvarSessao(usuario, perfil);
-      window.location.href = PERFIS[perfil].destino;
-    } else {
+  <script src="/executivo-vilabela-mt/config.js"></script>
+  <script>
+    (function () {
+      const logado = localStorage.getItem("evb_logado") === "true";
+      const perfilAtual = localStorage.getItem("evb_perfil");
+
+      if (logado && PERFIS[perfilAtual]?.destino) {
+        window.location.href = PERFIS[perfilAtual].destino;
+      }
+    })();
+
+    function mostrarErro(texto) {
       const erro = document.getElementById("erro");
-      erro.textContent = "Login inválido";
+      erro.textContent = texto;
       erro.style.display = "block";
     }
-  }
-</script>
 
+    function limparErro() {
+      const erro = document.getElementById("erro");
+      erro.textContent = "";
+      erro.style.display = "none";
+    }
+
+    function entrar() {
+      limparErro();
+
+      const perfil = document.getElementById("perfil").value;
+      const usuario = document.getElementById("usuario").value.trim();
+      const senha = document.getElementById("senha").value.trim();
+
+      if (!usuario || !senha) {
+        mostrarErro("Preencha usuário e senha para continuar.");
+        return;
+      }
+
+      if (!PERFIS[perfil]) {
+        mostrarErro("Perfil de acesso inválido.");
+        return;
+      }
+
+      if (senha !== PERFIS[perfil].senha) {
+        mostrarErro("Senha inválida para o perfil selecionado.");
+        return;
+      }
+
+      salvarSessao(usuario, perfil);
+      window.location.href = PERFIS[perfil].destino;
+    }
+  </script>
 </body>
 </html>
