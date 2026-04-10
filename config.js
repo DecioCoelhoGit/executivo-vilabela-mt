@@ -18,8 +18,8 @@ const PERFIS = {
   }
 };
 
-function urlProjeto(caminho = "") {
-  return `${BASE_PATH}${caminho}`;
+function urlProjeto(path = "") {
+  return `${BASE_PATH}${path}`;
 }
 
 function salvarSessao(usuario, perfil) {
@@ -29,9 +29,7 @@ function salvarSessao(usuario, perfil) {
 }
 
 function limparSessao() {
-  localStorage.removeItem("evb_usuario");
-  localStorage.removeItem("evb_perfil");
-  localStorage.removeItem("evb_logado");
+  localStorage.clear();
 }
 
 function sairSistema() {
@@ -48,28 +46,18 @@ function verificarSessao(perfisPermitidos = []) {
     return;
   }
 
-  if (perfisPermitidos.length > 0 && !perfisPermitidos.includes(perfil)) {
-    const destino = PERFIS[perfil]?.destino;
-    if (destino) {
-      window.location.href = destino;
-    } else {
-      sairSistema();
-    }
+  if (perfisPermitidos.length && !perfisPermitidos.includes(perfil)) {
+    window.location.href = PERFIS[perfil]?.destino || urlProjeto("/login.html");
   }
-}
-
-function obterUsuarioLogado() {
-  return {
-    usuario: localStorage.getItem("evb_usuario") || "Usuário",
-    perfil: localStorage.getItem("evb_perfil") || "visitante"
-  };
 }
 
 function preencherCabecalhoUsuario() {
   const el = document.getElementById("usuario-logado");
   if (!el) return;
 
-  const { usuario, perfil } = obterUsuarioLogado();
-  const nomePerfil = PERFIS[perfil]?.label || perfil;
-  el.textContent = `${usuario} • ${nomePerfil}`;
-}
+  const usuario = localStorage.getItem("evb_usuario") || "Usuário";
+  const perfil = localStorage.getItem("evb_perfil") || "";
+  const label = PERFIS[perfil]?.label || perfil;
+
+  el.textContent = `${usuario} • ${label}`;
+    }
