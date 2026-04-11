@@ -3,110 +3,87 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Painel de Controle • ExecutivoVilaBelaMT</title>
-  <meta name="theme-color" content="#04111f" />
-  <link rel="icon" href="/executivo-vilabela-mt/favicon.png" />
-  <link rel="stylesheet" href="/executivo-vilabela-mt/style.css" />
+  <title>Painel de Controle — ExecutivoVilaBelaMT</title>
+  <meta name="theme-color" content="#04162f" />
+  <link rel="icon" href="favicon.png" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body data-page="controle">
-  <header class="site-header">
-    <div class="brand-wrap">
-      <h1>ExecutivoVilaBelaMT</h1>
-      <p>Painel de Controle</p>
-      <div class="user-pill">Perfil Controle</div>
+  <header class="topbar">
+    <div class="brand-block cover-glass">
+      <div>
+        <h1>ExecutivoVilaBelaMT</h1>
+        <p>Painel de Controle</p>
+      </div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button>
     </div>
 
-    <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">☰</button>
-
-    <nav class="site-nav" id="site-nav">
-      <a href="/executivo-vilabela-mt/index.html">Início</a>
-      <a href="/executivo-vilabela-mt/login.html">Login</a>
-      <a href="/executivo-vilabela-mt/dashboard/executivo.html">Executivo</a>
-      <a href="/executivo-vilabela-mt/dashboard/legislativo.html">Legislativo</a>
-      <a href="/executivo-vilabela-mt/dashboard/controle.html" class="active">Controle</a>
-      <a href="/executivo-vilabela-mt/admin.html">Admin</a>
-      <a href="#" id="logout-link">Sair</a>
+    <nav class="menu-panel" id="mobileMenu">
+      <a href="index.html">Início</a>
+      <a href="login.html">Login</a>
+      <a href="admin.html">Admin</a>
+      <a href="executivo.html">Executivo</a>
+      <a href="legislativo.html">Legislativo</a>
+      <a href="controle.html" class="active">Controle</a>
     </nav>
   </header>
 
-  <main class="container">
-    <div class="user-pill" id="session-user-pill" style="margin-bottom:16px;">Carregando sessão...</div>
-
+  <main class="container dashboard-page">
     <section class="section">
-      <span class="pill-badge">Conformidade e Auditoria Preventiva</span>
-      <h2 class="section-title" style="margin-top:14px;">Painel de Controle</h2>
-      <p>Visão orientada a risco, integridade das informações e suporte à tomada de decisão.</p>
+      <div class="hero-badge">Perfil Controle</div>
+      <h2 class="panel-heading">Painel de Controle</h2>
+      <p class="muted-text">Visão preventiva para conformidade, riscos, execução crítica e equilíbrio fiscal.</p>
+      <div class="update-box">Atualizado em: <strong id="ctrlAtualizado">--/--/----</strong></div>
     </section>
 
     <section class="section">
-      <div class="quick-kpi">
-        <div class="value" style="font-size:1.2rem;">Atualizado em: <span id="data-atualizacao">--/--/----</span></div>
+      <div class="stats-grid">
+        <article class="stat-card">
+          <span>Risco Alto</span>
+          <strong id="ctrlRiscoAlto">0</strong>
+          <small>Secretarias críticas</small>
+        </article>
+        <article class="stat-card">
+          <span>Atenção</span>
+          <strong id="ctrlAtencao">0</strong>
+          <small>Secretarias em observação</small>
+        </article>
+        <article class="stat-card">
+          <span>Estáveis</span>
+          <strong id="ctrlEstavel">0</strong>
+          <small>Secretarias em equilíbrio</small>
+        </article>
+        <article class="stat-card">
+          <span>Saldo Consolidado</span>
+          <strong id="ctrlSaldoTotal">R$ 0,00</strong>
+          <small>Leitura do período</small>
+        </article>
       </div>
     </section>
 
-    <section class="section kpis-grid">
-      <article class="kpi">
-        <div class="label">Risco Alto</div>
-        <div class="value" id="kpi-risco-alto">0</div>
-        <div class="sub">Ocorrências críticas</div>
+    <section class="section grid-2">
+      <article class="card">
+        <h3>Pontos de Controle</h3>
+        <div id="pontosControle" class="text-block"></div>
       </article>
-
-      <article class="kpi">
-        <div class="label">Risco Médio</div>
-        <div class="value" id="kpi-risco-medio">0</div>
-        <div class="sub">Ocorrências de atenção</div>
-      </article>
-
-      <article class="kpi">
-        <div class="label">Risco Baixo</div>
-        <div class="value" id="kpi-risco-baixo">0</div>
-        <div class="sub">Situações sob controle</div>
-      </article>
-
-      <article class="kpi">
-        <div class="label">Saldo Global</div>
-        <div class="value" id="kpi-saldo-global-controle">R$ 0,00</div>
-        <div class="sub">Resultado consolidado</div>
+      <article class="card">
+        <h3>Conformidade Preventiva</h3>
+        <div id="conformidadeControle" class="text-block"></div>
       </article>
     </section>
 
     <section class="section">
       <article class="card">
-        <h3>Quadro de conformidade</h3>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Secretaria</th>
-                <th>Saldo</th>
-                <th>Execução</th>
-                <th>Risco</th>
-                <th>Alerta</th>
-              </tr>
-            </thead>
-            <tbody id="tabela-controle"></tbody>
-          </table>
-        </div>
-      </article>
-    </section>
-
-    <section class="section section-split">
-      <article class="card">
-        <h3>Resumo Preventivo</h3>
-        <div id="resumo-controle" class="insight">Carregando resumo...</div>
-      </article>
-
-      <article class="card">
-        <h3>Insights da IA</h3>
-        <div class="insights-grid" id="insights-controle-box"></div>
+        <h3>Matriz de Risco</h3>
+        <div id="listaControle" class="cards-list"></div>
       </article>
     </section>
   </main>
 
-  <footer class="site-footer">
-    Painel de Controle • conformidade, risco e governança
+  <footer class="footer">
+    ExecutivoVilaBelaMT • Painel de Controle
   </footer>
 
-  <script src="/executivo-vilabela-mt/script.js"></script>
+  <script src="script.js"></script>
 </body>
-  </html>
+</html>
