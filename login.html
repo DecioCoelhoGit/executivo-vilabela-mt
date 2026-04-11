@@ -4,84 +4,70 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login — ExecutivoVilaBelaMT</title>
-  <meta name="theme-color" content="#031327" />
+  <meta name="theme-color" content="#04162f" />
   <link rel="icon" href="favicon.png" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body data-page="login">
-  <header class="site-header">
-    <div class="header-shell">
-      <div class="header-top">
-        <div class="brand-wrap">
-          <h1 class="site-title site-title-small">ExecutivoVilaBelaMT</h1>
-          <p class="site-subtitle">Acesso institucional</p>
-        </div>
-
-        <button id="menuToggle" class="menu-toggle" aria-label="Abrir menu">☰</button>
+  <header class="topbar">
+    <div class="brand-block cover-glass">
+      <div>
+        <h1>ExecutivoVilaBelaMT</h1>
+        <p>Acesso institucional</p>
       </div>
-
-      <nav id="mobileMenu" class="mobile-menu">
-        <a href="index.html">Voltar ao portal</a>
-        <a href="admin.html">Área Admin</a>
-      </nav>
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button>
     </div>
+
+    <nav class="menu-panel" id="mobileMenu">
+      <a href="index.html">Voltar ao portal</a>
+      <a href="admin.html">Área Admin</a>
+      <a href="executivo.html">Executivo</a>
+      <a href="legislativo.html">Legislativo</a>
+      <a href="controle.html">Controle</a>
+    </nav>
   </header>
 
-  <main class="page">
-    <section class="section">
-      <article class="login-card">
-        <span class="hero-badge">Acesso institucional</span>
-        <h2 class="panel-title">Login do Sistema</h2>
-        <p class="panel-text">
-          Selecione o perfil de acesso e entre no ambiente correspondente
-          do ExecutivoVilaBelaMT.
-        </p>
+  <main class="container">
+    <section class="form-panel holo-panel">
+      <div class="hero-badge">Acesso institucional</div>
+      <h2>Login do Sistema</h2>
+      <p>Selecione o perfil de acesso e entre no ambiente correspondente do ExecutivoVilaBelaMT.</p>
 
-        <form id="loginForm" class="form-stack" novalidate>
-          <div class="form-group">
-            <label for="perfil">Perfil</label>
-            <select id="perfil" name="perfil">
-              <option value="executivo">Prefeito / Executivo</option>
-              <option value="legislativo">Vereador / Legislativo</option>
-              <option value="controle">Controle</option>
-              <option value="admin">Administração local</option>
-            </select>
-            <small>Escolha o ambiente institucional correspondente ao seu acesso.</small>
-          </div>
+      <form id="loginForm" class="form-grid">
+        <label>Perfil</label>
+        <select id="perfil">
+          <option value="executivo">Prefeito / Executivo</option>
+          <option value="legislativo">Vereador / Legislativo</option>
+          <option value="controle">Controle</option>
+          <option value="admin">Administração local</option>
+        </select>
 
-          <div class="form-group">
-            <label for="usuario">Usuário</label>
-            <input id="usuario" name="usuario" type="text" placeholder="Digite o usuário" autocomplete="username" />
-          </div>
+        <label>Usuário</label>
+        <input type="text" id="usuario" placeholder="Digite o usuário" />
 
-          <div class="form-group">
-            <label for="senha">Senha</label>
-            <input id="senha" name="senha" type="password" placeholder="Digite a senha" autocomplete="current-password" />
-          </div>
+        <label>Senha</label>
+        <input type="password" id="senha" placeholder="Digite a senha" />
 
-          <div id="loginMensagem" class="feedback-message"></div>
+        <div id="loginMensagem" class="message-box"></div>
 
-          <div class="hero-actions">
-            <button type="submit" class="btn">Entrar no sistema</button>
-            <a href="index.html" class="btn-secondary">Cancelar</a>
-          </div>
-        </form>
+        <button type="submit" class="btn btn-primary">Entrar no sistema</button>
+        <a href="index.html" class="btn btn-secondary">Cancelar</a>
+      </form>
 
-        <article class="card" style="margin-top:18px;">
-          <h3>Perfis de teste atuais</h3>
-          <p><strong>Executivo:</strong> usuário livre + senha 1234</p>
-          <p><strong>Legislativo:</strong> usuário livre + senha 1234</p>
-          <p><strong>Controle:</strong> usuário livre + senha 1234</p>
-          <p><strong>Admin:</strong> usuário livre + senha 1234</p>
-        </article>
+      <article class="card compact-card">
+        <h3>Perfis de teste atuais</h3>
+        <p><strong>Executivo:</strong> usuário livre + senha 1234</p>
+        <p><strong>Legislativo:</strong> usuário livre + senha 1234</p>
+        <p><strong>Controle:</strong> usuário livre + senha 1234</p>
+        <p><strong>Admin:</strong> usuário livre + senha 1234</p>
       </article>
     </section>
   </main>
 
-  <footer class="site-footer">
+  <footer class="footer">
     Curadoria estratégica: Décio Coelho • ExecutivoVilaBelaMT
   </footer>
 
   <script src="script.js"></script>
 </body>
-    </html>
+</html>
