@@ -1,15 +1,13 @@
-(function () {
+(() => {
   "use strict";
 
   const STORAGE_KEYS = {
-    session: "executivoSession",
-    dataA: "executivoRealData",
-    dataB: "dadosExecutivo",
-    dataC: "executivo_vilabela_dados"
+    session: "executivoSession"
   };
 
-  const fallbackData = {
+  const DATA = {
     atualizadoEm: "2026-01-31",
+    servidores: 10,
     secretarias: [
       { nome: "Administração", receita: 180000, despesa: 120000, saldo: 60000, execucao: 66.7 },
       { nome: "Finanças", receita: 150000, despesa: 98000, saldo: 52000, execucao: 65.3 },
@@ -26,47 +24,31 @@
 
   let charts = [];
 
-  function qs(selector) {
-    return document.querySelector(selector);
+  const $ = (id) => document.getElementById(id);
+  const page = document.body.dataset.page || "";
+
+  function brl(v) {
+    return Number(v || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   }
 
-  function byId(id) {
-    return document.getElementById(id);
-  }
-
-  function getPage() {
-    return document.body.dataset.page || "";
-  }
-
-  function formatCurrency(value) {
-    return Number(value || 0).toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL"
-    });
-  }
-
-  function formatPercent(value) {
-    return `${Number(value || 0).toLocaleString("pt-BR", {
+  function pct(v) {
+    return `${Number(v || 0).toLocaleString("pt-BR", {
       minimumFractionDigits: 1,
       maximumFractionDigits: 1
     })}%`;
   }
 
-  function sum(items, field) {
-    return items.reduce((total, item) => total + Number(item[field] || 0), 0);
+  function total(field) {
+    return DATA.secretarias.reduce((s, item) => s + Number(item[field] || 0), 0);
   }
 
-  function average(items, field) {
-    if (!items.length) return 0;
-    return sum(items, field) / items.length;
+  function avg(field) {
+    return total(field) / DATA.secretarias.length;
   }
 
-  function riskLevel(item) {
-    const execucao = Number(item.execucao || 0);
-    const saldo = Number(item.saldo || 0);
-
-    if (execucao > 110 || saldo < 0) return "alert";
-    if (execucao >= 95 && execucao <= 110) return "warn";
+  function risk(item) {
+    if (item.execucao > 110 || item.saldo < 0) return "alert";
+    if (item.execucao >= 95) return "warn";
     return "ok";
   }
 
@@ -76,390 +58,407 @@
     return "Estável";
   }
 
-  function loadData() {
-    try {
-      const raw =
-        localStorage.getItem(STORAGE_KEYS.dataA) ||
-        localStorage.getItem(STORAGE_KEYS.dataB) ||
-        localStorage.getItem(STORAGE_KEYS.dataC);
+  function initMenu() {
+    const btn = $("menuToggle");
+    const menu = $("mobileMenu");
+    if (!btn || !menu) return;
 
-      if (!raw) return fallbackData;
-
-      const parsed = JSON.parse(raw);
-
-      if (!parsed || !Array.isArray(parsed.secretarias)) {
-        return fallbackData;
-      }
-
-      return parsed;
-    } catch (error) {
-      console.error("Erro ao carregar dados:", error);
-      return fallbackData;
-    }
+    btn.addEventListener("click", () => {
+      menu.classList.toggle("open");
+    });
   }
 
   function getSession() {
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.session);
-      if (!raw) return null;
-      return JSON.parse(raw);
-    } catch (error) {
+      return raw ? JSON.parse(raw) : null;
+    } catch {
       return null;
     }
   }
 
-  function setSession(session) {
-    localStorage.setItem(STORAGE_KEYS.session, JSON.stringify(session));
+  function setSession(obj) {
+    localStorage.setItem(STORAGE_KEYS.session, JSON.stringify(obj));
   }
 
   function clearSession() {
     localStorage.removeItem(STORAGE_KEYS.session);
   }
 
-  function clearData() {
-    localStorage.removeItem(STORAGE_KEYS.dataA);
-    localStorage.removeItem(STORAGE_KEYS.dataB);
-    localStorage.removeItem(STORAGE_KEYS.dataC);
+  function fillHomeKPIs() {
+    if ($("homeReceitaTotal")) $("homeReceitaTotal").textContent = brl(total("receita"));
+    if ($("homeDespesaTotal")) $("homeDespesaTotal").textContent = brl(total("despesa"));
+    if ($("homeSaldoTotal")) $("homeSaldoTotal").textContent = brl(total("saldo"));
+    if ($("homeExecucaoMedia")) $("homeExecucaoMedia").textContent = pct(avg("execucao"));
   }
 
-  function initMenu() {
-    const menuToggle = byId("menuToggle");
-    const mobileMenu = byId("mobileMenu");
+  function renderMonitoramentoHome() {
+    const box = $("monitoramentoSecretarias");
+    if (!box) return;
 
-    if (!menuToggle || !mobileMenu) return;
-
-    menuToggle.addEventListener("click", () => {
-      mobileMenu.classList.toggle("open");
-    });
-  }
-
-  function applyPerfilFromQuery() {
-    const perfilEl = byId("perfil");
-    if (!perfilEl) return;
-
-    const params = new URLSearchParams(window.location.search);
-    const perfil = params.get("perfil");
-
-    if (perfil && ["executivo", "legislativo", "controle", "admin"].includes(perfil)) {
-      perfilEl.value = perfil;
-    }
-  }
-
-  function updateKPIs(data) {
-    const secretarias = data.secretarias || [];
-    const receita = sum(secretarias, "receita");
-    const despesa = sum(secretarias, "despesa");
-    const saldo = sum(secretarias, "saldo");
-    const execucao = average(secretarias, "execucao");
-
-    const receitaEl = byId("kpiReceita");
-    const despesaEl = byId("kpiDespesa");
-    const saldoEl = byId("kpiSaldo");
-    const execucaoEl = byId("kpiExecucao");
-
-    if (receitaEl) receitaEl.textContent = formatCurrency(receita);
-    if (despesaEl) despesaEl.textContent = formatCurrency(despesa);
-    if (saldoEl) saldoEl.textContent = formatCurrency(saldo);
-    if (execucaoEl) execucaoEl.textContent = formatPercent(execucao);
-  }
-
-  function renderSecretarias(data) {
-    const target = byId("listaSecretarias");
-    if (!target) return;
-
-    target.innerHTML = "";
-
-    data.secretarias.forEach((item) => {
-      const level = riskLevel(item);
-
-      const article = document.createElement("article");
-      article.className = "monitor-card";
-      article.innerHTML = `
+    box.innerHTML = "";
+    DATA.secretarias.forEach((item) => {
+      const level = risk(item);
+      const card = document.createElement("article");
+      card.className = "monitor-card";
+      card.innerHTML = `
         <h4>${item.nome}</h4>
-        <p>Receita: <strong>${formatCurrency(item.receita)}</strong></p>
-        <p>Despesa: <strong>${formatCurrency(item.despesa)}</strong></p>
-        <p>Saldo: <strong>${formatCurrency(item.saldo)}</strong></p>
-        <p>Execução: <strong>${formatPercent(item.execucao)}</strong></p>
-        <div class="status-row">
-          <span class="badge ${level}">${riskLabel(level)}</span>
-        </div>
+        <p>Receita: <strong>${brl(item.receita)}</strong></p>
+        <p>Despesa: <strong>${brl(item.despesa)}</strong></p>
+        <p>Saldo: <strong>${brl(item.saldo)}</strong></p>
+        <p>Execução: <strong>${pct(item.execucao)}</strong></p>
+        <span class="badge ${level}">${riskLabel(level)}</span>
       `;
-      target.appendChild(article);
+      box.appendChild(card);
     });
   }
 
   function destroyCharts() {
-    charts.forEach((chart) => {
-      if (chart) chart.destroy();
-    });
+    charts.forEach((c) => c && c.destroy());
     charts = [];
   }
 
-  function createCharts(data) {
+  function createHomeCharts() {
     if (typeof Chart === "undefined") return;
-
     destroyCharts();
 
-    const labels = data.secretarias.map((item) => item.nome);
-    const receitas = data.secretarias.map((item) => Number(item.receita || 0));
-    const despesas = data.secretarias.map((item) => Number(item.despesa || 0));
-    const saldos = data.secretarias.map((item) => Number(item.saldo || 0));
-    const execucoes = data.secretarias.map((item) => Number(item.execucao || 0));
-    const riscos = data.secretarias.map((item) => {
-      const level = riskLevel(item);
-      if (level === "alert") return 3;
-      if (level === "warn") return 2;
-      return 1;
-    });
+    const labels = DATA.secretarias.map((s) => s.nome);
+    const receitas = DATA.secretarias.map((s) => s.receita);
+    const despesas = DATA.secretarias.map((s) => s.despesa);
+    const saldos = DATA.secretarias.map((s) => s.saldo);
+    const execucoes = DATA.secretarias.map((s) => s.execucao);
 
-    const commonOptions = {
+    const riskCounts = {
+      ok: DATA.secretarias.filter((s) => risk(s) === "ok").length,
+      warn: DATA.secretarias.filter((s) => risk(s) === "warn").length,
+      alert: DATA.secretarias.filter((s) => risk(s) === "alert").length
+    };
+
+    const opt = {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        legend: {
-          labels: {
-            color: "#dbe7ff"
-          }
-        }
+        legend: { labels: { color: "#eaf2ff" } }
       },
       scales: {
-        x: {
-          ticks: { color: "#c6d4ea" },
-          grid: { color: "rgba(255,255,255,.05)" }
-        },
-        y: {
-          ticks: { color: "#c6d4ea" },
-          grid: { color: "rgba(255,255,255,.05)" }
-        }
+        x: { ticks: { color: "#d3def0" }, grid: { color: "rgba(255,255,255,.05)" } },
+        y: { ticks: { color: "#d3def0" }, grid: { color: "rgba(255,255,255,.05)" } }
       }
     };
 
-    const c1 = byId("chartReceitaDespesa");
-    if (c1) {
-      charts.push(new Chart(c1, {
+    if ($("chartReceitaDespesa")) {
+      charts.push(new Chart($("chartReceitaDespesa"), {
         type: "bar",
         data: {
           labels,
           datasets: [
-            {
-              label: "Receita",
-              data: receitas,
-              backgroundColor: "rgba(54, 220, 255, 0.78)",
-              borderColor: "rgba(54, 220, 255, 1)",
-              borderWidth: 1,
-              borderRadius: 8
-            },
-            {
-              label: "Despesa",
-              data: despesas,
-              backgroundColor: "rgba(213, 53, 40, 0.82)",
-              borderColor: "rgba(213, 53, 40, 1)",
-              borderWidth: 1,
-              borderRadius: 8
-            }
+            { label: "Receita", data: receitas, backgroundColor: "rgba(58,188,255,.85)", borderRadius: 8 },
+            { label: "Despesa", data: despesas, backgroundColor: "rgba(196,55,45,.85)", borderRadius: 8 }
           ]
         },
-        options: commonOptions
+        options: opt
       }));
     }
 
-    const c2 = byId("chartSaldo");
-    if (c2) {
-      charts.push(new Chart(c2, {
+    if ($("chartSaldo")) {
+      charts.push(new Chart($("chartSaldo"), {
         type: "line",
         data: {
           labels,
-          datasets: [
-            {
-              label: "Saldo",
-              data: saldos,
-              borderColor: "rgba(80,255,120,1)",
-              backgroundColor: "rgba(80,255,120,.16)",
-              fill: true,
-              tension: 0.35,
-              borderWidth: 3,
-              pointRadius: 4,
-              pointBackgroundColor: "#80ff98"
-            }
-          ]
+          datasets: [{
+            label: "Saldo",
+            data: saldos,
+            borderColor: "rgba(80,255,120,1)",
+            backgroundColor: "rgba(80,255,120,.14)",
+            fill: true,
+            tension: 0.35,
+            borderWidth: 3,
+            pointRadius: 4
+          }]
         },
-        options: commonOptions
+        options: opt
       }));
     }
 
-    const c3 = byId("chartExecucao");
-    if (c3) {
-      charts.push(new Chart(c3, {
+    if ($("chartExecucao")) {
+      charts.push(new Chart($("chartExecucao"), {
         type: "bar",
         data: {
           labels,
-          datasets: [
-            {
-              label: "Execução (%)",
-              data: execucoes,
-              backgroundColor: execucoes.map((value) =>
-                value > 110
-                  ? "rgba(255, 98, 84, 0.85)"
-                  : value >= 95
-                  ? "rgba(255, 211, 92, 0.82)"
-                  : "rgba(57,255,79,.74)"
-              ),
-              borderWidth: 1,
-              borderRadius: 8
-            }
-          ]
+          datasets: [{
+            label: "Execução (%)",
+            data: execucoes,
+            backgroundColor: execucoes.map(v => v > 110 ? "rgba(255,90,90,.88)" : v >= 95 ? "rgba(255,212,90,.82)" : "rgba(57,255,61,.76)"),
+            borderRadius: 8
+          }]
         },
-        options: commonOptions
+        options: opt
       }));
     }
 
-    const c4 = byId("chartRisco");
-    if (c4) {
-      const riscoCount = [
-        riscos.filter((r) => r === 1).length,
-        riscos.filter((r) => r === 2).length,
-        riscos.filter((r) => r === 3).length
-      ];
-
-      charts.push(new Chart(c4, {
+    if ($("chartRisco")) {
+      charts.push(new Chart($("chartRisco"), {
         type: "doughnut",
         data: {
           labels: ["Estável", "Atenção", "Risco alto"],
           datasets: [{
-            data: riscoCount,
+            data: [riskCounts.ok, riskCounts.warn, riskCounts.alert],
             backgroundColor: [
-              "rgba(57,255,79,.76)",
-              "rgba(255,211,92,.82)",
-              "rgba(255,98,84,.88)"
+              "rgba(57,255,61,.76)",
+              "rgba(255,212,90,.82)",
+              "rgba(255,90,90,.88)"
             ],
-            borderColor: [
-              "rgba(57,255,79,1)",
-              "rgba(255,211,92,1)",
-              "rgba(255,98,84,1)"
-            ],
-            borderWidth: 1
+            borderWidth: 0
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: {
-              labels: {
-                color: "#dbe7ff"
-              }
-            }
+            legend: { labels: { color: "#eaf2ff" } }
           }
         }
       }));
     }
   }
 
-  function initHome() {
-    const data = loadData();
-    updateKPIs(data);
-    renderSecretarias(data);
-    createCharts(data);
-  }
-
   function initLogin() {
-    applyPerfilFromQuery();
-
-    const form = byId("loginForm");
-    const msg = byId("loginMensagem");
+    const perfil = $("perfil");
+    const msg = $("loginMensagem");
+    const form = $("loginForm");
 
     if (!form) return;
 
-    form.addEventListener("submit", (event) => {
-      event.preventDefault();
+    const params = new URLSearchParams(window.location.search);
+    const perfilQuery = params.get("perfil");
+    if (perfilQuery && perfil) perfil.value = perfilQuery;
 
-      const perfil = byId("perfil").value;
-      const usuario = byId("usuario").value.trim();
-      const senha = byId("senha").value.trim();
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
 
-      if (!senha) {
-        if (msg) msg.textContent = "Informe a senha.";
-        return;
-      }
+      const selected = perfil.value;
+      const usuario = ($("usuario").value || "Usuário").trim();
+      const senha = ($("senha").value || "").trim();
 
       if (senha !== "1234") {
-        if (msg) msg.textContent = "Senha inválida. Use 1234 para testes.";
+        msg.textContent = "Senha inválida. Use 1234.";
         return;
       }
 
-      const session = {
-        perfil,
-        usuario: usuario || "Usuário",
+      setSession({
+        usuario,
+        perfil: selected,
         autenticado: true,
-        em: new Date().toISOString()
-      };
+        data: new Date().toISOString()
+      });
 
-      setSession(session);
-
-      if (perfil === "admin") {
-        window.location.href = "admin.html";
-        return;
-      }
-
-      window.location.href = "index.html";
+      if (selected === "executivo") window.location.href = "executivo.html";
+      if (selected === "legislativo") window.location.href = "legislativo.html";
+      if (selected === "controle") window.location.href = "controle.html";
+      if (selected === "admin") window.location.href = "admin.html";
     });
   }
 
   function initAdmin() {
-    const statusGrid = byId("adminStatusGrid");
-    const msg = byId("adminMensagem");
+    const status = $("adminStatusGrid");
+    const msg = $("adminMensagem");
     const session = getSession();
 
-    if (statusGrid) {
-      const dataA = !!localStorage.getItem(STORAGE_KEYS.dataA);
-      const dataB = !!localStorage.getItem(STORAGE_KEYS.dataB);
-      const dataC = !!localStorage.getItem(STORAGE_KEYS.dataC);
-
-      statusGrid.innerHTML = `
-        <div class="status-item"><strong>Receitas locais:</strong> ${dataA || dataB || dataC ? "ativo" : "inativo"}</div>
-        <div class="status-item"><strong>Despesas locais:</strong> ${dataA || dataB || dataC ? "ativo" : "inativo"}</div>
-        <div class="status-item"><strong>Servidores locais:</strong> ${dataA || dataB || dataC ? "ativo" : "inativo"}</div>
-        <div class="status-item"><strong>Sessão ativa:</strong> ${session ? "ativo" : "inativo"}</div>
+    if (status) {
+      status.innerHTML = `
+        <div class="card"><strong>Receitas locais:</strong> inativo</div>
+        <div class="card"><strong>Despesas locais:</strong> inativo</div>
+        <div class="card"><strong>Servidores locais:</strong> inativo</div>
+        <div class="card"><strong>Sessão ativa:</strong> ${session ? "ativo" : "inativo"}</div>
       `;
     }
 
-    const btnLimparBase = byId("btnLimparBase");
-    const btnLimparSessao = byId("btnLimparSessao");
-    const logoutLink = byId("logoutLink");
-
-    if (btnLimparBase) {
-      btnLimparBase.addEventListener("click", () => {
-        clearData();
-        if (msg) msg.textContent = "Base local removida com sucesso.";
-        setTimeout(() => window.location.reload(), 500);
-      });
-    }
-
-    if (btnLimparSessao) {
-      btnLimparSessao.addEventListener("click", () => {
+    if ($("btnLimparSessao")) {
+      $("btnLimparSessao").addEventListener("click", () => {
         clearSession();
         if (msg) msg.textContent = "Sessão removida com sucesso.";
-        setTimeout(() => window.location.reload(), 500);
+        setTimeout(() => location.reload(), 500);
       });
     }
 
-    if (logoutLink) {
-      logoutLink.addEventListener("click", (event) => {
-        event.preventDefault();
+    if ($("btnLimparBase")) {
+      $("btnLimparBase").addEventListener("click", () => {
+        clearSession();
+        if (msg) msg.textContent = "Base local limpa com sucesso.";
+      });
+    }
+
+    if ($("logoutLink")) {
+      $("logoutLink").addEventListener("click", (e) => {
+        e.preventDefault();
         clearSession();
         window.location.href = "login.html";
       });
     }
   }
 
+  function fillExecutivo() {
+    if ($("executivoAtualizado")) $("executivoAtualizado").textContent = DATA.atualizadoEm;
+    if ($("execReceita")) $("execReceita").textContent = brl(total("receita"));
+    if ($("execDespesa")) $("execDespesa").textContent = brl(total("despesa"));
+    if ($("execSaldo")) $("execSaldo").textContent = brl(total("saldo"));
+    if ($("execServidores")) $("execServidores").textContent = String(DATA.servidores);
+
+    const filtro = $("filtroExecutivo");
+    const tabela = $("tabelaExecutivo");
+    const alertas = $("alertasExecutivo");
+    const resumo = $("resumoExecutivo");
+    const insights = $("insightsExecutivo");
+
+    if (filtro) {
+      filtro.innerHTML = `<option value="todas">Todas as Secretarias</option>` +
+        DATA.secretarias.map(s => `<option value="${s.nome}">${s.nome}</option>`).join("");
+    }
+
+    function render(selected = "todas") {
+      const list = selected === "todas"
+        ? DATA.secretarias
+        : DATA.secretarias.filter(s => s.nome === selected);
+
+      if (tabela) {
+        tabela.innerHTML = list.map(item => `
+          <tr>
+            <td>${item.nome}</td>
+            <td>${brl(item.receita)}</td>
+            <td>${brl(item.despesa)}</td>
+            <td>${brl(item.saldo)}</td>
+            <td>${pct(item.execucao)}</td>
+          </tr>
+        `).join("");
+      }
+
+      if (alertas) {
+        const criticos = DATA.secretarias.filter(s => risk(s) === "alert");
+        alertas.innerHTML = criticos.length
+          ? criticos.map(item => `<div class="monitor-card"><strong>Alerta:</strong> ${item.nome} com execução de ${pct(item.execucao)} e saldo de ${brl(item.saldo)}.</div>`).join("")
+          : `<div class="monitor-card">Nenhum alerta crítico foi identificado na leitura atual.</div>`;
+      }
+
+      if (resumo) {
+        resumo.innerHTML = `
+          <p><strong>Execução geral:</strong> ${pct(avg("execucao"))}</p>
+          <p><strong>Receita consolidada:</strong> ${brl(total("receita"))}</p>
+          <p><strong>Despesa consolidada:</strong> ${brl(total("despesa"))}</p>
+          <p><strong>Saldo apurado:</strong> ${brl(total("saldo"))}</p>
+          <p><strong>Secretarias críticas:</strong> ${DATA.secretarias.filter(s => risk(s) === "alert").length}</p>
+        `;
+      }
+
+      if (insights) {
+        insights.innerHTML = `
+          <p>Há ${DATA.secretarias.filter(s => risk(s) === "alert").length} secretaria(s) com execução crítica, exigindo verificação imediata de empenho, liquidação e saldo orçamentário.</p>
+          <p>${DATA.secretarias.filter(s => s.saldo >= 0).length} secretaria(s) mantêm saldo positivo, o que favorece planejamento preventivo.</p>
+          <p>Sugestão de IA: consolidar relatórios mensais por secretaria e gerar parecer executivo automatizado.</p>
+        `;
+      }
+    }
+
+    render();
+
+    if (filtro) {
+      filtro.addEventListener("change", () => render(filtro.value));
+    }
+
+    if ($("btnExportarExecutivo")) {
+      $("btnExportarExecutivo").addEventListener("click", () => window.print());
+    }
+  }
+
+  function fillLegislativo() {
+    if ($("legAtualizado")) $("legAtualizado").textContent = DATA.atualizadoEm;
+    if ($("legExecucaoMedia")) $("legExecucaoMedia").textContent = pct(avg("execucao"));
+    if ($("legDespesaTotal")) $("legDespesaTotal").textContent = brl(total("despesa"));
+    if ($("legAreasCriticas")) $("legAreasCriticas").textContent = String(DATA.secretarias.filter(s => risk(s) === "alert").length);
+    if ($("legSaldoTotal")) $("legSaldoTotal").textContent = brl(total("saldo"));
+
+    if ($("focosLegislativos")) {
+      $("focosLegislativos").innerHTML = `
+        <p>Obras, Planejamento, Agricultura, Saúde e Meio Ambiente concentram maior atenção legislativa.</p>
+        <p>Essas áreas merecem leitura por comissão, requerimentos e eventual convocação técnica.</p>
+      `;
+    }
+
+    if ($("fiscalizacaoLegislativa")) {
+      $("fiscalizacaoLegislativa").innerHTML = `
+        <p>Priorizar verificação de saldo negativo e execução acima de 100%.</p>
+        <p>Comparar tendência por secretaria e registrar justificativas gerenciais.</p>
+      `;
+    }
+
+    if ($("listaLegislativo")) {
+      $("listaLegislativo").innerHTML = DATA.secretarias.map(item => `
+        <article class="monitor-card">
+          <h4>${item.nome}</h4>
+          <p>Receita: <strong>${brl(item.receita)}</strong></p>
+          <p>Despesa: <strong>${brl(item.despesa)}</strong></p>
+          <p>Saldo: <strong>${brl(item.saldo)}</strong></p>
+          <p>Execução: <strong>${pct(item.execucao)}</strong></p>
+          <span class="badge ${risk(item)}">${riskLabel(risk(item))}</span>
+        </article>
+      `).join("");
+    }
+  }
+
+  function fillControle() {
+    const ok = DATA.secretarias.filter(s => risk(s) === "ok").length;
+    const warn = DATA.secretarias.filter(s => risk(s) === "warn").length;
+    const alert = DATA.secretarias.filter(s => risk(s) === "alert").length;
+
+    if ($("ctrlAtualizado")) $("ctrlAtualizado").textContent = DATA.atualizadoEm;
+    if ($("ctrlRiscoAlto")) $("ctrlRiscoAlto").textContent = String(alert);
+    if ($("ctrlAtencao")) $("ctrlAtencao").textContent = String(warn);
+    if ($("ctrlEstavel")) $("ctrlEstavel").textContent = String(ok);
+    if ($("ctrlSaldoTotal")) $("ctrlSaldoTotal").textContent = brl(total("saldo"));
+
+    if ($("pontosControle")) {
+      $("pontosControle").innerHTML = `
+        <p>Monitorar secretarias com saldo negativo.</p>
+        <p>Verificar execução acima de 110%.</p>
+        <p>Priorizar Obras, Planejamento, Agricultura, Saúde e Meio Ambiente.</p>
+      `;
+    }
+
+    if ($("conformidadeControle")) {
+      $("conformidadeControle").innerHTML = `
+        <p>Foco em trilhas de auditoria, justificativas formais e revisão preventiva.</p>
+        <p>Organizar leitura por órgão e consolidar base para conformidade institucional.</p>
+      `;
+    }
+
+    if ($("listaControle")) {
+      $("listaControle").innerHTML = DATA.secretarias.map(item => `
+        <article class="monitor-card">
+          <h4>${item.nome}</h4>
+          <p>Receita: <strong>${brl(item.receita)}</strong></p>
+          <p>Despesa: <strong>${brl(item.despesa)}</strong></p>
+          <p>Saldo: <strong>${brl(item.saldo)}</strong></p>
+          <p>Execução: <strong>${pct(item.execucao)}</strong></p>
+          <span class="badge ${risk(item)}">${riskLabel(risk(item))}</span>
+        </article>
+      `).join("");
+    }
+  }
+
+  function initHome() {
+    fillHomeKPIs();
+    renderMonitoramentoHome();
+    createHomeCharts();
+  }
+
   function boot() {
     initMenu();
-
-    const page = getPage();
 
     if (page === "home") initHome();
     if (page === "login") initLogin();
     if (page === "admin") initAdmin();
+    if (page === "executivo") fillExecutivo();
+    if (page === "legislativo") fillLegislativo();
+    if (page === "controle") fillControle();
   }
 
   document.addEventListener("DOMContentLoaded", boot);
