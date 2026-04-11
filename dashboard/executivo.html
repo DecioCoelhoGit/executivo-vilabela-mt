@@ -3,101 +3,84 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Painel Executivo • ExecutivoVilaBelaMT</title>
-  <meta name="theme-color" content="#04111f" />
-  <link rel="icon" href="/executivo-vilabela-mt/favicon.png" />
-  <link rel="stylesheet" href="/executivo-vilabela-mt/style.css" />
+  <title>Painel Executivo — ExecutivoVilaBelaMT</title>
+  <meta name="theme-color" content="#04162f" />
+  <link rel="icon" href="favicon.png" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body data-page="executivo">
-  <header class="site-header">
-    <div class="brand-wrap">
-      <h1>ExecutivoVilaBelaMT</h1>
-      <p>Painel Executivo</p>
-      <div class="user-pill" id="session-pill">Perfil Executivo</div>
+  <header class="topbar">
+    <div class="brand-block cover-glass">
+      <div>
+        <h1>ExecutivoVilaBelaMT</h1>
+        <p>Painel Executivo</p>
+      </div>
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button>
     </div>
 
-    <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">☰</button>
-
-    <nav class="site-nav" id="site-nav">
-      <a href="/executivo-vilabela-mt/index.html">Início</a>
-      <a href="/executivo-vilabela-mt/login.html">Login</a>
-      <a href="/executivo-vilabela-mt/dashboard/executivo.html" class="active">Executivo</a>
-      <a href="/executivo-vilabela-mt/dashboard/legislativo.html">Legislativo</a>
-      <a href="/executivo-vilabela-mt/dashboard/controle.html">Controle</a>
-      <a href="/executivo-vilabela-mt/admin.html">Admin</a>
-      <a href="#" id="logout-link">Sair</a>
+    <nav class="menu-panel" id="mobileMenu">
+      <a href="index.html">Início</a>
+      <a href="login.html">Login</a>
+      <a href="admin.html">Admin</a>
+      <a href="executivo.html" class="active">Executivo</a>
+      <a href="legislativo.html">Legislativo</a>
+      <a href="controle.html">Controle</a>
     </nav>
   </header>
 
-  <main class="container">
-    <div class="user-pill" id="session-user-pill" style="margin-bottom:16px;">Carregando sessão...</div>
-
+  <main class="container dashboard-page">
     <section class="section">
-      <span class="pill-badge">Gestão Integrada das Secretarias</span>
-      <h2 class="section-title" style="margin-top:14px;">Painel Executivo</h2>
-      <p>Leitura consolidada de receita, despesa, saldo, execução e insights por IA.</p>
+      <div class="hero-badge" id="sessionBadgeExecutivo">Perfil Executivo</div>
+      <h2 class="panel-heading">Painel Executivo</h2>
+      <p class="muted-text">Leitura consolidada de receita, despesa, saldo, execução e insights por IA.</p>
+      <div class="update-box">Atualizado em: <strong id="executivoAtualizado">--/--/----</strong></div>
     </section>
 
     <section class="section">
-      <div class="quick-kpi" id="data-atualizacao-box">
-        <div class="value" style="font-size:1.2rem;">Atualizado em: <span id="data-atualizacao">--/--/----</span></div>
+      <div class="stats-grid">
+        <article class="stat-card">
+          <span>Receita Total</span>
+          <strong id="execReceita">R$ 0,00</strong>
+          <small>Base consolidada do período</small>
+        </article>
+        <article class="stat-card">
+          <span>Despesa Total</span>
+          <strong id="execDespesa">R$ 0,00</strong>
+          <small>Execução registrada</small>
+        </article>
+        <article class="stat-card">
+          <span>Saldo</span>
+          <strong id="execSaldo">R$ 0,00</strong>
+          <small>Situação apurada</small>
+        </article>
+        <article class="stat-card">
+          <span>Servidores</span>
+          <strong id="execServidores">0</strong>
+          <small>Quantidade informada</small>
+        </article>
       </div>
     </section>
 
-    <section class="section kpis-grid">
-      <article class="kpi">
-        <div class="label">Receita Total</div>
-        <div class="value" id="kpi-receita-total">R$ 0,00</div>
-        <div class="sub">Base consolidada do período</div>
-      </article>
-
-      <article class="kpi">
-        <div class="label">Despesa Total</div>
-        <div class="value" id="kpi-despesa-total">R$ 0,00</div>
-        <div class="sub">Execução registrada</div>
-      </article>
-
-      <article class="kpi">
-        <div class="label">Saldo</div>
-        <div class="value" id="kpi-saldo-total">R$ 0,00</div>
-        <div class="sub">Situação apurada</div>
-      </article>
-
-      <article class="kpi">
-        <div class="label">Servidores</div>
-        <div class="value" id="kpi-servidores-total">0</div>
-        <div class="sub">Quantidade informada</div>
-      </article>
-    </section>
-
-    <section class="section section-split">
+    <section class="section">
       <article class="card">
         <h3>Filtro por secretaria</h3>
-        <select id="filtro-secretaria" class="input-ui" style="margin-top:12px;">
-          <option value="todas">Todas as Secretarias</option>
-        </select>
-        <p style="margin-top:12px;">Use o filtro para focar a leitura de uma secretaria específica.</p>
-      </article>
-
-      <article class="card">
-        <h3>Exportação</h3>
-        <button class="btn" id="btn-exportar" type="button" style="margin-top:12px;width:100%;">Exportar relatório</button>
-        <p style="margin-top:12px;">Gera versão pronta para impressão ou PDF pelo navegador.</p>
+        <select id="filtroExecutivo"></select>
+        <p class="muted-text">Use o filtro para focar a leitura de uma secretaria específica.</p>
       </article>
     </section>
 
     <section class="section">
       <article class="card">
-        <h3>Atualização local</h3>
-        <input type="file" id="arquivo-json" class="input-ui" accept=".json" />
-        <p style="margin-top:12px;">Você pode carregar uma base local em JSON para testes rápidos.</p>
+        <h3>Exportação</h3>
+        <button class="btn btn-primary" id="btnExportarExecutivo">Exportar relatório</button>
+        <p class="muted-text">Gera versão pronta para impressão ou PDF pelo navegador.</p>
       </article>
     </section>
 
     <section class="section">
       <article class="card">
         <h3>Alertas</h3>
-        <div class="insights-grid" id="alertas-box"></div>
+        <div id="alertasExecutivo" class="cards-list compact-list"></div>
       </article>
     </section>
 
@@ -105,40 +88,38 @@
       <article class="card">
         <h3>Execução por Secretaria</h3>
         <div class="table-wrap">
-          <table>
+          <table class="data-table">
             <thead>
               <tr>
                 <th>Secretaria</th>
                 <th>Receita</th>
-                <th>Despesa Paga</th>
+                <th>Despesa</th>
                 <th>Saldo</th>
                 <th>Execução</th>
-                <th>Risco</th>
               </tr>
             </thead>
-            <tbody id="tabela-secretarias"></tbody>
+            <tbody id="tabelaExecutivo"></tbody>
           </table>
         </div>
       </article>
     </section>
 
-    <section class="section section-split">
+    <section class="section grid-2">
       <article class="card">
         <h3>Resumo Estratégico</h3>
-        <div id="resumo-estrategico" class="insight">Carregando resumo...</div>
+        <div id="resumoExecutivo" class="text-block"></div>
       </article>
-
       <article class="card">
         <h3>Insights da IA</h3>
-        <div class="insights-grid" id="insights-box"></div>
+        <div id="insightsExecutivo" class="text-block"></div>
       </article>
     </section>
   </main>
 
-  <footer class="site-footer">
-    Painel Executivo • leitura consolidada para decisão e monitoramento
+  <footer class="footer">
+    ExecutivoVilaBelaMT • Painel Executivo
   </footer>
 
-  <script src="/executivo-vilabela-mt/script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
