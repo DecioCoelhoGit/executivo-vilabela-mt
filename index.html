@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ExecutivoVilaBelaMT — Governança Pública Inteligente</title>
-  <meta name="description" content="Plataforma estratégica para gestão municipal, transparência, planejamento, monitoramento fiscal e apoio com IA em Vila Bela da Santíssima Trindade - MT." />
+  <meta name="description" content="Plataforma estratégica para gestão municipal, transparência, planejamento, monitoramento fiscal e apoio com IA para Vila Bela da Santíssima Trindade - MT." />
   <meta name="theme-color" content="#031327" />
 
   <meta property="og:title" content="ExecutivoVilaBelaMT" />
@@ -17,7 +17,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
+<body data-page="home">
   <header class="site-header">
     <div class="header-shell">
       <div class="header-top">
@@ -26,20 +26,18 @@
           <p class="site-subtitle">Marco Inicial da Governança Pública Inteligente</p>
         </div>
 
-        <button id="menuToggle" class="menu-toggle" aria-label="Abrir menu">
-          ☰
-        </button>
+        <button id="menuToggle" class="menu-toggle" aria-label="Abrir menu">☰</button>
       </div>
 
       <nav id="mobileMenu" class="mobile-menu">
-        <a href="#topo" class="active">Início</a>
+        <a href="index.html" class="active">Início</a>
         <a href="login.html">Login</a>
         <a href="admin.html">Admin</a>
       </nav>
     </div>
   </header>
 
-  <main id="topo" class="page">
+  <main class="page">
     <section class="hero-card section">
       <span class="hero-badge">Vila Bela • 1ª Capital de MT</span>
       <h2 class="hero-title">Integração entre Secretarias, Legislativo e Controle</h2>
@@ -181,9 +179,9 @@
           rotinas de governança institucional.
         </p>
         <div class="quick-links">
-          <a href="login.html" class="btn">Abrir Login Executivo</a>
-          <a href="login.html" class="btn-secondary">Abrir Login Legislativo</a>
-          <a href="login.html" class="btn-secondary">Abrir Login Controle</a>
+          <a href="login.html?perfil=executivo" class="btn">Abrir Login Executivo</a>
+          <a href="login.html?perfil=legislativo" class="btn-secondary">Abrir Login Legislativo</a>
+          <a href="login.html?perfil=controle" class="btn-secondary">Abrir Login Controle</a>
         </div>
       </article>
 
@@ -191,9 +189,9 @@
         <h3>Marco Estratégico</h3>
         <p>
           O projeto visual integra topo institucional, leitura fiscal,
-          governança temática e camada analítica.
-          Esta base já serve como núcleo inicial para expansão a módulos
-          oficiais, automações e painéis com dados reais.
+          governança temática e camada analítica. Esta base já serve como
+          núcleo inicial para expansão a módulos oficiais, automações e
+          painéis com dados reais.
         </p>
       </article>
     </section>
@@ -205,4 +203,4 @@
 
   <script src="script.js"></script>
 </body>
-      </html>
+  </html>
