@@ -3,78 +3,76 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login • ExecutivoVilaBelaMT</title>
-  <meta name="theme-color" content="#04111f" />
-  <link rel="icon" href="/executivo-vilabela-mt/favicon.png" />
-  <link rel="stylesheet" href="/executivo-vilabela-mt/style.css" />
+  <title>Login — ExecutivoVilaBelaMT</title>
+  <meta name="theme-color" content="#031327" />
+  <link rel="icon" href="favicon.png" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body data-page="login">
   <header class="site-header">
-    <div class="brand-wrap">
-      <h1>ExecutivoVilaBelaMT</h1>
-      <p>Acesso institucional</p>
+    <div class="header-shell">
+      <div class="header-top">
+        <div class="brand-wrap">
+          <h1 class="site-title site-title-small">ExecutivoVilaBelaMT</h1>
+          <p class="site-subtitle">Acesso institucional</p>
+        </div>
+
+        <button id="menuToggle" class="menu-toggle" aria-label="Abrir menu">☰</button>
+      </div>
+
+      <nav id="mobileMenu" class="mobile-menu">
+        <a href="index.html">Voltar ao portal</a>
+        <a href="admin.html">Área Admin</a>
+      </nav>
     </div>
-
-    <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">☰</button>
-
-    <nav class="site-nav" id="site-nav">
-      <a href="/executivo-vilabela-mt/index.html">Início</a>
-      <a href="/executivo-vilabela-mt/login.html" class="active">Login</a>
-      <a href="/executivo-vilabela-mt/admin.html">Admin</a>
-    </nav>
   </header>
 
-  <main class="container">
+  <main class="page">
     <section class="section">
-      <div class="hero-actions" style="margin-top:0;">
-        <a class="btn btn-secondary" href="/executivo-vilabela-mt/index.html">Voltar ao portal</a>
-        <a class="btn btn-secondary" href="/executivo-vilabela-mt/admin.html">Área Admin</a>
-      </div>
-    </section>
-
-    <section class="section">
-      <article class="card" style="max-width:760px;margin:0 auto;">
-        <span class="pill-badge">Acesso institucional</span>
-        <h2 class="section-title" style="margin-top:18px;">Login do Sistema</h2>
-        <p>
-          Selecione o perfil de acesso e entre no ambiente correspondente do
-          ExecutivoVilaBelaMT.
+      <article class="login-card">
+        <span class="hero-badge">Acesso institucional</span>
+        <h2 class="panel-title">Login do Sistema</h2>
+        <p class="panel-text">
+          Selecione o perfil de acesso e entre no ambiente correspondente
+          do ExecutivoVilaBelaMT.
         </p>
 
-        <form id="login-form" style="display:grid;gap:16px;margin-top:18px;">
-          <div>
-            <label for="perfil" style="display:block;font-weight:700;margin-bottom:8px;">Perfil</label>
-            <select id="perfil" name="perfil" class="input-ui">
+        <form id="loginForm" class="form-stack" novalidate>
+          <div class="form-group">
+            <label for="perfil">Perfil</label>
+            <select id="perfil" name="perfil">
               <option value="executivo">Prefeito / Executivo</option>
               <option value="legislativo">Vereador / Legislativo</option>
               <option value="controle">Controle</option>
-              <option value="admin">Administração</option>
+              <option value="admin">Administração local</option>
             </select>
-            <div class="input-help">Escolha o ambiente institucional correspondente ao seu acesso.</div>
+            <small>Escolha o ambiente institucional correspondente ao seu acesso.</small>
           </div>
 
-          <div>
-            <label for="usuario" style="display:block;font-weight:700;margin-bottom:8px;">Usuário</label>
-            <input id="usuario" name="usuario" type="text" class="input-ui" placeholder="Digite o usuário" autocomplete="username" />
+          <div class="form-group">
+            <label for="usuario">Usuário</label>
+            <input id="usuario" name="usuario" type="text" placeholder="Digite o usuário" autocomplete="username" />
           </div>
 
-          <div>
-            <label for="senha" style="display:block;font-weight:700;margin-bottom:8px;">Senha</label>
-            <input id="senha" name="senha" type="password" class="input-ui" placeholder="Digite a senha" autocomplete="current-password" />
+          <div class="form-group">
+            <label for="senha">Senha</label>
+            <input id="senha" name="senha" type="password" placeholder="Digite a senha" autocomplete="current-password" />
           </div>
 
-          <button type="submit" class="btn" style="width:100%;">Entrar no sistema</button>
-          <a class="btn btn-secondary" href="/executivo-vilabela-mt/index.html" style="width:100%;">Cancelar</a>
+          <div id="loginMensagem" class="feedback-message"></div>
+
+          <div class="hero-actions">
+            <button type="submit" class="btn">Entrar no sistema</button>
+            <a href="index.html" class="btn-secondary">Cancelar</a>
+          </div>
         </form>
 
-        <div id="login-feedback" class="insight hidden" style="margin-top:16px;"></div>
-
-        <article class="card" style="margin-top:18px;padding:18px;">
-          <h3 style="margin-top:0;">Perfis de teste atuais</h3>
-          <p style="margin:0 0 8px;"><strong>Executivo:</strong> usuário livre + senha <strong>1234</strong></p>
-          <p style="margin:0 0 8px;"><strong>Legislativo:</strong> usuário livre + senha <strong>1234</strong></p>
-          <p style="margin:0 0 8px;"><strong>Controle:</strong> usuário livre + senha <strong>1234</strong></p>
-          <p style="margin:0;"><strong>Admin:</strong> usuário livre + senha <strong>1234</strong></p>
+        <article class="card" style="margin-top:18px;">
+          <h3>Perfis de teste atuais</h3>
+          <p><strong>Executivo:</strong> usuário livre + senha 1234</p>
+          <p><strong>Legislativo:</strong> usuário livre + senha 1234</p>
+          <p><strong>Controle:</strong> usuário livre + senha 1234</p>
+          <p><strong>Admin:</strong> usuário livre + senha 1234</p>
         </article>
       </article>
     </section>
@@ -84,6 +82,6 @@
     Curadoria estratégica: Décio Coelho • ExecutivoVilaBelaMT
   </footer>
 
-  <script src="/executivo-vilabela-mt/script.js"></script>
+  <script src="script.js"></script>
 </body>
-</html>
+    </html>
