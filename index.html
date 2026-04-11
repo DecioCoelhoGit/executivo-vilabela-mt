@@ -3,257 +3,197 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ExecutivoVilaBelaMT — Governança Pública Inteligente</title>
+  <meta name="description" content="Plataforma estratégica para gestão municipal, transparência, planejamento, monitoramento fiscal e apoio com IA em Vila Bela da Santíssima Trindade - MT." />
+  <meta name="theme-color" content="#031327" />
 
-  <title>ExecutivoVilaBelaMT • Gestão Pública Inteligente</title>
-  <meta
-    name="description"
-    content="Integração entre Secretarias, Legislativo e Órgãos de Controle com dados reais, governança visual e IA aplicada à gestão pública."
-  />
-  <meta name="theme-color" content="#04111f" />
-
-  <meta property="og:title" content="ExecutivoVilaBelaMT • Gestão Pública Inteligente" />
-  <meta
-    property="og:description"
-    content="Plataforma institucional para leitura executiva, fiscalização temática, conformidade e governança visual."
-  />
-  <meta
-    property="og:image"
-    content="https://deciocoelhogit.github.io/executivo-vilabela-mt/assets/capa-og.jpg"
-  />
-  <meta
-    property="og:url"
-    content="https://deciocoelhogit.github.io/executivo-vilabela-mt/"
-  />
+  <meta property="og:title" content="ExecutivoVilaBelaMT" />
+  <meta property="og:description" content="Marco Inicial da Governança Pública Inteligente." />
   <meta property="og:type" content="website" />
+  <meta property="og:image" content="og-executivo-vilabela.png" />
 
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="ExecutivoVilaBelaMT" />
-  <meta
-    name="twitter:description"
-    content="Governança pública inteligente com dados reais, visual institucional e IA."
-  />
-  <meta
-    name="twitter:image"
-    content="https://deciocoelhogit.github.io/executivo-vilabela-mt/assets/capa-og.jpg"
-  />
+  <link rel="icon" href="favicon.png" />
+  <link rel="stylesheet" href="style.css" />
 
-  <link rel="icon" href="/executivo-vilabela-mt/favicon.png" />
-  <link rel="stylesheet" href="/executivo-vilabela-mt/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body data-page="home">
+<body>
   <header class="site-header">
-    <div class="brand-wrap">
-      <h1>ExecutivoVilaBelaMT</h1>
-      <p>Marco Inicial da Governança Pública Inteligente</p>
+    <div class="header-shell">
+      <div class="header-top">
+        <div class="brand-wrap">
+          <h1 class="site-title">ExecutivoVilaBelaMT</h1>
+          <p class="site-subtitle">Marco Inicial da Governança Pública Inteligente</p>
+        </div>
+
+        <button id="menuToggle" class="menu-toggle" aria-label="Abrir menu">
+          ☰
+        </button>
+      </div>
+
+      <nav id="mobileMenu" class="mobile-menu">
+        <a href="#topo" class="active">Início</a>
+        <a href="login.html">Login</a>
+        <a href="admin.html">Admin</a>
+      </nav>
     </div>
-
-    <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">
-      ☰
-    </button>
-
-    <nav class="site-nav" id="site-nav">
-      <a href="/executivo-vilabela-mt/index.html" class="active">Início</a>
-      <a href="/executivo-vilabela-mt/login.html">Login</a>
-      <a href="/executivo-vilabela-mt/admin.html">Admin</a>
-    </nav>
   </header>
 
-  <main class="container">
-    <section class="section hero-grid">
-      <article class="card hero-card">
-        <span class="pill-badge">Vila Bela • 1ª Capital de MT</span>
+  <main id="topo" class="page">
+    <section class="hero-card section">
+      <span class="hero-badge">Vila Bela • 1ª Capital de MT</span>
+      <h2 class="hero-title">Integração entre Secretarias, Legislativo e Controle</h2>
+      <p class="hero-text">
+        Plataforma estratégica para gestão municipal, transparência,
+        planejamento, monitoramento fiscal e apoio com IA.
+        Estrutura criada para leitura institucional, acompanhamento executivo,
+        fiscalização temática e conformidade preventiva.
+      </p>
 
-        <h2>Integração entre Secretarias, Legislativo e Controle</h2>
-
-        <p>
-          Plataforma estratégica para gestão municipal, transparência,
-          planejamento, monitoramento fiscal e apoio com IA. Estrutura criada
-          para leitura institucional, acompanhamento executivo, fiscalização
-          temática e conformidade preventiva.
-        </p>
-
-        <div class="hero-actions">
-          <a class="btn" href="/executivo-vilabela-mt/login.html">Entrar no Sistema</a>
-          <a class="btn btn-secondary" href="#governanca">Ver Governança Visual</a>
-        </div>
-      </article>
-
-      <aside class="card side-card">
-        <h3 class="section-title small-title">Resumo Fiscal do Município</h3>
-        <div class="quick-kpis" id="home-kpis">
-          <div class="quick-kpi">
-            <div class="label">Receita total</div>
-            <div class="value loading-muted">carregando...</div>
-            <div class="sub">Base consolidada do período</div>
-          </div>
-        </div>
-      </aside>
+      <div class="hero-actions">
+        <a href="login.html" class="btn">Entrar no Sistema</a>
+        <a href="#governanca" class="btn-secondary">Ver Governança Visual</a>
+      </div>
     </section>
 
-    <section class="section" id="governanca">
-      <h2 class="section-title">Governança Visual e Inteligência Institucional</h2>
+    <section class="section">
+      <h3 class="section-title">Resumo Fiscal do Município</h3>
 
-      <div class="gov-grid">
-        <article class="card gov-card">
-          <h3>Gestão Integrada das Secretarias</h3>
-          <p>
-            Visão consolidada de receita, despesa, saldo, execução, servidores,
-            alertas e indicadores por secretaria.
-          </p>
-          <ul class="mini-list">
-            <li>Receita arrecadada por área</li>
-            <li>Despesa empenhada, liquidada e paga</li>
-            <li>Saldo e pressão orçamentária</li>
-            <li>Execução média e faixas críticas</li>
-          </ul>
+      <div class="kpis-grid">
+        <article class="kpi">
+          <div class="label">Receita total</div>
+          <div id="kpiReceita" class="value">R$ 0,00</div>
+          <div class="sub">Arrecadação consolidada do período</div>
         </article>
 
-        <article class="card gov-card">
-          <h3>Leitura para o Poder Legislativo</h3>
-          <p>
-            Base para acompanhamento, fiscalização temática, leitura executiva
-            dos números e organização de pautas por área.
-          </p>
-          <ul class="mini-list">
-            <li>Prioridades para fiscalização</li>
-            <li>Secretarias em atenção</li>
-            <li>Leitura simplificada para plenário e comissões</li>
-            <li>Roteiro automatizado de controle</li>
-          </ul>
+        <article class="kpi">
+          <div class="label">Despesa paga</div>
+          <div id="kpiDespesa" class="value">R$ 0,00</div>
+          <div class="sub">Execução financeira registrada</div>
         </article>
 
-        <article class="card gov-card">
-          <h3>Conformidade e Controle</h3>
-          <p>
-            Suporte para auditoria preventiva, análise de risco, integridade das
-            informações e conformidade orientada por dados.
-          </p>
-          <ul class="mini-list">
-            <li>Risco alto, médio e baixo</li>
-            <li>Execução crítica acima do limite</li>
-            <li>Saldo negativo ou insuficiente</li>
-            <li>Leitura para parecer preventivo</li>
-          </ul>
+        <article class="kpi">
+          <div class="label">Saldo apurado</div>
+          <div id="kpiSaldo" class="value">R$ 0,00</div>
+          <div class="sub">Resultado do período</div>
         </article>
 
-        <article class="card gov-card">
-          <h3>IA Generativa Aplicada à Gestão</h3>
-          <p>
-            Geração de insights, relatórios automáticos, leitura resumida,
-            priorização institucional e apoio à decisão.
-          </p>
-          <ul class="mini-list">
-            <li>Resumo gerencial automático</li>
-            <li>Leitura executiva por perfil</li>
-            <li>Alertas e interpretação contextual</li>
-            <li>Base para integração futura com banco externo</li>
-          </ul>
+        <article class="kpi">
+          <div class="label">Execução média</div>
+          <div id="kpiExecucao" class="value">0%</div>
+          <div class="sub">Leitura média por secretaria</div>
         </article>
       </div>
     </section>
 
-    <section class="section section-split">
-      <article class="card reading-card">
-        <h3>Monitoramento por Secretarias</h3>
-        <p>
-          Leitura institucional rápida das áreas que exigem maior atenção nesta
-          base consolidada.
-        </p>
-        <div class="risk-strip" id="risk-strip">
-          <div class="risk-item">
-            <div>
-              <div class="risk-name loading-muted">carregando...</div>
-              <div class="risk-note">aguarde a leitura dos indicadores</div>
-            </div>
-          </div>
-        </div>
+    <section id="governanca" class="section grid-2">
+      <article class="feature-card">
+        <h3>Governança Visual e Inteligência Institucional</h3>
+        <ul>
+          <li>Leitura integrada dos secretários e áreas finalísticas.</li>
+          <li>Resumo executivo com foco em receita, despesa, saldo e risco.</li>
+          <li>Base para decisões orientadas por dados.</li>
+          <li>Compatível com evolução para dados oficiais.</li>
+        </ul>
       </article>
 
-      <article class="card reading-card">
-        <h3>Quadro Institucional de Leitura</h3>
-        <p>
-          Ambiente concebido para contemplar todas as Secretarias Municipais,
-          entidades correlatas e possíveis integrações com Câmara, TCE-MT, TCU
-          e AMM.
-        </p>
-        <ul class="mini-list">
-          <li>Prefeitura Municipal</li>
-          <li>Câmara Municipal</li>
-          <li>Controle Interno</li>
-          <li>TCE-MT</li>
-          <li>TCU</li>
-          <li>AMM</li>
+      <article class="feature-card">
+        <h3>Leitura para o Poder Legislativo</h3>
+        <ul>
+          <li>Acompanhamento temático por secretaria.</li>
+          <li>Base para fiscalização, requerimentos e comissões.</li>
+          <li>Identificação de alertas de execução e saldo.</li>
+          <li>Visão consolidada para atividade parlamentar.</li>
+        </ul>
+      </article>
+
+      <article class="feature-card">
+        <h3>Conformidade e Controle</h3>
+        <ul>
+          <li>Suporte para auditoria preventiva.</li>
+          <li>Foco em execução crítica, desequilíbrio e risco fiscal.</li>
+          <li>Organização institucional da leitura por órgão.</li>
+          <li>Pronto para expansão com indicadores formais.</li>
+        </ul>
+      </article>
+
+      <article class="feature-card">
+        <h3>IA Generativa Aplicada à Gestão Pública</h3>
+        <ul>
+          <li>Insights automáticos para leitura executiva.</li>
+          <li>Priorização de áreas com maior atenção.</li>
+          <li>Apoio a pareceres, notas e resumos gerenciais.</li>
+          <li>Camada estratégica de interpretação institucional.</li>
         </ul>
       </article>
     </section>
 
     <section class="section">
-      <h2 class="section-title">Dashboard Analítico</h2>
+      <h3 class="section-title">Monitoramento por Secretaria</h3>
+      <div id="listaSecretarias" class="cards-grid"></div>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title">Quadro Institucional de Leitura</h3>
+      <article class="card">
+        <p>
+          Estrutura integrada para Executivo, Legislativo e Controle,
+          com potencial de conexão futura com Prefeitura Municipal,
+          Câmara Municipal, TCE-MT, TCU e AMM.
+        </p>
+        <div class="section-subtitle" style="margin-top:12px;">
+          Base visual inicial para evolução do ecossistema institucional.
+        </div>
+      </article>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title">Dashboard Analítico</h3>
 
       <div class="charts-grid">
-        <article class="card chart-card">
+        <article class="chart-card">
           <h3>Receita x Despesa por Secretaria</h3>
           <canvas id="chartReceitaDespesa"></canvas>
         </article>
 
-        <article class="card chart-card">
+        <article class="chart-card">
           <h3>Saldo por Secretaria</h3>
           <canvas id="chartSaldo"></canvas>
         </article>
 
-        <article class="card chart-card">
+        <article class="chart-card">
           <h3>Execução por Secretaria</h3>
           <canvas id="chartExecucao"></canvas>
         </article>
 
-        <article class="card chart-card">
+        <article class="chart-card">
           <h3>Mapa de Risco Institucional</h3>
           <canvas id="chartRisco"></canvas>
         </article>
       </div>
     </section>
 
-    <section class="section">
-      <h2 class="section-title">Acesso ao Sistema</h2>
+    <section class="section grid-2">
+      <article class="card">
+        <h3>Acesso ao Sistema</h3>
+        <p style="margin-bottom:14px;">
+          Entre nos ambientes operacionais e evolua a estrutura para
+          rotinas de governança institucional.
+        </p>
+        <div class="quick-links">
+          <a href="login.html" class="btn">Abrir Login Executivo</a>
+          <a href="login.html" class="btn-secondary">Abrir Login Legislativo</a>
+          <a href="login.html" class="btn-secondary">Abrir Login Controle</a>
+        </div>
+      </article>
 
-      <div class="access-grid">
-        <article class="card access-card">
-          <h3>Executivo</h3>
-          <p>
-            Visão consolidada para gestão, planejamento, acompanhamento fiscal,
-            saldo, execução e leitura gerencial.
-          </p>
-          <a class="btn" href="/executivo-vilabela-mt/login.html">Abrir Login Executivo</a>
-        </article>
-
-        <article class="card access-card">
-          <h3>Legislativo</h3>
-          <p>
-            Leitura orientada para fiscalização, acompanhamento de números,
-            priorização temática e interpretação institucional.
-          </p>
-          <a class="btn btn-secondary" href="/executivo-vilabela-mt/login.html">Abrir Login Legislativo</a>
-        </article>
-
-        <article class="card access-card">
-          <h3>Controle</h3>
-          <p>
-            Visão preventiva para conformidade, risco, integridade das
-            informações e suporte a pareceres de controle.
-          </p>
-          <a class="btn btn-secondary" href="/executivo-vilabela-mt/login.html">Abrir Login Controle</a>
-        </article>
-      </div>
-    </section>
-
-    <section class="section">
       <article class="card">
         <h3>Marco Estratégico</h3>
         <p>
-          O ExecutivoVilaBelaMT constitui a base institucional para evolução de
-          painéis executivos, leituras legislativas, controle preventivo,
-          governança visual e integração futura com dados reais, banco externo e
-          automações.
+          O projeto visual integra topo institucional, leitura fiscal,
+          governança temática e camada analítica.
+          Esta base já serve como núcleo inicial para expansão a módulos
+          oficiais, automações e painéis com dados reais.
         </p>
       </article>
     </section>
@@ -263,7 +203,6 @@
     Curadoria estratégica: Décio Coelho • ExecutivoVilaBelaMT • Ecossistema de Governança Inteligente
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="/executivo-vilabela-mt/script.js"></script>
+  <script src="script.js"></script>
 </body>
-            </html>
+      </html>
