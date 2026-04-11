@@ -3,69 +3,120 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login — ExecutivoVilaBelaMT</title>
-  <meta name="theme-color" content="#04162f" />
-  <link rel="icon" href="favicon.png" />
+  <title>Login | ExecutivoVilaBelaMT</title>
+  <meta
+    name="description"
+    content="Acesso institucional ao ExecutivoVilaBelaMT para os ambientes Executivo, Legislativo, Controle e Administração."
+  />
+  <meta name="theme-color" content="#03112b" />
+
+  <link rel="icon" type="image/png" href="favicon.png" />
   <link rel="stylesheet" href="style.css" />
 </head>
-<body data-page="login">
-  <header class="topbar">
-    <div class="brand-block cover-glass">
-      <div>
-        <h1>ExecutivoVilaBelaMT</h1>
-        <p>Acesso institucional</p>
+<body>
+  <header class="site-header ultra-shell">
+    <div class="container header-inner">
+      <div class="brand-block">
+        <h1 class="site-brand">ExecutivoVilaBelaMT</h1>
+        <p class="site-subtitle">Acesso institucional</p>
       </div>
-      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button>
-    </div>
 
-    <nav class="menu-panel" id="mobileMenu">
-      <a href="index.html">Voltar ao portal</a>
-      <a href="admin.html">Área Admin</a>
-      <a href="executivo.html">Executivo</a>
-      <a href="legislativo.html">Legislativo</a>
-      <a href="controle.html">Controle</a>
-    </nav>
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-label="Abrir menu"
+        aria-expanded="false"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="main-nav">
+        <a href="index.html" data-nav="index.html">Início</a>
+        <a href="login.html" data-nav="login.html">Login</a>
+        <a href="executivo.html" data-nav="executivo.html">Executivo</a>
+        <a href="legislativo.html" data-nav="legislativo.html">Legislativo</a>
+        <a href="controle.html" data-nav="controle.html">Controle</a>
+        <a href="admin.html" data-nav="admin.html">Admin</a>
+      </nav>
+    </div>
   </header>
 
-  <main class="container">
-    <section class="form-panel holo-panel">
-      <div class="hero-badge">Acesso institucional</div>
-      <h2>Login do Sistema</h2>
-      <p>Selecione o perfil de acesso e entre no ambiente correspondente do ExecutivoVilaBelaMT.</p>
+  <main>
+    <section class="section ultra-shell">
+      <div class="container narrow-container">
+        <div class="login-shell glass-card">
+          <div class="login-top-actions">
+            <a class="btn btn-secondary" href="index.html">Voltar ao portal</a>
+            <a class="btn btn-secondary" href="admin.html">Área Admin</a>
+          </div>
 
-      <form id="loginForm" class="form-grid">
-        <label>Perfil</label>
-        <select id="perfil">
-          <option value="executivo">Prefeito / Executivo</option>
-          <option value="legislativo">Vereador / Legislativo</option>
-          <option value="controle">Controle</option>
-          <option value="admin">Administração local</option>
-        </select>
+          <div class="hero-topline">Acesso institucional</div>
+          <h2 class="section-title">Login do Sistema</h2>
+          <p class="section-text">
+            Selecione o perfil de acesso e entre no ambiente correspondente do
+            ExecutivoVilaBelaMT.
+          </p>
 
-        <label>Usuário</label>
-        <input type="text" id="usuario" placeholder="Digite o usuário" />
+          <form id="loginForm" class="login-form" novalidate>
+            <div class="form-group">
+              <label for="perfil">Perfil</label>
+              <select id="perfil" name="perfil">
+                <option value="executivo">Prefeito / Executivo</option>
+                <option value="legislativo">Vereador / Legislativo</option>
+                <option value="controle">Controle Interno / Controle</option>
+                <option value="admin">Administração local / Admin</option>
+              </select>
+              <small>Escolha o ambiente institucional correspondente ao seu acesso.</small>
+            </div>
 
-        <label>Senha</label>
-        <input type="password" id="senha" placeholder="Digite a senha" />
+            <div class="form-group">
+              <label for="usuario">Usuário</label>
+              <input
+                type="text"
+                id="usuario"
+                name="usuario"
+                placeholder="Digite o usuário"
+                autocomplete="username"
+              />
+            </div>
 
-        <div id="loginMensagem" class="message-box"></div>
+            <div class="form-group">
+              <label for="senha">Senha</label>
+              <input
+                type="password"
+                id="senha"
+                name="senha"
+                placeholder="Digite a senha"
+                autocomplete="current-password"
+              />
+            </div>
 
-        <button type="submit" class="btn btn-primary">Entrar no sistema</button>
-        <a href="index.html" class="btn btn-secondary">Cancelar</a>
-      </form>
+            <div class="form-actions stacked">
+              <button type="submit" class="btn btn-primary">Entrar no sistema</button>
+              <button type="button" class="btn btn-secondary" id="cancelarLogin">Cancelar</button>
+            </div>
 
-      <article class="card compact-card">
-        <h3>Perfis de teste atuais</h3>
-        <p><strong>Executivo:</strong> usuário livre + senha 1234</p>
-        <p><strong>Legislativo:</strong> usuário livre + senha 1234</p>
-        <p><strong>Controle:</strong> usuário livre + senha 1234</p>
-        <p><strong>Admin:</strong> usuário livre + senha 1234</p>
-      </article>
+            <div id="loginMensagem" class="status-box" aria-live="polite"></div>
+          </form>
+
+          <div class="info-card glass-card compact-card">
+            <h3>Perfis de teste atuais</h3>
+            <p><strong>Executivo:</strong> usuário livre + senha 1234</p>
+            <p><strong>Legislativo:</strong> usuário livre + senha 1234</p>
+            <p><strong>Controle:</strong> usuário livre + senha 1234</p>
+            <p><strong>Admin:</strong> usuário livre + senha 1234</p>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 
-  <footer class="footer">
-    Curadoria estratégica: Décio Coelho • ExecutivoVilaBelaMT
+  <footer class="site-footer ultra-shell">
+    <div class="container">
+      <p>Curadoria estratégica: Décio Coelho • ExecutivoVilaBelaMT</p>
+    </div>
   </footer>
 
   <script src="script.js"></script>
