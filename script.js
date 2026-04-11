@@ -1,892 +1,817 @@
-(function () {
-  "use strict";
+/* =========================================================
+   EXECUTIVOVILABELAMT — SCRIPT.JS TOTAL
+   Menu blindado + login + admin + painéis + gráficos
+   ========================================================= */
 
-  const APP = {
-    storageKeys: {
-      session: "evbmt_session",
-      data: "evbmt_dados_reais"
-    },
+document.addEventListener("DOMContentLoaded", () => {
+  iniciarApp();
+});
 
-    defaults: {
-      atualizadoEm: "2026-01-31",
-      resumo: {
-        receitaTotal: 1903900,
-        despesaTotal: 2019000,
-        saldoTotal: -116000,
-        execucaoMedia: 101.0,
-        servidores: 0
-      },
-      secretarias: [
-        {
-          nome: "Administração",
-          receita: 180000,
-          despesa: 120000,
-          saldo: 60000,
-          execucao: 66.7,
-          risco: "Estável"
-        },
-        {
-          nome: "Finanças",
-          receita: 150000,
-          despesa: 98000,
-          saldo: 52000,
-          execucao: 65.3,
-          risco: "Estável"
-        },
-        {
-          nome: "Saúde",
-          receita: 300000,
-          despesa: 345000,
-          saldo: -45000,
-          execucao: 115.0,
-          risco: "Risco alto"
-        },
-        {
-          nome: "Educação",
-          receita: 330000,
-          despesa: 310000,
-          saldo: 20000,
-          execucao: 93.9,
-          risco: "Atenção"
-        },
-        {
-          nome: "Assistência Social",
-          receita: 125000,
-          despesa: 110000,
-          saldo: 15000,
-          execucao: 88.0,
-          risco: "Estável"
-        },
-        {
-          nome: "Obras",
-          receita: 210000,
-          despesa: 295000,
-          saldo: -85000,
-          execucao: 140.5,
-          risco: "Risco alto"
-        },
-        {
-          nome: "Cultura e Turismo",
-          receita: 62000,
-          despesa: 53000,
-          saldo: 9000,
-          execucao: 85.5,
-          risco: "Estável"
-        },
-        {
-          nome: "Meio Ambiente",
-          receita: 46000,
-          despesa: 47000,
-          saldo: -1000,
-          execucao: 102.2,
-          risco: "Risco alto"
-        },
-        {
-          nome: "Agricultura",
-          receita: 72000,
-          despesa: 89000,
-          saldo: -17000,
-          execucao: 123.6,
-          risco: "Risco alto"
-        },
-        {
-          nome: "Planejamento",
-          receita: 428900,
-          despesa: 552900,
-          saldo: -124000,
-          execucao: 128.9,
-          risco: "Risco alto"
-        }
-      ],
-      leituras: {
-        governanca: [
-          "Leitura integrada das secretarias e áreas finalísticas.",
-          "Resumo executivo com foco em receita, despesa, saldo e risco.",
-          "Base para decisões orientadas por dados.",
-          "Compatível com evolução para dados oficiais."
-        ],
-        legislativo: [
-          "Acompanhamento temático por secretaria.",
-          "Base para fiscalização, requerimentos e comissões.",
-          "Identificação de alertas de execução e saldo.",
-          "Visão consolidada para atividade parlamentar."
-        ],
-        controle: [
-          "Suporte para auditoria preventiva.",
-          "Foco em execução crítica, desequilíbrio e risco fiscal.",
-          "Organização institucional da leitura por órgão.",
-          "Pronto para expansão com indicadores formais."
-        ],
-        ia: [
-          "Insights automáticos para leitura executiva.",
-          "Priorização de áreas com maior atenção.",
-          "Apoio a pareceres, notas e resumos gerenciais.",
-          "Camada estratégica de interpretação institucional."
-        ]
-      },
-      parcerias: {
-        institucionais: [
-          "Prefeitura Municipal",
-          "Câmara Municipal",
-          "TCE-MT",
-          "TCU",
-          "AMM"
-        ],
-        tecnologicas: [
-          "GitHub Pages",
-          "Termux",
-          "Git",
-          "Notion",
-          "OpenAI / ChatGPT"
-        ]
-      }
-    },
+function iniciarApp() {
+  iniciarMenuBlindado();
+  iniciarRodapeAno();
+  iniciarLogin();
+  iniciarAdmin();
+  carregarPainelPagina();
+}
 
-    state: {
-      dados: null,
-      sessao: null,
-      charts: {}
-    }
-  };
+/* =========================================================
+   CONFIGURAÇÃO GERAL
+   ========================================================= */
 
-  function $(selector, scope = document) {
-    return scope.querySelector(selector);
+const APP_CONFIG = {
+  storageKeys: {
+    sessao: "evbmt_sessao",
+    baseDados: "evbmt_base_dados"
+  },
+  usuariosTeste: {
+    executivo: { senha: "1234", destino: "executivo.html", perfilNome: "Prefeito / Executivo" },
+    legislativo: { senha: "1234", destino: "legislativo.html", perfilNome: "Vereador / Legislativo" },
+    controle: { senha: "1234", destino: "controle.html", perfilNome: "Controle / Órgãos de Controle" },
+    admin: { senha: "1234", destino: "admin.html", perfilNome: "Administração local" }
+  }
+};
+
+const BASE_PADRAO = {
+  atualizadoEm: "2026-01-31",
+  parceriasInstitucionais: [
+    "Prefeitura Municipal",
+    "Câmara Municipal",
+    "TCE-MT",
+    "TCU",
+    "AMM"
+  ],
+  parceriasTecnologicas: [
+    "GitHub Pages",
+    "Termux",
+    "Git",
+    "JSON",
+    "OpenAI / ChatGPT"
+  ],
+  secretarias: [
+    { nome: "Administração", receita: 180000, despesa: 120000, servidores: 22 },
+    { nome: "Finanças", receita: 150000, despesa: 98000, servidores: 10 },
+    { nome: "Saúde", receita: 300000, despesa: 345000, servidores: 140 },
+    { nome: "Educação", receita: 330000, despesa: 310000, servidores: 115 },
+    { nome: "Assistência Social", receita: 125000, despesa: 110000, servidores: 26 },
+    { nome: "Obras", receita: 210000, despesa: 295000, servidores: 34 },
+    { nome: "Cultura e Turismo", receita: 62000, despesa: 53000, servidores: 8 },
+    { nome: "Meio Ambiente", receita: 46000, despesa: 47000, servidores: 7 },
+    { nome: "Agricultura", receita: 72000, despesa: 89000, servidores: 12 },
+    { nome: "Planejamento", receita: 428900, despesa: 552900, servidores: 9 }
+  ]
+};
+
+/* =========================================================
+   MENU BLINDADO
+   ========================================================= */
+
+function iniciarMenuBlindado() {
+  const toggle = document.querySelector("[data-menu-toggle]");
+  const drawer = document.querySelector("[data-menu-drawer]");
+  const overlay = document.querySelector("[data-menu-overlay]");
+  const fechar = document.querySelectorAll("[data-menu-close]");
+  const body = document.body;
+
+  if (!toggle || !drawer) return;
+
+  function abrirMenu() {
+    drawer.classList.add("is-open");
+    if (overlay) overlay.classList.add("is-open");
+    toggle.classList.add("is-active");
+    body.classList.add("menu-open");
+    toggle.setAttribute("aria-expanded", "true");
   }
 
-  function $all(selector, scope = document) {
-    return Array.from(scope.querySelectorAll(selector));
+  function fecharMenu() {
+    drawer.classList.remove("is-open");
+    if (overlay) overlay.classList.remove("is-open");
+    toggle.classList.remove("is-active");
+    body.classList.remove("menu-open");
+    toggle.setAttribute("aria-expanded", "false");
   }
 
-  function formatCurrency(value) {
-    const number = Number(value || 0);
-    return number.toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL"
-    });
-  }
-
-  function formatNumber(value, digits = 1) {
-    const number = Number(value || 0);
-    return number.toLocaleString("pt-BR", {
-      minimumFractionDigits: digits,
-      maximumFractionDigits: digits
-    });
-  }
-
-  function formatPercent(value, digits = 1) {
-    return `${formatNumber(value, digits)}%`;
-  }
-
-  function normalizeRisk(value) {
-    const raw = String(value || "").trim().toLowerCase();
-    if (raw.includes("alto")) return "risco";
-    if (raw.includes("aten")) return "atencao";
-    return "estavel";
-  }
-
-  function getRiskLabel(value) {
-    const risk = normalizeRisk(value);
-    if (risk === "risco") return "Risco alto";
-    if (risk === "atencao") return "Atenção";
-    return "Estável";
-  }
-
-  function safeParse(jsonText, fallback = null) {
-    try {
-      return JSON.parse(jsonText);
-    } catch {
-      return fallback;
+  function alternarMenu() {
+    const aberto = drawer.classList.contains("is-open");
+    if (aberto) {
+      fecharMenu();
+    } else {
+      abrirMenu();
     }
   }
 
-  function cloneData(data) {
-    return safeParse(JSON.stringify(data), APP.defaults);
+  toggle.addEventListener("click", alternarMenu);
+
+  fechar.forEach((item) => {
+    item.addEventListener("click", fecharMenu);
+  });
+
+  if (overlay) {
+    overlay.addEventListener("click", fecharMenu);
   }
 
-  function getStoredData() {
-    const local = localStorage.getItem(APP.storageKeys.data);
-    const parsed = local ? safeParse(local, null) : null;
-    return parsed || cloneData(APP.defaults);
-  }
-
-  function saveData(data) {
-    localStorage.setItem(APP.storageKeys.data, JSON.stringify(data));
-    APP.state.dados = data;
-  }
-
-  function getSession() {
-    const raw = localStorage.getItem(APP.storageKeys.session);
-    return raw ? safeParse(raw, null) : null;
-  }
-
-  function saveSession(session) {
-    localStorage.setItem(APP.storageKeys.session, JSON.stringify(session));
-    APP.state.sessao = session;
-  }
-
-  function clearSession() {
-    localStorage.removeItem(APP.storageKeys.session);
-    APP.state.sessao = null;
-  }
-
-  function clearData() {
-    localStorage.removeItem(APP.storageKeys.data);
-    APP.state.dados = cloneData(APP.defaults);
-  }
-
-  function ensureDataShape(data) {
-    const base = cloneData(APP.defaults);
-    if (!data || typeof data !== "object") return base;
-
-    return {
-      atualizadoEm: data.atualizadoEm || base.atualizadoEm,
-      resumo: {
-        receitaTotal: Number(data?.resumo?.receitaTotal ?? base.resumo.receitaTotal),
-        despesaTotal: Number(data?.resumo?.despesaTotal ?? base.resumo.despesaTotal),
-        saldoTotal: Number(data?.resumo?.saldoTotal ?? base.resumo.saldoTotal),
-        execucaoMedia: Number(data?.resumo?.execucaoMedia ?? base.resumo.execucaoMedia),
-        servidores: Number(data?.resumo?.servidores ?? base.resumo.servidores)
-      },
-      secretarias: Array.isArray(data.secretarias) && data.secretarias.length
-        ? data.secretarias.map((item) => ({
-            nome: item.nome || "Secretaria",
-            receita: Number(item.receita || 0),
-            despesa: Number(item.despesa || 0),
-            saldo: Number(item.saldo ?? (Number(item.receita || 0) - Number(item.despesa || 0))),
-            execucao: Number(item.execucao || 0),
-            risco: item.risco || "Estável"
-          }))
-        : base.secretarias,
-      leituras: {
-        governanca: Array.isArray(data?.leituras?.governanca) ? data.leituras.governanca : base.leituras.governanca,
-        legislativo: Array.isArray(data?.leituras?.legislativo) ? data.leituras.legislativo : base.leituras.legislativo,
-        controle: Array.isArray(data?.leituras?.controle) ? data.leituras.controle : base.leituras.controle,
-        ia: Array.isArray(data?.leituras?.ia) ? data.leituras.ia : base.leituras.ia
-      },
-      parcerias: {
-        institucionais: Array.isArray(data?.parcerias?.institucionais)
-          ? data.parcerias.institucionais
-          : base.parcerias.institucionais,
-        tecnologicas: Array.isArray(data?.parcerias?.tecnologicas)
-          ? data.parcerias.tecnologicas
-          : base.parcerias.tecnologicas
-      }
-    };
-  }
-
-  function recalcResumo(data) {
-    const receitaTotal = data.secretarias.reduce((sum, item) => sum + Number(item.receita || 0), 0);
-    const despesaTotal = data.secretarias.reduce((sum, item) => sum + Number(item.despesa || 0), 0);
-    const saldoTotal = data.secretarias.reduce((sum, item) => sum + Number(item.saldo || 0), 0);
-    const execucaoMedia = data.secretarias.length
-      ? data.secretarias.reduce((sum, item) => sum + Number(item.execucao || 0), 0) / data.secretarias.length
-      : 0;
-
-    data.resumo.receitaTotal = receitaTotal;
-    data.resumo.despesaTotal = despesaTotal;
-    data.resumo.saldoTotal = saldoTotal;
-    data.resumo.execucaoMedia = Number(execucaoMedia.toFixed(1));
-
-    return data;
-  }
-
-  function setText(selector, value) {
-    const el = $(selector);
-    if (el) el.textContent = value;
-  }
-
-  function setHtml(selector, value) {
-    const el = $(selector);
-    if (el) el.innerHTML = value;
-  }
-
-  function buildList(items) {
-    if (!Array.isArray(items) || !items.length) return "";
-    return `<ul class="list-clean">${items.map((item) => `<li>${item}</li>`).join("")}</ul>`;
-  }
-
-  function renderParcerias(data) {
-    setHtml("[data-parcerias-institucionais]", buildList(data.parcerias.institucionais));
-    setHtml("[data-parcerias-tecnologicas]", buildList(data.parcerias.tecnologicas));
-  }
-
-  function renderLeituras(data) {
-    setHtml("[data-leitura-governanca]", buildList(data.leituras.governanca));
-    setHtml("[data-leitura-legislativo]", buildList(data.leituras.legislativo));
-    setHtml("[data-leitura-controle]", buildList(data.leituras.controle));
-    setHtml("[data-leitura-ia]", buildList(data.leituras.ia));
-  }
-
-  function renderResumo(data) {
-    setText("[data-atualizado-em]", data.atualizadoEm || "--/--/----");
-    setText("[data-receita-total]", formatCurrency(data.resumo.receitaTotal));
-    setText("[data-despesa-total]", formatCurrency(data.resumo.despesaTotal));
-    setText("[data-saldo-total]", formatCurrency(data.resumo.saldoTotal));
-    setText("[data-execucao-media]", formatPercent(data.resumo.execucaoMedia, 1));
-    setText("[data-servidores]", String(data.resumo.servidores ?? 0));
-  }
-
-  function buildMonitorCards(secretarias) {
-    return secretarias
-      .map((item) => {
-        const riskClass = normalizeRisk(item.risco);
-        const riskLabel = getRiskLabel(item.risco);
-
-        return `
-          <article class="monitor-card">
-            <h3>${item.nome}</h3>
-            <div class="monitor-card__stats">
-              <div>Receita: <strong>${formatCurrency(item.receita)}</strong></div>
-              <div>Despesa: <strong>${formatCurrency(item.despesa)}</strong></div>
-              <div>Saldo: <strong>${formatCurrency(item.saldo)}</strong></div>
-              <div>Execução: <strong>${formatPercent(item.execucao, 1)}</strong></div>
-            </div>
-            <span class="risk-chip ${riskClass}">${riskLabel}</span>
-          </article>
-        `;
-      })
-      .join("");
-  }
-
-  function buildTableRows(secretarias) {
-    return secretarias
-      .map((item) => `
-        <tr>
-          <td><strong>${item.nome}</strong></td>
-          <td>${formatCurrency(item.receita)}</td>
-          <td>${formatCurrency(item.despesa)}</td>
-          <td>${formatCurrency(item.saldo)}</td>
-          <td>${formatPercent(item.execucao, 1)}</td>
-          <td><span class="risk-chip ${normalizeRisk(item.risco)}">${getRiskLabel(item.risco)}</span></td>
-        </tr>
-      `)
-      .join("");
-  }
-
-  function buildAlerts(secretarias) {
-    const critical = secretarias.filter((item) => Number(item.execucao) >= 100 || Number(item.saldo) < 0);
-
-    if (!critical.length) {
-      return `
-        <article class="alert-card is-success">
-          <strong>Nenhum alerta crítico</strong>
-          <div>Não foi identificado risco alto na leitura atual.</div>
-        </article>
-      `;
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      fecharMenu();
     }
+  });
 
-    return critical
-      .map((item) => {
-        const isNegative = Number(item.saldo) < 0;
-        const isCritical = Number(item.execucao) >= 110 || isNegative;
-        const typeClass = isCritical ? "is-danger" : "is-warning";
+  const linksMenu = drawer.querySelectorAll("a");
+  linksMenu.forEach((link) => {
+    link.addEventListener("click", fecharMenu);
+  });
+}
 
-        return `
-          <article class="alert-card ${typeClass}">
-            <strong>Alerta: ${item.nome}</strong>
-            <div>Execução de ${formatPercent(item.execucao, 1)} e saldo de ${formatCurrency(item.saldo)}.</div>
-          </article>
-        `;
-      })
-      .join("");
-  }
+/* =========================================================
+   LOGIN
+   ========================================================= */
 
-  function buildInsights(secretarias) {
-    const criticas = secretarias.filter((item) => Number(item.execucao) >= 100 || Number(item.saldo) < 0);
-    const estaveis = secretarias.filter((item) => Number(item.saldo) >= 0);
-    const maiorDespesa = [...secretarias].sort((a, b) => b.despesa - a.despesa)[0];
+function iniciarLogin() {
+  const form = document.querySelector("#loginForm");
+  if (!form) return;
 
-    const insights = [];
+  const perfilSelect = document.querySelector("#perfil");
+  const usuarioInput = document.querySelector("#usuario");
+  const senhaInput = document.querySelector("#senha");
+  const statusBox = document.querySelector("#loginStatus");
+  const cancelarBtn = document.querySelector("#cancelarLogin");
 
-    if (criticas.length) {
-      insights.push(
-        `Há ${criticas.length} secretaria(s) com execução crítica, exigindo verificação imediata de empenho, liquidação e saldo orçamentário.`
-      );
-    }
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
 
-    if (estaveis.length) {
-      insights.push(
-        `${estaveis.length} secretaria(s) mantêm saldo positivo, o que favorece planejamento preventivo.`
-      );
-    }
+    const perfil = normalizarPerfil(perfilSelect ? perfilSelect.value : "");
+    const usuario = (usuarioInput ? usuarioInput.value : "").trim();
+    const senha = (senhaInput ? senhaInput.value : "").trim();
 
-    if (maiorDespesa) {
-      insights.push(
-        `${maiorDespesa.nome} lidera a despesa consolidada do período, recomendando monitoramento prioritário.`
-      );
-    }
-
-    insights.push("Sugestão de IA: consolidar relatórios mensais por secretaria e gerar parecer executivo automatizado.");
-
-    return buildList(insights);
-  }
-
-  function renderFilter(secretarias) {
-    const select = $("#filtroSecretaria");
-    if (!select) return;
-
-    const current = select.value || "Todas as Secretarias";
-    const options = [
-      `<option value="Todas as Secretarias">Todas as Secretarias</option>`,
-      ...secretarias.map((item) => `<option value="${item.nome}">${item.nome}</option>`)
-    ];
-
-    select.innerHTML = options.join("");
-    select.value = current;
-  }
-
-  function getFilteredSecretarias(data) {
-    const select = $("#filtroSecretaria");
-    if (!select || !select.value || select.value === "Todas as Secretarias") {
-      return data.secretarias;
-    }
-    return data.secretarias.filter((item) => item.nome === select.value);
-  }
-
-  function renderPanels(data) {
-    const filtered = getFilteredSecretarias(data);
-
-    setHtml("[data-monitoramento-secretarias]", buildMonitorCards(filtered));
-    setHtml("[data-execucao-secretarias]", buildTableRows(filtered));
-    setHtml("[data-alertas]", buildAlerts(filtered));
-    setHtml("[data-insights-ia]", buildInsights(filtered));
-
-    renderCharts(filtered);
-  }
-
-  function destroyCharts() {
-    Object.values(APP.state.charts).forEach((chart) => {
-      if (chart && typeof chart.destroy === "function") {
-        chart.destroy();
-      }
-    });
-    APP.state.charts = {};
-  }
-
-  function chartAvailable() {
-    return typeof window.Chart !== "undefined";
-  }
-
-  function renderCharts(secretarias) {
-    destroyCharts();
-
-    if (!chartAvailable()) {
+    if (!perfil || !usuario || !senha) {
+      mostrarStatusLogin("Preencha perfil, usuário e senha.", "erro");
       return;
     }
 
-    const labels = secretarias.map((item) => item.nome);
-    const receitas = secretarias.map((item) => Number(item.receita || 0));
-    const despesas = secretarias.map((item) => Number(item.despesa || 0));
-    const saldos = secretarias.map((item) => Number(item.saldo || 0));
-    const execucoes = secretarias.map((item) => Number(item.execucao || 0));
+    const credencial = APP_CONFIG.usuariosTeste[perfil];
+    if (!credencial) {
+      mostrarStatusLogin("Perfil não reconhecido.", "erro");
+      return;
+    }
 
-    const stableCount = secretarias.filter((item) => normalizeRisk(item.risco) === "estavel").length;
-    const warnCount = secretarias.filter((item) => normalizeRisk(item.risco) === "atencao").length;
-    const riskCount = secretarias.filter((item) => normalizeRisk(item.risco) === "risco").length;
+    if (senha !== credencial.senha) {
+      mostrarStatusLogin("Senha inválida.", "erro");
+      return;
+    }
 
-    const commonOptions = {
+    salvarSessao({
+      perfil,
+      usuario,
+      perfilNome: credencial.perfilNome,
+      loginEm: new Date().toISOString()
+    });
+
+    mostrarStatusLogin("Acesso liberado. Redirecionando...", "sucesso");
+
+    setTimeout(() => {
+      window.location.href = credencial.destino;
+    }, 500);
+  });
+
+  if (cancelarBtn) {
+    cancelarBtn.addEventListener("click", () => {
+      form.reset();
+      limparStatusLogin();
+    });
+  }
+
+  function mostrarStatusLogin(texto, tipo = "info") {
+    if (!statusBox) return;
+    statusBox.textContent = texto;
+    statusBox.className = `status-box ${tipo}`;
+  }
+
+  function limparStatusLogin() {
+    if (!statusBox) return;
+    statusBox.textContent = "";
+    statusBox.className = "status-box";
+  }
+}
+
+function normalizarPerfil(valor) {
+  const v = String(valor || "").toLowerCase().trim();
+  if (v.includes("execut")) return "executivo";
+  if (v.includes("legis")) return "legislativo";
+  if (v.includes("control")) return "controle";
+  if (v.includes("admin")) return "admin";
+  return v;
+}
+
+function salvarSessao(sessao) {
+  localStorage.setItem(APP_CONFIG.storageKeys.sessao, JSON.stringify(sessao));
+}
+
+function obterSessao() {
+  try {
+    const raw = localStorage.getItem(APP_CONFIG.storageKeys.sessao);
+    return raw ? JSON.parse(raw) : null;
+  } catch (error) {
+    return null;
+  }
+}
+
+function limparSessao() {
+  localStorage.removeItem(APP_CONFIG.storageKeys.sessao);
+}
+
+/* =========================================================
+   ADMIN
+   ========================================================= */
+
+function iniciarAdmin() {
+  const paginaAdmin = document.body.dataset.page === "admin";
+  if (!paginaAdmin) return;
+
+  const btnLimparBase = document.querySelector("#btnLimparBase");
+  const btnLimparSessao = document.querySelector("#btnLimparSessao");
+  const statusNavegador = document.querySelector("#statusNavegador");
+  const estadoBases = document.querySelector("#estadoBases");
+
+  atualizarPainelAdmin();
+
+  if (btnLimparBase) {
+    btnLimparBase.addEventListener("click", () => {
+      localStorage.removeItem(APP_CONFIG.storageKeys.baseDados);
+      atualizarPainelAdmin("Base local removida com sucesso.");
+    });
+  }
+
+  if (btnLimparSessao) {
+    btnLimparSessao.addEventListener("click", () => {
+      limparSessao();
+      atualizarPainelAdmin("Sessão removida com sucesso.");
+    });
+  }
+
+  function atualizarPainelAdmin(mensagem = "") {
+    if (statusNavegador) {
+      statusNavegador.innerHTML = `
+        <strong>armazenamento local</strong><br>
+        ${suportaStorage() ? "ativo" : "indisponível"}<br>
+        Sessão e bases podem ser validadas localmente.
+      `;
+    }
+
+    const base = obterBaseDados();
+    const sessao = obterSessao();
+
+    if (estadoBases) {
+      estadoBases.innerHTML = `
+        <div class="status-item"><strong>Receitas locais:</strong> ${base ? "ativo" : "inativo"}</div>
+        <div class="status-item"><strong>Despesas locais:</strong> ${base ? "ativo" : "inativo"}</div>
+        <div class="status-item"><strong>Servidores locais:</strong> ${base ? "ativo" : "inativo"}</div>
+        <div class="status-item"><strong>Sessão ativa:</strong> ${sessao ? "ativo" : "inativo"}</div>
+        ${mensagem ? `<div class="status-feedback">${mensagem}</div>` : ""}
+      `;
+    }
+  }
+}
+
+function suportaStorage() {
+  try {
+    const teste = "__evbmt_teste__";
+    localStorage.setItem(teste, "ok");
+    localStorage.removeItem(teste);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+/* =========================================================
+   BASE DE DADOS
+   ========================================================= */
+
+function obterBaseDados() {
+  try {
+    const raw = localStorage.getItem(APP_CONFIG.storageKeys.baseDados);
+    if (raw) return JSON.parse(raw);
+  } catch (error) {
+    console.warn("Falha ao ler base local. Usando base padrão.");
+  }
+  return BASE_PADRAO;
+}
+
+function salvarBaseDados(base) {
+  localStorage.setItem(APP_CONFIG.storageKeys.baseDados, JSON.stringify(base));
+}
+
+function calcularResumo(base) {
+  const totalReceita = base.secretarias.reduce((acc, item) => acc + item.receita, 0);
+  const totalDespesa = base.secretarias.reduce((acc, item) => acc + item.despesa, 0);
+  const totalServidores = base.secretarias.reduce((acc, item) => acc + item.servidores, 0);
+  const saldo = totalReceita - totalDespesa;
+
+  const mediaExecucao =
+    base.secretarias.length > 0
+      ? base.secretarias.reduce((acc, item) => acc + calcularExecucao(item), 0) / base.secretarias.length
+      : 0;
+
+  return {
+    totalReceita,
+    totalDespesa,
+    totalServidores,
+    saldo,
+    mediaExecucao
+  };
+}
+
+function calcularExecucao(item) {
+  if (!item.receita || item.receita <= 0) return 0;
+  return (item.despesa / item.receita) * 100;
+}
+
+function classificarRisco(item) {
+  const execucao = calcularExecucao(item);
+  const saldo = item.receita - item.despesa;
+
+  if (execucao > 100 || saldo < 0) return "Risco alto";
+  if (execucao >= 90) return "Atenção";
+  return "Estável";
+}
+
+function obterCorRisco(status) {
+  if (status === "Risco alto") return "#ff5c5c";
+  if (status === "Atenção") return "#f3c64f";
+  return "#35e06f";
+}
+
+/* =========================================================
+   CARREGAMENTO POR PÁGINA
+   ========================================================= */
+
+function carregarPainelPagina() {
+  const page = document.body.dataset.page;
+  if (!page) return;
+
+  const base = obterBaseDados();
+  const resumo = calcularResumo(base);
+  const sessao = obterSessao();
+
+  preencherCabecalhoSessao(page, sessao);
+
+  if (page === "executivo") {
+    renderExecutivo(base, resumo);
+  }
+
+  if (page === "legislativo") {
+    renderLegislativo(base, resumo);
+  }
+
+  if (page === "controle") {
+    renderControle(base, resumo);
+  }
+
+  if (page === "home") {
+    renderHome(base, resumo);
+  }
+}
+
+function preencherCabecalhoSessao(page, sessao) {
+  const elUsuario = document.querySelector("[data-sessao-usuario]");
+  const elPerfil = document.querySelector("[data-sessao-perfil]");
+
+  if (elUsuario) {
+    elUsuario.textContent = sessao?.usuario || "Visitante";
+  }
+
+  if (elPerfil) {
+    if (page === "executivo") elPerfil.textContent = sessao?.perfilNome || "Prefeito / Executivo";
+    if (page === "legislativo") elPerfil.textContent = sessao?.perfilNome || "Vereador / Legislativo";
+    if (page === "controle") elPerfil.textContent = sessao?.perfilNome || "Controle / Órgãos de Controle";
+    if (page === "admin") elPerfil.textContent = "Administração local";
+  }
+}
+
+/* =========================================================
+   RENDER HOME
+   ========================================================= */
+
+function renderHome(base, resumo) {
+  preencherTexto("#homeReceitaTotal", moeda(resumo.totalReceita));
+  preencherTexto("#homeDespesaTotal", moeda(resumo.totalDespesa));
+  preencherTexto("#homeSaldoTotal", moeda(resumo.saldo));
+  preencherTexto("#homeExecucaoMedia", percentual(resumo.mediaExecucao));
+  renderMonitoramentoSecretarias("#monitoramentoSecretarias", base.secretarias);
+  renderParcerias("#listaParceriasInstitucionais", base.parceriasInstitucionais);
+  renderParcerias("#listaParceriasTecnologicas", base.parceriasTecnologicas);
+  renderGraficos(base.secretarias);
+}
+
+/* =========================================================
+   RENDER EXECUTIVO
+   ========================================================= */
+
+function renderExecutivo(base, resumo) {
+  preencherTexto("#executivoAtualizadoEm", formatarData(base.atualizadoEm));
+  preencherTexto("#executivoReceitaTotal", moeda(resumo.totalReceita));
+  preencherTexto("#executivoDespesaTotal", moeda(resumo.totalDespesa));
+  preencherTexto("#executivoSaldoTotal", moeda(resumo.saldo));
+  preencherTexto("#executivoServidores", String(resumo.totalServidores));
+
+  const filtro = document.querySelector("#filtroSecretaria");
+  const tabela = document.querySelector("#tabelaExecutivoBody");
+  const alertas = document.querySelector("#executivoAlertas");
+  const resumoBox = document.querySelector("#executivoResumo");
+  const insights = document.querySelector("#executivoInsights");
+  const exportarBtn = document.querySelector("#btnExportarRelatorio");
+  const uploadJson = document.querySelector("#uploadJson");
+
+  if (filtro) {
+    popularFiltroSecretarias(filtro, base.secretarias);
+    filtro.addEventListener("change", () => {
+      atualizarPainelExecutivo(base.secretarias, filtro.value);
+    });
+  }
+
+  if (uploadJson) {
+    uploadJson.addEventListener("change", (event) => {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const json = JSON.parse(String(e.target?.result || "{}"));
+          if (!json.secretarias || !Array.isArray(json.secretarias)) {
+            alert("Arquivo JSON inválido.");
+            return;
+          }
+          salvarBaseDados(json);
+          location.reload();
+        } catch (error) {
+          alert("Não foi possível ler o JSON.");
+        }
+      };
+      reader.readAsText(file, "utf-8");
+    });
+  }
+
+  if (exportarBtn) {
+    exportarBtn.addEventListener("click", () => window.print());
+  }
+
+  atualizarPainelExecutivo(base.secretarias, "todas");
+
+  function atualizarPainelExecutivo(secretarias, filtroNome) {
+    const lista =
+      filtroNome && filtroNome !== "todas"
+        ? secretarias.filter((item) => item.nome === filtroNome)
+        : secretarias;
+
+    if (tabela) {
+      tabela.innerHTML = lista
+        .map((item) => {
+          const saldo = item.receita - item.despesa;
+          return `
+            <tr>
+              <td>${item.nome}</td>
+              <td>${moeda(item.receita)}</td>
+              <td>${moeda(item.despesa)}</td>
+              <td>${moeda(saldo)}</td>
+              <td>${percentual(calcularExecucao(item))}</td>
+            </tr>
+          `;
+        })
+        .join("");
+    }
+
+    if (alertas) {
+      const itensCriticos = lista.filter((item) => classificarRisco(item) !== "Estável");
+      alertas.innerHTML =
+        itensCriticos.length > 0
+          ? itensCriticos
+              .map((item) => {
+                const saldo = item.receita - item.despesa;
+                return `<div class="alert-item">Alerta: ${item.nome} com execução de ${percentual(calcularExecucao(item))} e saldo de ${moeda(saldo)}.</div>`;
+              })
+              .join("")
+          : `<div class="alert-item ok">Nenhum alerta crítico foi identificado na leitura atual.</div>`;
+    }
+
+    if (resumoBox) {
+      const listaResumo = calcularResumo({ secretarias: lista });
+      const criticos = lista.filter((item) => classificarRisco(item) === "Risco alto").length;
+      resumoBox.innerHTML = `
+        <strong>Execução geral:</strong> ${percentual(listaResumo.mediaExecucao)}<br>
+        <strong>Receita consolidada:</strong> ${moeda(listaResumo.totalReceita)}<br>
+        <strong>Despesa consolidada:</strong> ${moeda(listaResumo.totalDespesa)}<br>
+        <strong>Saldo apurado:</strong> ${moeda(listaResumo.saldo)}<br>
+        <strong>Secretarias críticas:</strong> ${criticos}
+      `;
+    }
+
+    if (insights) {
+      const criticos = lista.filter((item) => classificarRisco(item) === "Risco alto");
+      const positivos = lista.filter((item) => item.receita - item.despesa > 0);
+      insights.innerHTML = `
+        <p>Há ${criticos.length} secretaria(s) com execução crítica, exigindo verificação imediata de empenho, liquidação e saldo orçamentário.</p>
+        <p>${positivos.length} secretaria(s) mantêm saldo positivo, o que favorece planejamento preventivo.</p>
+        <p>Sugestão de IA: consolidar relatórios mensais por secretaria e gerar parecer executivo automatizado.</p>
+      `;
+    }
+  }
+}
+
+/* =========================================================
+   RENDER LEGISLATIVO
+   ========================================================= */
+
+function renderLegislativo(base, resumo) {
+  preencherTexto("#legAtualizadoEm", formatarData(base.atualizadoEm));
+  preencherTexto("#legExecucaoMedia", percentual(resumo.mediaExecucao));
+  preencherTexto("#legDespesaEmpenhada", moeda(resumo.totalDespesa));
+  preencherTexto("#legSaldoApurado", moeda(resumo.saldo));
+
+  const container = document.querySelector("#legTemasFiscalizacao");
+  if (container) {
+    container.innerHTML = base.secretarias
+      .map((item) => {
+        const risco = classificarRisco(item);
+        return `
+          <article class="monitor-card">
+            <h3>${item.nome}</h3>
+            <p><strong>Receita:</strong> ${moeda(item.receita)}</p>
+            <p><strong>Despesa:</strong> ${moeda(item.despesa)}</p>
+            <p><strong>Saldo:</strong> ${moeda(item.receita - item.despesa)}</p>
+            <p><strong>Execução:</strong> ${percentual(calcularExecucao(item))}</p>
+            <span class="status-pill" style="border-color:${obterCorRisco(risco)};color:${obterCorRisco(risco)}">${risco}</span>
+          </article>
+        `;
+      })
+      .join("");
+  }
+}
+
+/* =========================================================
+   RENDER CONTROLE
+   ========================================================= */
+
+function renderControle(base) {
+  preencherTexto("#controleAtualizadoEm", formatarData(base.atualizadoEm));
+
+  const riscos = document.querySelector("#controleRiscos");
+  const conformidade = document.querySelector("#controleConformidade");
+
+  if (riscos) {
+    const lista = base.secretarias
+      .filter((item) => classificarRisco(item) !== "Estável")
+      .map((item) => {
+        return `<li>${item.nome}: execução ${percentual(calcularExecucao(item))} e saldo ${moeda(item.receita - item.despesa)}.</li>`;
+      });
+
+    riscos.innerHTML = lista.length
+      ? `<ul>${lista.join("")}</ul>`
+      : `<p>Nenhum risco crítico identificado.</p>`;
+  }
+
+  if (conformidade) {
+    conformidade.innerHTML = `
+      <ul>
+        <li>Base pronta para auditoria preventiva.</li>
+        <li>Leitura consolidada por secretaria.</li>
+        <li>Estrutura inicial compatível com Portal da Transparência, TCE-MT e TCU.</li>
+        <li>Ponto de expansão para API oficial e trilha de evidências.</li>
+      </ul>
+    `;
+  }
+}
+
+/* =========================================================
+   COMPONENTES AUXILIARES
+   ========================================================= */
+
+function renderMonitoramentoSecretarias(selector, secretarias) {
+  const container = document.querySelector(selector);
+  if (!container) return;
+
+  container.innerHTML = secretarias
+    .map((item) => {
+      const risco = classificarRisco(item);
+      return `
+        <article class="monitor-card">
+          <h3>${item.nome}</h3>
+          <p>Receita: <strong>${moeda(item.receita)}</strong></p>
+          <p>Despesa: <strong>${moeda(item.despesa)}</strong></p>
+          <p>Saldo: <strong>${moeda(item.receita - item.despesa)}</strong></p>
+          <p>Execução: <strong>${percentual(calcularExecucao(item))}</strong></p>
+          <span class="status-pill" style="border-color:${obterCorRisco(risco)};color:${obterCorRisco(risco)}">${risco}</span>
+        </article>
+      `;
+    })
+    .join("");
+}
+
+function renderParcerias(selector, lista) {
+  const container = document.querySelector(selector);
+  if (!container) return;
+
+  container.innerHTML = `
+    <ul>
+      ${lista.map((item) => `<li>${item}</li>`).join("")}
+    </ul>
+  `;
+}
+
+function popularFiltroSecretarias(select, secretarias) {
+  select.innerHTML = `
+    <option value="todas">Todas as Secretarias</option>
+    ${secretarias.map((item) => `<option value="${item.nome}">${item.nome}</option>`).join("")}
+  `;
+}
+
+function preencherTexto(selector, valor) {
+  const el = document.querySelector(selector);
+  if (el) el.textContent = valor;
+}
+
+function iniciarRodapeAno() {
+  const els = document.querySelectorAll("[data-ano-atual]");
+  const ano = new Date().getFullYear();
+  els.forEach((el) => {
+    el.textContent = String(ano);
+  });
+}
+
+function moeda(valor) {
+  return Number(valor || 0).toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL"
+  });
+}
+
+function percentual(valor) {
+  return `${Number(valor || 0).toLocaleString("pt-BR", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1
+  })}%`;
+}
+
+function formatarData(dataIso) {
+  if (!dataIso) return "--/--/----";
+  const data = new Date(dataIso);
+  if (Number.isNaN(data.getTime())) return dataIso;
+  return data.toLocaleDateString("pt-BR");
+}
+
+/* =========================================================
+   GRÁFICOS (CHART.JS)
+   ========================================================= */
+
+function renderGraficos(secretarias) {
+  if (typeof Chart === "undefined") return;
+
+  criarGraficoReceitaDespesa(secretarias);
+  criarGraficoSaldo(secretarias);
+  criarGraficoExecucao(secretarias);
+  criarGraficoRisco(secretarias);
+}
+
+function destruirGrafico(idCanvas) {
+  const chart = Chart.getChart(idCanvas);
+  if (chart) chart.destroy();
+}
+
+function criarGraficoReceitaDespesa(secretarias) {
+  const canvas = document.getElementById("chartReceitaDespesa");
+  if (!canvas) return;
+
+  destruirGrafico("chartReceitaDespesa");
+
+  new Chart(canvas, {
+    type: "bar",
+    data: {
+      labels: secretarias.map((item) => item.nome),
+      datasets: [
+        {
+          label: "Receita",
+          data: secretarias.map((item) => item.receita),
+          backgroundColor: "#28c7fa"
+        },
+        {
+          label: "Despesa",
+          data: secretarias.map((item) => item.despesa),
+          backgroundColor: "#c0392b"
+        }
+      ]
+    },
+    options: opcoesPadraoGrafico()
+  });
+}
+
+function criarGraficoSaldo(secretarias) {
+  const canvas = document.getElementById("chartSaldo");
+  if (!canvas) return;
+
+  destruirGrafico("chartSaldo");
+
+  new Chart(canvas, {
+    type: "line",
+    data: {
+      labels: secretarias.map((item) => item.nome),
+      datasets: [
+        {
+          label: "Saldo",
+          data: secretarias.map((item) => item.receita - item.despesa),
+          borderColor: "#52ff7a",
+          backgroundColor: "rgba(82,255,122,0.15)",
+          fill: true,
+          tension: 0.35
+        }
+      ]
+    },
+    options: opcoesPadraoGrafico()
+  });
+}
+
+function criarGraficoExecucao(secretarias) {
+  const canvas = document.getElementById("chartExecucao");
+  if (!canvas) return;
+
+  destruirGrafico("chartExecucao");
+
+  new Chart(canvas, {
+    type: "bar",
+    data: {
+      labels: secretarias.map((item) => item.nome),
+      datasets: [
+        {
+          label: "Execução (%)",
+          data: secretarias.map((item) => Number(calcularExecucao(item).toFixed(1))),
+          backgroundColor: secretarias.map((item) => {
+            const risco = classificarRisco(item);
+            if (risco === "Risco alto") return "#e74c3c";
+            if (risco === "Atenção") return "#f1c40f";
+            return "#2ecc71";
+          })
+        }
+      ]
+    },
+    options: opcoesPadraoGrafico()
+  });
+}
+
+function criarGraficoRisco(secretarias) {
+  const canvas = document.getElementById("chartRisco");
+  if (!canvas) return;
+
+  destruirGrafico("chartRisco");
+
+  const estavel = secretarias.filter((item) => classificarRisco(item) === "Estável").length;
+  const atencao = secretarias.filter((item) => classificarRisco(item) === "Atenção").length;
+  const riscoAlto = secretarias.filter((item) => classificarRisco(item) === "Risco alto").length;
+
+  new Chart(canvas, {
+    type: "doughnut",
+    data: {
+      labels: ["Estável", "Atenção", "Risco alto"],
+      datasets: [
+        {
+          data: [estavel, atencao, riscoAlto],
+          backgroundColor: ["#2ecc71", "#f1c40f", "#e74c3c"],
+          borderWidth: 0
+        }
+      ]
+    },
+    options: {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
         legend: {
           labels: {
-            color: "#f3f7ff"
+            color: "#eaf2ff"
           }
         }
+      }
+    }
+  });
+}
+
+function opcoesPadraoGrafico() {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        ticks: { color: "#dbe7ff" },
+        grid: { color: "rgba(255,255,255,0.08)" }
       },
-      scales: {
-        x: {
-          ticks: { color: "#d7e3ff" },
-          grid: { color: "rgba(255,255,255,0.06)" }
-        },
-        y: {
-          ticks: { color: "#d7e3ff" },
-          grid: { color: "rgba(255,255,255,0.06)" }
+      y: {
+        ticks: { color: "#dbe7ff" },
+        grid: { color: "rgba(255,255,255,0.08)" }
+      }
+    },
+    plugins: {
+      legend: {
+        labels: {
+          color: "#eaf2ff"
         }
       }
-    };
-
-    const ctxReceitaDespesa = $("#chartReceitaDespesa");
-    if (ctxReceitaDespesa) {
-      APP.state.charts.receitaDespesa = new Chart(ctxReceitaDespesa, {
-        type: "bar",
-        data: {
-          labels,
-          datasets: [
-            {
-              label: "Receita",
-              data: receitas,
-              backgroundColor: "rgba(84, 199, 255, 0.75)",
-              borderColor: "rgba(84, 199, 255, 1)",
-              borderWidth: 1
-            },
-            {
-              label: "Despesa",
-              data: despesas,
-              backgroundColor: "rgba(179, 15, 15, 0.75)",
-              borderColor: "rgba(226, 64, 64, 1)",
-              borderWidth: 1
-            }
-          ]
-        },
-        options: commonOptions
-      });
     }
-
-    const ctxSaldo = $("#chartSaldo");
-    if (ctxSaldo) {
-      APP.state.charts.saldo = new Chart(ctxSaldo, {
-        type: "line",
-        data: {
-          labels,
-          datasets: [
-            {
-              label: "Saldo",
-              data: saldos,
-              borderColor: "#39ff5a",
-              backgroundColor: "rgba(57, 255, 90, 0.18)",
-              fill: true,
-              tension: 0.3
-            }
-          ]
-        },
-        options: commonOptions
-      });
-    }
-
-    const ctxExecucao = $("#chartExecucao");
-    if (ctxExecucao) {
-      APP.state.charts.execucao = new Chart(ctxExecucao, {
-        type: "bar",
-        data: {
-          labels,
-          datasets: [
-            {
-              label: "Execução (%)",
-              data: execucoes,
-              backgroundColor: execucoes.map((value) => {
-                if (value >= 110) return "rgba(226, 64, 64, 0.8)";
-                if (value >= 95) return "rgba(216, 184, 71, 0.85)";
-                return "rgba(57, 255, 90, 0.75)";
-              }),
-              borderWidth: 1
-            }
-          ]
-        },
-        options: commonOptions
-      });
-    }
-
-    const ctxRisco = $("#chartRisco");
-    if (ctxRisco) {
-      APP.state.charts.risco = new Chart(ctxRisco, {
-        type: "doughnut",
-        data: {
-          labels: ["Estável", "Atenção", "Risco alto"],
-          datasets: [
-            {
-              data: [stableCount, warnCount, riskCount],
-              backgroundColor: [
-                "rgba(57, 255, 90, 0.75)",
-                "rgba(216, 184, 71, 0.85)",
-                "rgba(226, 64, 64, 0.85)"
-              ],
-              borderColor: "rgba(3,17,43,0.95)",
-              borderWidth: 2
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              labels: {
-                color: "#f3f7ff"
-              }
-            }
-          }
-        }
-      });
-    }
-  }
-
-  function renderAdminStatus() {
-    const data = APP.state.dados || getStoredData();
-    const session = APP.state.sessao || getSession();
-
-    const statusReceitas = data?.resumo?.receitaTotal ? "ativo" : "inativo";
-    const statusDespesas = data?.resumo?.despesaTotal ? "ativo" : "inativo";
-    const statusServidores = Number.isFinite(Number(data?.resumo?.servidores)) ? "ativo" : "inativo";
-    const statusSessao = session ? "ativo" : "inativo";
-
-    const target = $("[data-admin-status]");
-    if (!target) return;
-
-    target.innerHTML = `
-      <div class="status-stack">
-        <article class="status-card">
-          <strong>Receitas locais:</strong> ${statusReceitas}
-        </article>
-        <article class="status-card">
-          <strong>Despesas locais:</strong> ${statusDespesas}
-        </article>
-        <article class="status-card">
-          <strong>Servidores locais:</strong> ${statusServidores}
-        </article>
-        <article class="status-card">
-          <strong>Sessão ativa:</strong> ${statusSessao}
-        </article>
-      </div>
-    `;
-  }
-
-  function renderSessionIdentity() {
-    const session = APP.state.sessao || getSession();
-    const target = $("[data-session-label]");
-
-    if (!target) return;
-
-    if (!session) {
-      target.textContent = "Acesso institucional";
-      return;
-    }
-
-    target.textContent = `${session.usuario} • ${session.perfil}`;
-  }
-
-  function getPanelRouteByPerfil(perfil) {
-    const value = String(perfil || "").toLowerCase();
-
-    if (value.includes("legisl")) return "legislativo.html";
-    if (value.includes("control")) return "controle.html";
-    if (value.includes("admin")) return "admin.html";
-    return "executivo.html";
-  }
-
-  function handleLoginSubmit(event) {
-    event.preventDefault();
-
-    const perfil = $("#perfil");
-    const usuario = $("#usuario");
-    const senha = $("#senha");
-
-    const perfilValue = perfil ? perfil.value : "Prefeito / Executivo";
-    const usuarioValue = usuario ? usuario.value.trim() : "";
-    const senhaValue = senha ? senha.value.trim() : "";
-
-    if (!usuarioValue || !senhaValue) {
-      window.alert("Preencha usuário e senha.");
-      return;
-    }
-
-    if (senhaValue !== "1234") {
-      window.alert("Senha de teste inválida. Use 1234.");
-      return;
-    }
-
-    const session = {
-      perfil: perfilValue,
-      usuario: usuarioValue,
-      loginEm: new Date().toISOString()
-    };
-
-    saveSession(session);
-    window.location.href = getPanelRouteByPerfil(perfilValue);
-  }
-
-  function handleLogout(event) {
-    if (event) event.preventDefault();
-    clearSession();
-    window.location.href = "login.html";
-  }
-
-  function handleImportData(event) {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = function (loadEvent) {
-      const content = String(loadEvent.target?.result || "");
-      const parsed = safeParse(content, null);
-
-      if (!parsed) {
-        window.alert("Arquivo JSON inválido.");
-        event.target.value = "";
-        return;
+  };
       }
-
-      const shaped = recalcResumo(ensureDataShape(parsed));
-      saveData(shaped);
-      renderAll();
-      window.alert("Base local atualizada com sucesso.");
-      event.target.value = "";
-    };
-    reader.readAsText(file, "utf-8");
-  }
-
-  function exportData() {
-    const data = APP.state.dados || getStoredData();
-    const json = JSON.stringify(data, null, 2);
-    const blob = new Blob([json], { type: "application/json;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "executivo-vilabela-mt-dados.json";
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    URL.revokeObjectURL(url);
-  }
-
-  function exportPrint() {
-    window.print();
-  }
-
-  function bindMenu() {
-    const toggle = $(".menu-toggle");
-    const nav = $(".main-nav");
-
-    if (!toggle || !nav) return;
-
-    toggle.addEventListener("click", function () {
-      const open = nav.classList.toggle("is-open");
-      toggle.classList.toggle("is-open", open);
-      toggle.setAttribute("aria-expanded", String(open));
-    });
-
-    $all(".main-nav a, .main-nav button", nav).forEach((item) => {
-      item.addEventListener("click", function () {
-        nav.classList.remove("is-open");
-        toggle.classList.remove("is-open");
-        toggle.setAttribute("aria-expanded", "false");
-      });
-    });
-  }
-
-  function bindLogin() {
-    const form = $("#loginForm");
-    if (form) {
-      form.addEventListener("submit", handleLoginSubmit);
-    }
-
-    const cancel = $("[data-login-cancel]");
-    if (cancel) {
-      cancel.addEventListener("click", function () {
-        window.location.href = "index.html";
-      });
-    }
-  }
-
-  function bindAdmin() {
-    const inputFile = $("#inputJsonDados");
-    if (inputFile) {
-      inputFile.addEventListener("change", handleImportData);
-    }
-
-    const btnExport = $("[data-export-json]");
-    if (btnExport) {
-      btnExport.addEventListener("click", exportData);
-    }
-
-    const btnPrint = $("[data-export-print]");
-    if (btnPrint) {
-      btnPrint.addEventListener("click", exportPrint);
-    }
-
-    const btnClearData = $("[data-clear-data]");
-    if (btnClearData) {
-      btnClearData.addEventListener("click", function () {
-        const ok = window.confirm("Deseja limpar a base local?");
-        if (!ok) return;
-        clearData();
-        saveData(recalcResumo(ensureDataShape(APP.state.dados)));
-        renderAll();
-      });
-    }
-
-    const btnClearSession = $("[data-clear-session]");
-    if (btnClearSession) {
-      btnClearSession.addEventListener("click", function () {
-        const ok = window.confirm("Deseja limpar a sessão local?");
-        if (!ok) return;
-        clearSession();
-        renderAll();
-      });
-    }
-  }
-
-  function bindGlobalActions() {
-    $all("[data-logout]").forEach((btn) => {
-      btn.addEventListener("click", handleLogout);
-    });
-
-    $all("[data-export-relatorio]").forEach((btn) => {
-      btn.addEventListener("click", exportPrint);
-    });
-
-    const filtro = $("#filtroSecretaria");
-    if (filtro) {
-      filtro.addEventListener("change", function () {
-        renderPanels(APP.state.dados);
-      });
-    }
-  }
-
-  function requireSessionIfNeeded() {
-    const body = document.body;
-    if (!body) return;
-
-    const requiresSession = body.hasAttribute("data-require-session");
-    if (!requiresSession) return;
-
-    const session = APP.state.sessao || getSession();
-    if (!session) {
-      window.location.href = "login.html";
-    }
-  }
-
-  function markActiveMenu() {
-    const page = (location.pathname.split("/").pop() || "index.html").toLowerCase();
-
-    $all("[data-nav]").forEach((item) => {
-      const target = String(item.getAttribute("data-nav") || "").toLowerCase();
-      if (
-        (page === "" && target === "index.html") ||
-        target === page
-      ) {
-        item.classList.add("is-active");
-      } else {
-        item.classList.remove("is-active");
-      }
-    });
-  }
-
-  function renderAll() {
-    APP.state.dados = recalcResumo(ensureDataShape(getStoredData()));
-    APP.state.sessao = getSession();
-
-    renderSessionIdentity();
-    renderResumo(APP.state.dados);
-    renderLeituras(APP.state.dados);
-    renderParcerias(APP.state.dados);
-    renderFilter(APP.state.dados.secretarias);
-    renderPanels(APP.state.dados);
-    renderAdminStatus();
-    markActiveMenu();
-  }
-
-  function init() {
-    APP.state.dados = recalcResumo(ensureDataShape(getStoredData()));
-    APP.state.sessao = getSession();
-
-    requireSessionIfNeeded();
-    bindMenu();
-    bindLogin();
-    bindAdmin();
-    bindGlobalActions();
-    renderAll();
-  }
-
-  document.addEventListener("DOMContentLoaded", init);
-})();
