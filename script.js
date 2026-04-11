@@ -1,14 +1,12 @@
 (function () {
   "use strict";
 
-  const menuToggle = document.getElementById("menuToggle");
-  const mobileMenu = document.getElementById("mobileMenu");
-
-  if (menuToggle && mobileMenu) {
-    menuToggle.addEventListener("click", () => {
-      mobileMenu.classList.toggle("open");
-    });
-  }
+  const STORAGE_KEYS = {
+    session: "executivoSession",
+    dataA: "executivoRealData",
+    dataB: "dadosExecutivo",
+    dataC: "executivo_vilabela_dados"
+  };
 
   const fallbackData = {
     atualizadoEm: "2026-01-31",
@@ -26,36 +24,28 @@
     ]
   };
 
-  function loadRealData() {
-    try {
-      const raw =
-        localStorage.getItem("executivoRealData") ||
-        localStorage.getItem("dadosExecutivo") ||
-        localStorage.getItem("executivo_vilabela_dados");
+  let charts = [];
 
-      if (!raw) return fallbackData;
-
-      const parsed = JSON.parse(raw);
-
-      if (!parsed || !Array.isArray(parsed.secretarias)) {
-        return fallbackData;
-      }
-
-      return parsed;
-    } catch (error) {
-      console.error("Falha ao ler dados locais:", error);
-      return fallbackData;
-    }
+  function qs(selector) {
+    return document.querySelector(selector);
   }
 
-  function currencyBRL(value) {
+  function byId(id) {
+    return document.getElementById(id);
+  }
+
+  function getPage() {
+    return document.body.dataset.page || "";
+  }
+
+  function formatCurrency(value) {
     return Number(value || 0).toLocaleString("pt-BR", {
       style: "currency",
       currency: "BRL"
     });
   }
 
-  function percentBR(value) {
+  function formatPercent(value) {
     return `${Number(value || 0).toLocaleString("pt-BR", {
       minimumFractionDigits: 1,
       maximumFractionDigits: 1
@@ -63,7 +53,7 @@
   }
 
   function sum(items, field) {
-    return items.reduce((acc, item) => acc + Number(item[field] || 0), 0);
+    return items.reduce((total, item) => total + Number(item[field] || 0), 0);
   }
 
   function average(items, field) {
@@ -86,26 +76,95 @@
     return "Estável";
   }
 
+  function loadData() {
+    try {
+      const raw =
+        localStorage.getItem(STORAGE_KEYS.dataA) ||
+        localStorage.getItem(STORAGE_KEYS.dataB) ||
+        localStorage.getItem(STORAGE_KEYS.dataC);
+
+      if (!raw) return fallbackData;
+
+      const parsed = JSON.parse(raw);
+
+      if (!parsed || !Array.isArray(parsed.secretarias)) {
+        return fallbackData;
+      }
+
+      return parsed;
+    } catch (error) {
+      console.error("Erro ao carregar dados:", error);
+      return fallbackData;
+    }
+  }
+
+  function getSession() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEYS.session);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function setSession(session) {
+    localStorage.setItem(STORAGE_KEYS.session, JSON.stringify(session));
+  }
+
+  function clearSession() {
+    localStorage.removeItem(STORAGE_KEYS.session);
+  }
+
+  function clearData() {
+    localStorage.removeItem(STORAGE_KEYS.dataA);
+    localStorage.removeItem(STORAGE_KEYS.dataB);
+    localStorage.removeItem(STORAGE_KEYS.dataC);
+  }
+
+  function initMenu() {
+    const menuToggle = byId("menuToggle");
+    const mobileMenu = byId("mobileMenu");
+
+    if (!menuToggle || !mobileMenu) return;
+
+    menuToggle.addEventListener("click", () => {
+      mobileMenu.classList.toggle("open");
+    });
+  }
+
+  function applyPerfilFromQuery() {
+    const perfilEl = byId("perfil");
+    if (!perfilEl) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const perfil = params.get("perfil");
+
+    if (perfil && ["executivo", "legislativo", "controle", "admin"].includes(perfil)) {
+      perfilEl.value = perfil;
+    }
+  }
+
   function updateKPIs(data) {
     const secretarias = data.secretarias || [];
-    const receitaTotal = sum(secretarias, "receita");
-    const despesaTotal = sum(secretarias, "despesa");
-    const saldoTotal = sum(secretarias, "saldo");
-    const execucaoMedia = average(secretarias, "execucao");
+    const receita = sum(secretarias, "receita");
+    const despesa = sum(secretarias, "despesa");
+    const saldo = sum(secretarias, "saldo");
+    const execucao = average(secretarias, "execucao");
 
-    const receitaEl = document.getElementById("kpiReceita");
-    const despesaEl = document.getElementById("kpiDespesa");
-    const saldoEl = document.getElementById("kpiSaldo");
-    const execucaoEl = document.getElementById("kpiExecucao");
+    const receitaEl = byId("kpiReceita");
+    const despesaEl = byId("kpiDespesa");
+    const saldoEl = byId("kpiSaldo");
+    const execucaoEl = byId("kpiExecucao");
 
-    if (receitaEl) receitaEl.textContent = currencyBRL(receitaTotal);
-    if (despesaEl) despesaEl.textContent = currencyBRL(despesaTotal);
-    if (saldoEl) saldoEl.textContent = currencyBRL(saldoTotal);
-    if (execucaoEl) execucaoEl.textContent = percentBR(execucaoMedia);
+    if (receitaEl) receitaEl.textContent = formatCurrency(receita);
+    if (despesaEl) despesaEl.textContent = formatCurrency(despesa);
+    if (saldoEl) saldoEl.textContent = formatCurrency(saldo);
+    if (execucaoEl) execucaoEl.textContent = formatPercent(execucao);
   }
 
   function renderSecretarias(data) {
-    const target = document.getElementById("listaSecretarias");
+    const target = byId("listaSecretarias");
     if (!target) return;
 
     target.innerHTML = "";
@@ -115,23 +174,19 @@
 
       const article = document.createElement("article");
       article.className = "monitor-card";
-
       article.innerHTML = `
         <h4>${item.nome}</h4>
-        <p>Receita: <strong>${currencyBRL(item.receita)}</strong></p>
-        <p>Despesa: <strong>${currencyBRL(item.despesa)}</strong></p>
-        <p>Saldo: <strong>${currencyBRL(item.saldo)}</strong></p>
-        <p>Execução: <strong>${percentBR(item.execucao)}</strong></p>
+        <p>Receita: <strong>${formatCurrency(item.receita)}</strong></p>
+        <p>Despesa: <strong>${formatCurrency(item.despesa)}</strong></p>
+        <p>Saldo: <strong>${formatCurrency(item.saldo)}</strong></p>
+        <p>Execução: <strong>${formatPercent(item.execucao)}</strong></p>
         <div class="status-row">
           <span class="badge ${level}">${riskLabel(level)}</span>
         </div>
       `;
-
       target.appendChild(article);
     });
   }
-
-  let charts = [];
 
   function destroyCharts() {
     charts.forEach((chart) => {
@@ -141,20 +196,17 @@
   }
 
   function createCharts(data) {
-    if (typeof Chart === "undefined") {
-      console.warn("Chart.js não carregado.");
-      return;
-    }
+    if (typeof Chart === "undefined") return;
 
     destroyCharts();
 
-    const labels = data.secretarias.map((s) => s.nome);
-    const receitas = data.secretarias.map((s) => Number(s.receita || 0));
-    const despesas = data.secretarias.map((s) => Number(s.despesa || 0));
-    const saldos = data.secretarias.map((s) => Number(s.saldo || 0));
-    const execucoes = data.secretarias.map((s) => Number(s.execucao || 0));
-    const riscos = data.secretarias.map((s) => {
-      const level = riskLevel(s);
+    const labels = data.secretarias.map((item) => item.nome);
+    const receitas = data.secretarias.map((item) => Number(item.receita || 0));
+    const despesas = data.secretarias.map((item) => Number(item.despesa || 0));
+    const saldos = data.secretarias.map((item) => Number(item.saldo || 0));
+    const execucoes = data.secretarias.map((item) => Number(item.execucao || 0));
+    const riscos = data.secretarias.map((item) => {
+      const level = riskLevel(item);
       if (level === "alert") return 3;
       if (level === "warn") return 2;
       return 1;
@@ -182,9 +234,9 @@
       }
     };
 
-    const receitaDespesaCtx = document.getElementById("chartReceitaDespesa");
-    if (receitaDespesaCtx) {
-      charts.push(new Chart(receitaDespesaCtx, {
+    const c1 = byId("chartReceitaDespesa");
+    if (c1) {
+      charts.push(new Chart(c1, {
         type: "bar",
         data: {
           labels,
@@ -192,7 +244,7 @@
             {
               label: "Receita",
               data: receitas,
-              backgroundColor: "rgba(54, 220, 255, 0.75)",
+              backgroundColor: "rgba(54, 220, 255, 0.78)",
               borderColor: "rgba(54, 220, 255, 1)",
               borderWidth: 1,
               borderRadius: 8
@@ -200,7 +252,7 @@
             {
               label: "Despesa",
               data: despesas,
-              backgroundColor: "rgba(213, 53, 40, 0.78)",
+              backgroundColor: "rgba(213, 53, 40, 0.82)",
               borderColor: "rgba(213, 53, 40, 1)",
               borderWidth: 1,
               borderRadius: 8
@@ -211,9 +263,9 @@
       }));
     }
 
-    const saldoCtx = document.getElementById("chartSaldo");
-    if (saldoCtx) {
-      charts.push(new Chart(saldoCtx, {
+    const c2 = byId("chartSaldo");
+    if (c2) {
+      charts.push(new Chart(c2, {
         type: "line",
         data: {
           labels,
@@ -221,8 +273,8 @@
             {
               label: "Saldo",
               data: saldos,
-              borderColor: "rgba(80, 255, 120, 1)",
-              backgroundColor: "rgba(80, 255, 120, 0.16)",
+              borderColor: "rgba(80,255,120,1)",
+              backgroundColor: "rgba(80,255,120,.16)",
               fill: true,
               tension: 0.35,
               borderWidth: 3,
@@ -235,9 +287,9 @@
       }));
     }
 
-    const execucaoCtx = document.getElementById("chartExecucao");
-    if (execucaoCtx) {
-      charts.push(new Chart(execucaoCtx, {
+    const c3 = byId("chartExecucao");
+    if (c3) {
+      charts.push(new Chart(c3, {
         type: "bar",
         data: {
           labels,
@@ -247,10 +299,10 @@
               data: execucoes,
               backgroundColor: execucoes.map((value) =>
                 value > 110
-                  ? "rgba(255, 98, 84, 0.82)"
+                  ? "rgba(255, 98, 84, 0.85)"
                   : value >= 95
-                  ? "rgba(255, 211, 92, 0.80)"
-                  : "rgba(57, 255, 79, 0.72)"
+                  ? "rgba(255, 211, 92, 0.82)"
+                  : "rgba(57,255,79,.74)"
               ),
               borderWidth: 1,
               borderRadius: 8
@@ -261,35 +313,32 @@
       }));
     }
 
-    const riscoCtx = document.getElementById("chartRisco");
-    if (riscoCtx) {
-      const riscoLabels = ["Estável", "Atenção", "Risco alto"];
+    const c4 = byId("chartRisco");
+    if (c4) {
       const riscoCount = [
         riscos.filter((r) => r === 1).length,
         riscos.filter((r) => r === 2).length,
         riscos.filter((r) => r === 3).length
       ];
 
-      charts.push(new Chart(riscoCtx, {
+      charts.push(new Chart(c4, {
         type: "doughnut",
         data: {
-          labels: riscoLabels,
-          datasets: [
-            {
-              data: riscoCount,
-              backgroundColor: [
-                "rgba(57,255,79,.75)",
-                "rgba(255,211,92,.82)",
-                "rgba(255,98,84,.86)"
-              ],
-              borderColor: [
-                "rgba(57,255,79,1)",
-                "rgba(255,211,92,1)",
-                "rgba(255,98,84,1)"
-              ],
-              borderWidth: 1
-            }
-          ]
+          labels: ["Estável", "Atenção", "Risco alto"],
+          datasets: [{
+            data: riscoCount,
+            backgroundColor: [
+              "rgba(57,255,79,.76)",
+              "rgba(255,211,92,.82)",
+              "rgba(255,98,84,.88)"
+            ],
+            borderColor: [
+              "rgba(57,255,79,1)",
+              "rgba(255,211,92,1)",
+              "rgba(255,98,84,1)"
+            ],
+            borderWidth: 1
+          }]
         },
         options: {
           responsive: true,
@@ -306,12 +355,112 @@
     }
   }
 
-  function init() {
-    const data = loadRealData();
+  function initHome() {
+    const data = loadData();
     updateKPIs(data);
     renderSecretarias(data);
     createCharts(data);
   }
 
-  document.addEventListener("DOMContentLoaded", init);
+  function initLogin() {
+    applyPerfilFromQuery();
+
+    const form = byId("loginForm");
+    const msg = byId("loginMensagem");
+
+    if (!form) return;
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const perfil = byId("perfil").value;
+      const usuario = byId("usuario").value.trim();
+      const senha = byId("senha").value.trim();
+
+      if (!senha) {
+        if (msg) msg.textContent = "Informe a senha.";
+        return;
+      }
+
+      if (senha !== "1234") {
+        if (msg) msg.textContent = "Senha inválida. Use 1234 para testes.";
+        return;
+      }
+
+      const session = {
+        perfil,
+        usuario: usuario || "Usuário",
+        autenticado: true,
+        em: new Date().toISOString()
+      };
+
+      setSession(session);
+
+      if (perfil === "admin") {
+        window.location.href = "admin.html";
+        return;
+      }
+
+      window.location.href = "index.html";
+    });
+  }
+
+  function initAdmin() {
+    const statusGrid = byId("adminStatusGrid");
+    const msg = byId("adminMensagem");
+    const session = getSession();
+
+    if (statusGrid) {
+      const dataA = !!localStorage.getItem(STORAGE_KEYS.dataA);
+      const dataB = !!localStorage.getItem(STORAGE_KEYS.dataB);
+      const dataC = !!localStorage.getItem(STORAGE_KEYS.dataC);
+
+      statusGrid.innerHTML = `
+        <div class="status-item"><strong>Receitas locais:</strong> ${dataA || dataB || dataC ? "ativo" : "inativo"}</div>
+        <div class="status-item"><strong>Despesas locais:</strong> ${dataA || dataB || dataC ? "ativo" : "inativo"}</div>
+        <div class="status-item"><strong>Servidores locais:</strong> ${dataA || dataB || dataC ? "ativo" : "inativo"}</div>
+        <div class="status-item"><strong>Sessão ativa:</strong> ${session ? "ativo" : "inativo"}</div>
+      `;
+    }
+
+    const btnLimparBase = byId("btnLimparBase");
+    const btnLimparSessao = byId("btnLimparSessao");
+    const logoutLink = byId("logoutLink");
+
+    if (btnLimparBase) {
+      btnLimparBase.addEventListener("click", () => {
+        clearData();
+        if (msg) msg.textContent = "Base local removida com sucesso.";
+        setTimeout(() => window.location.reload(), 500);
+      });
+    }
+
+    if (btnLimparSessao) {
+      btnLimparSessao.addEventListener("click", () => {
+        clearSession();
+        if (msg) msg.textContent = "Sessão removida com sucesso.";
+        setTimeout(() => window.location.reload(), 500);
+      });
+    }
+
+    if (logoutLink) {
+      logoutLink.addEventListener("click", (event) => {
+        event.preventDefault();
+        clearSession();
+        window.location.href = "login.html";
+      });
+    }
+  }
+
+  function boot() {
+    initMenu();
+
+    const page = getPage();
+
+    if (page === "home") initHome();
+    if (page === "login") initLogin();
+    if (page === "admin") initAdmin();
+  }
+
+  document.addEventListener("DOMContentLoaded", boot);
 })();
