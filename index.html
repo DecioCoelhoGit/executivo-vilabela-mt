@@ -3,329 +3,393 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>ExecutivoVilaBelaMT — Governança Pública Inteligente</title>
+
   <meta
     name="description"
-    content="Plataforma estratégica para gestão municipal, transparência, planejamento, monitoramento fiscal e apoio com IA em Vila Bela da Santíssima Trindade - MT."
+    content="Plataforma estratégica para integração entre Secretarias, Poder Legislativo e Órgãos de Controle, com monitoramento fiscal, governança visual e apoio institucional por IA."
   />
   <meta name="theme-color" content="#04143a" />
 
-  <meta property="og:title" content="ExecutivoVilaBelaMT" />
-  <meta property="og:description" content="Marco inicial da Governança Pública Inteligente." />
+  <meta property="og:title" content="ExecutivoVilaBelaMT — Governança Pública Inteligente" />
+  <meta
+    property="og:description"
+    content="Marco Inicial da Governança Pública Inteligente em Vila Bela da Santíssima Trindade - MT."
+  />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="pt_BR" />
-  <meta property="og:image" content="https://deciocoelhogit.github.io/executivo-vilabela-mt/assets/og-executivo.jpg" />
+  <meta property="og:image" content="assets/og-executivo.jpg" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet"
   />
 
   <link rel="stylesheet" href="style.css" />
 </head>
 <body data-page="home">
-  <div class="site-bg-glow"></div>
+  <div class="site-shell">
+    <div class="bg-grid"></div>
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
 
-  <header class="topbar topbar--hero">
-    <div class="container topbar__inner">
-      <div class="brand-block">
-        <h1 class="brand-title">ExecutivoVilaBelaMT</h1>
-        <p class="brand-subtitle">Marco Inicial da Governança Pública Inteligente</p>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <div class="brand">
+          <h1 class="brand-title">ExecutivoVilaBelaMT</h1>
+          <p class="brand-subtitle">Marco Inicial da Governança Pública Inteligente</p>
+        </div>
+
+        <button
+          class="menu-toggle"
+          type="button"
+          aria-label="Abrir menu"
+          aria-expanded="false"
+          data-menu-toggle
+        >
+          <span class="bar"></span>
+        </button>
       </div>
 
-      <button
-        class="menu-toggle"
-        type="button"
-        aria-label="Abrir menu"
-        aria-expanded="false"
-        data-menu-toggle
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-    </div>
-  </header>
+      <nav class="main-nav container"></nav>
+    </header>
 
-  <div class="menu-overlay" data-menu-overlay data-menu-close></div>
+    <div class="menu-overlay" data-menu-overlay data-menu-close></div>
 
-  <aside class="menu-drawer" data-menu-drawer>
-    <div class="menu-drawer__head">
-      <strong>Menu institucional</strong>
-      <button class="menu-close" type="button" aria-label="Fechar menu" data-menu-close>×</button>
-    </div>
+    <aside class="menu-drawer" data-menu-drawer data-menu>
+      <p class="menu-title">Navegação institucional</p>
 
-    <nav class="menu-nav">
-      <a href="index.html">Início</a>
-      <a href="login.html">Login</a>
-      <a href="executivo.html">Executivo</a>
-      <a href="legislativo.html">Legislativo</a>
-      <a href="controle.html">Controle</a>
-      <a href="admin.html">Admin</a>
-    </nav>
-  </aside>
+      <div class="menu-grid">
+        <a class="menu-link is-current" href="index.html">Início</a>
+        <a class="menu-link" href="login.html">Login</a>
+        <a class="menu-link" href="executivo.html">Executivo</a>
+        <a class="menu-link" href="legislativo.html">Legislativo</a>
+        <a class="menu-link" href="controle.html">Controle</a>
+        <a class="menu-link" href="admin.html">Admin</a>
+      </div>
+    </aside>
 
-  <main>
-    <section class="hero hero--institutional">
-      <div class="container">
-        <div class="hero-card glass-card">
-          <div class="hero-chip">Vila Bela • 1ª Capital de MT</div>
+    <main class="page-main">
+      <section class="hero-cover">
+        <div class="hero-cover-inner container">
+          <div class="hero-grid">
+            <article class="hero-card hologram-card">
+              <span class="badge gold">Vila Bela • 1ª Capital de MT</span>
 
-          <h2 class="hero-title">
-            Integração entre Secretarias, Legislativo e Controle
-          </h2>
+              <h2 class="hero-title">
+                Integração entre Secretarias, Legislativo e Controle
+              </h2>
 
-          <p class="hero-text">
-            Plataforma estratégica para gestão municipal, transparência,
-            planejamento, monitoramento fiscal e apoio com IA. Estrutura criada
-            para leitura institucional, acompanhamento executivo, fiscalização
-            temática e conformidade preventiva.
-          </p>
+              <p class="hero-text">
+                Plataforma estratégica para gestão municipal, transparência,
+                planejamento, monitoramento fiscal e apoio com IA. Estrutura criada
+                para leitura institucional, acompanhamento executivo, fiscalização
+                temática e conformidade preventiva.
+              </p>
 
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="login.html">Entrar no Sistema</a>
-            <a class="btn btn-secondary" href="#governanca-visual">Ver Governança Visual</a>
+              <div class="hero-actions">
+                <a class="btn btn-primary" href="login.html">Entrar no Sistema</a>
+                <a class="btn btn-secondary" href="#fontes-oficiais">Ver Governança Visual</a>
+              </div>
+            </article>
+
+            <article class="card glass-card">
+              <span class="badge">Visão institucional</span>
+              <h3 class="section-title mt-2">Síntese Estratégica</h3>
+              <p class="section-subtitle">
+                Estrutura pensada para contemplar todas as Secretarias Municipais,
+                entidades correlatas e integrações com Câmara, TCE-MT, TCU e AMM.
+              </p>
+
+              <div class="inline-stats mt-3">
+                <div class="inline-stat">
+                  <div class="label">Receita total</div>
+                  <div class="value" id="homeReceitaTotal">R$ 0,00</div>
+                </div>
+                <div class="inline-stat">
+                  <div class="label">Despesa total</div>
+                  <div class="value" id="homeDespesaTotal">R$ 0,00</div>
+                </div>
+                <div class="inline-stat">
+                  <div class="label">Saldo</div>
+                  <div class="value" id="homeSaldoTotal">R$ 0,00</div>
+                </div>
+                <div class="inline-stat">
+                  <div class="label">Execução média</div>
+                  <div class="value" id="homeExecucaoMedia">0,0%</div>
+                </div>
+              </div>
+            </article>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="section">
-      <div class="container">
-        <h2 class="section-title">Resumo Fiscal do Município</h2>
+      <section class="section">
+        <div class="container">
+          <h2 class="section-title">Resumo Fiscal do Município</h2>
 
-        <div class="kpi-grid">
-          <article class="kpi-card glass-card">
-            <span class="kpi-label">Receita total</span>
-            <strong class="kpi-value" id="homeReceitaTotal">R$ 0,00</strong>
-            <span class="kpi-note">Arrecadação consolidada do período</span>
-          </article>
+          <div class="kpis-grid">
+            <article class="kpi-card">
+              <p class="kpi-label">Receita total</p>
+              <h3 class="kpi-value" id="homeReceitaTotal">R$ 0,00</h3>
+              <p class="kpi-note">Arrecadação consolidada do período</p>
+            </article>
 
-          <article class="kpi-card glass-card">
-            <span class="kpi-label">Despesa paga</span>
-            <strong class="kpi-value" id="homeDespesaTotal">R$ 0,00</strong>
-            <span class="kpi-note">Execução financeira registrada</span>
-          </article>
+            <article class="kpi-card">
+              <p class="kpi-label">Despesa paga</p>
+              <h3 class="kpi-value" id="homeDespesaTotal">R$ 0,00</h3>
+              <p class="kpi-note">Execução financeira registrada</p>
+            </article>
 
-          <article class="kpi-card glass-card">
-            <span class="kpi-label">Saldo apurado</span>
-            <strong class="kpi-value" id="homeSaldoTotal">R$ 0,00</strong>
-            <span class="kpi-note">Resultado do período</span>
-          </article>
+            <article class="kpi-card">
+              <p class="kpi-label">Saldo apurado</p>
+              <h3 class="kpi-value" id="homeSaldoTotal">R$ 0,00</h3>
+              <p class="kpi-note">Resultado do período</p>
+            </article>
 
-          <article class="kpi-card glass-card">
-            <span class="kpi-label">Execução média</span>
-            <strong class="kpi-value" id="homeExecucaoMedia">0,0%</strong>
-            <span class="kpi-note">Leitura média por secretaria</span>
-          </article>
+            <article class="kpi-card">
+              <p class="kpi-label">Execução média</p>
+              <h3 class="kpi-value" id="homeExecucaoMedia">0,0%</h3>
+              <p class="kpi-note">Leitura média por secretaria</p>
+            </article>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="section" id="governanca-visual">
-      <div class="container">
-        <div class="content-grid">
-          <article class="info-card glass-card">
-            <h3>Governança Visual e Inteligência Institucional</h3>
-            <ul>
-              <li>Leitura integrada dos secretários e áreas finalísticas.</li>
-              <li>Resumo executivo com foco em receita, despesa, saldo e risco.</li>
-              <li>Base para decisões orientadas por dados.</li>
-              <li>Compatível com evolução para dados oficiais.</li>
-            </ul>
-          </article>
+      <section class="section">
+        <div class="container">
+          <div class="info-grid">
+            <article class="card glass-card">
+              <span class="badge">Governança visual</span>
+              <h3 class="section-title mt-2">Inteligência Institucional</h3>
+              <ul class="list-clean">
+                <li>Leitura integrada das secretarias e áreas finalísticas.</li>
+                <li>Resumo executivo com foco em receita, despesa, saldo e risco.</li>
+                <li>Base para decisões orientadas por dados.</li>
+                <li>Compatível com evolução para dados oficiais.</li>
+              </ul>
+            </article>
 
-          <article class="info-card glass-card">
-            <h3>Leitura para o Poder Legislativo</h3>
-            <ul>
-              <li>Acompanhamento temático por secretaria.</li>
-              <li>Base para fiscalização, requerimentos e comissões.</li>
-              <li>Identificação de alertas de execução e saldo.</li>
-              <li>Visão consolidada para atividade parlamentar.</li>
-            </ul>
-          </article>
+            <article class="card glass-card">
+              <span class="badge">Legislativo</span>
+              <h3 class="section-title mt-2">Fiscalização Temática</h3>
+              <ul class="list-clean">
+                <li>Acompanhamento por secretaria e área temática.</li>
+                <li>Base para comissões, requerimentos e leitura em plenário.</li>
+                <li>Identificação de alertas de execução e saldo.</li>
+                <li>Visão consolidada para atividade parlamentar.</li>
+              </ul>
+            </article>
 
-          <article class="info-card glass-card">
-            <h3>Conformidade e Controle</h3>
-            <ul>
-              <li>Suporte para auditoria preventiva.</li>
-              <li>Foco em execução crítica, desequilíbrio e risco fiscal.</li>
-              <li>Organização institucional da leitura por órgão.</li>
-              <li>Ponto para expansão com indicadores formais.</li>
-            </ul>
-          </article>
-
-          <article class="info-card glass-card">
-            <h3>IA Generativa Aplicada à Gestão Pública</h3>
-            <ul>
-              <li>Insights automáticos para leitura executiva.</li>
-              <li>Priorização de áreas com maior atenção.</li>
-              <li>Apoio a pareceres, notas e resumos gerenciais.</li>
-              <li>Camada estratégica de interpretação institucional.</li>
-            </ul>
-          </article>
+            <article class="card glass-card">
+              <span class="badge">Controle</span>
+              <h3 class="section-title mt-2">Conformidade Preventiva</h3>
+              <ul class="list-clean">
+                <li>Suporte para auditoria preventiva.</li>
+                <li>Foco em execução crítica, desequilíbrio e risco fiscal.</li>
+                <li>Organização institucional da leitura por órgão.</li>
+                <li>Pronto para evolução com indicadores formais.</li>
+              </ul>
+            </article>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="section">
-      <div class="container">
-        <h2 class="section-title">Monitoramento por Secretaria</h2>
-        <div id="monitoramentoSecretarias" class="monitor-grid"></div>
-      </div>
-    </section>
+      <section class="section">
+        <div class="container">
+          <h2 class="section-title">Monitoramento por Secretaria</h2>
+          <div class="monitor-grid" id="monitoramentoSecretarias"></div>
+        </div>
+      </section>
 
-    <section class="section">
-      <div class="container">
-        <div class="content-grid">
-          <article class="info-card glass-card">
-            <h3>Quadro Institucional de Leitura</h3>
-            <p>
-              Estrutura integrada para Executivo, Legislativo e Controle, com
-              potencial de conexão futura com Prefeitura Municipal, Câmara Municipal,
-              TCE-MT, TCU e AMM.
+      <section class="section" id="fontes-oficiais">
+        <div class="container">
+          <article class="card glass-card hologram-card">
+            <span class="badge gold">Fontes oficiais e parcerias</span>
+            <h2 class="section-title mt-2">Holograma de Camadas Institucionais</h2>
+            <p class="section-subtitle">
+              Estrutura conceitual para integrar fontes públicas, dados padronizados,
+              inteligência institucional e governança visual.
             </p>
-            <p>
-              Base visual inicial para evolução do ecossistema institucional.
+
+            <div class="layers-grid mt-3">
+              <div class="layer-item">
+                <p class="layer-kicker">Camada 1</p>
+                <h3 class="layer-title">Fontes Oficiais</h3>
+                <p class="layer-text">
+                  Portal da Transparência Municipal, site oficial da Prefeitura,
+                  folha de pagamento, licitações, legislação e publicações.
+                </p>
+              </div>
+
+              <div class="layer-item">
+                <p class="layer-kicker">Camada 2</p>
+                <h3 class="layer-title">Coleta e Padronização</h3>
+                <p class="layer-text">
+                  Estruturação por JSON, padronização por secretaria, leitura por
+                  período e compatibilidade com integrações futuras por API.
+                </p>
+              </div>
+
+              <div class="layer-item">
+                <p class="layer-kicker">Camada 3</p>
+                <h3 class="layer-title">Inteligência Institucional</h3>
+                <p class="layer-text">
+                  Painéis Executivo, Legislativo e Controle com leitura gerencial,
+                  fiscalização temática, conformidade e alertas.
+                </p>
+              </div>
+
+              <div class="layer-item">
+                <p class="layer-kicker">Camada 4</p>
+                <h3 class="layer-title">Governança Visual</h3>
+                <p class="layer-text">
+                  Cards, gráficos, mapas de risco, relatórios, visão comparativa e
+                  navegação institucional por contexto.
+                </p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="partners-grid">
+            <article class="partner-card card glass-card">
+              <span class="badge">Institucional</span>
+              <h3 class="section-title mt-2">Parcerias Institucionais</h3>
+              <div id="listaParceriasInstitucionais"></div>
+            </article>
+
+            <article class="partner-card card glass-card">
+              <span class="badge">Tecnológica</span>
+              <h3 class="section-title mt-2">Parcerias Tecnológicas</h3>
+              <div id="listaParceriasTecnologicas"></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="sources-grid">
+            <article class="source-card card glass-card">
+              <span class="badge">Dados</span>
+              <h3 class="section-title mt-2">Fontes Oficiais de Evolução</h3>
+              <ul>
+                <li>Portal da Transparência Municipal</li>
+                <li>Prefeitura Municipal de Vila Bela</li>
+                <li>Folha de Pagamento / Gestão de Pessoas</li>
+                <li>Licitações, contratos e convênios</li>
+                <li>Leis, decretos e portarias</li>
+              </ul>
+            </article>
+
+            <article class="source-card card glass-card">
+              <span class="badge">Expansão</span>
+              <h3 class="section-title mt-2">Integrações Futuras</h3>
+              <ul>
+                <li>TCE-MT</li>
+                <li>TCU</li>
+                <li>AMM</li>
+                <li>Portal da Transparência da União</li>
+                <li>APIs, proxies e rotinas de atualização automática</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <h2 class="section-title">Dashboard Analítico</h2>
+
+          <div class="charts-grid">
+            <article class="chart-card">
+              <h3>Receita x Despesa por Secretaria</h3>
+              <canvas id="chartReceitaDespesa"></canvas>
+            </article>
+
+            <article class="chart-card">
+              <h3>Saldo por Secretaria</h3>
+              <canvas id="chartSaldo"></canvas>
+            </article>
+
+            <article class="chart-card">
+              <h3>Execução por Secretaria</h3>
+              <canvas id="chartExecucao"></canvas>
+            </article>
+
+            <article class="chart-card">
+              <h3>Mapa de Risco Institucional</h3>
+              <canvas id="chartRisco"></canvas>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="portal-links">
+            <article class="portal-card">
+              <span class="badge green">Executivo</span>
+              <h3>Acesso ao Painel Executivo</h3>
+              <p>
+                Leitura consolidada para gestão, monitoramento de saldo, execução e apoio decisório.
+              </p>
+              <a class="btn btn-primary" href="login.html">Abrir Login Executivo</a>
+            </article>
+
+            <article class="portal-card">
+              <span class="badge">Legislativo</span>
+              <h3>Acesso ao Painel Legislativo</h3>
+              <p>
+                Fiscalização temática, leitura dos números, comparação por secretaria e acompanhamento institucional.
+              </p>
+              <a class="btn btn-secondary" href="login.html">Abrir Login Legislativo</a>
+            </article>
+
+            <article class="portal-card">
+              <span class="badge">Controle</span>
+              <h3>Acesso ao Painel de Controle</h3>
+              <p>
+                Conformidade, criticidade, risco fiscal e apoio preventivo à leitura dos dados.
+              </p>
+              <a class="btn btn-secondary" href="login.html">Abrir Login Controle</a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <article class="card glass-card">
+            <span class="badge gold">Marco estratégico</span>
+            <h2 class="section-title mt-2">Plataforma-base para evolução institucional</h2>
+            <p class="section-subtitle">
+              O projeto integra identidade pública, leitura fiscal, governança temática,
+              inteligência institucional e caminho preparado para dados reais via JSON,
+              APIs e Portais da Transparência.
             </p>
           </article>
-
-          <article class="info-card glass-card">
-            <h3>Parcerias Institucionais</h3>
-            <div id="listaParceriasInstitucionais"></div>
-          </article>
-
-          <article class="info-card glass-card">
-            <h3>Parcerias Tecnológicas</h3>
-            <div id="listaParceriasTecnologicas"></div>
-          </article>
-
-          <article class="info-card glass-card">
-            <h3>Fontes Oficiais de Evolução</h3>
-            <ul>
-              <li>Portal da Transparência Municipal</li>
-              <li>SICONFI / Tesouro Nacional</li>
-              <li>Tribunal de Contas do Estado</li>
-              <li>IBGE e bases públicas complementares</li>
-              <li>Integrações futuras por API institucional</li>
-            </ul>
-          </article>
         </div>
-      </div>
-    </section>
+      </section>
+    </main>
 
-    <section class="section">
+    <footer class="footer-note">
       <div class="container">
-        <div class="hologram-card glass-card">
-          <h2 class="section-title">Holograma de Camadas Institucionais</h2>
-
-          <div class="layers-grid">
-            <article class="layer-box layer-box--1">
-              <span class="layer-number">01</span>
-              <h3>Camada Visual</h3>
-              <p>Capa institucional, hero visual, identidade pública e navegação.</p>
-            </article>
-
-            <article class="layer-box layer-box--2">
-              <span class="layer-number">02</span>
-              <h3>Camada Analítica</h3>
-              <p>KPIs, monitoramento por secretaria, leitura temática e alertas.</p>
-            </article>
-
-            <article class="layer-box layer-box--3">
-              <span class="layer-number">03</span>
-              <h3>Camada de Governança</h3>
-              <p>Executivo, Legislativo e Controle em trilhas separadas e complementares.</p>
-            </article>
-
-            <article class="layer-box layer-box--4">
-              <span class="layer-number">04</span>
-              <h3>Camada de Dados</h3>
-              <p>JSON local hoje, APIs e Portais da Transparência como próxima etapa.</p>
-            </article>
-
-            <article class="layer-box layer-box--5">
-              <span class="layer-number">05</span>
-              <h3>Camada de IA</h3>
-              <p>Insights, resumos, alertas, apoio técnico e leitura institucional assistida.</p>
-            </article>
-          </div>
-        </div>
+        Curadoria estratégica: Décio Coelho • ExecutivoVilaBelaMT • Ecossistema de Governança Inteligente •
+        <span data-ano-atual></span>
       </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <h2 class="section-title">Dashboard Analítico</h2>
-
-        <div class="charts-grid">
-          <article class="chart-card glass-card">
-            <h3>Receita x Despesa por Secretaria</h3>
-            <canvas id="chartReceitaDespesa"></canvas>
-          </article>
-
-          <article class="chart-card glass-card">
-            <h3>Saldo por Secretaria</h3>
-            <canvas id="chartSaldo"></canvas>
-          </article>
-
-          <article class="chart-card glass-card">
-            <h3>Execução por Secretaria</h3>
-            <canvas id="chartExecucao"></canvas>
-          </article>
-
-          <article class="chart-card glass-card">
-            <h3>Mapa de Risco Institucional</h3>
-            <canvas id="chartRisco"></canvas>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <article class="access-card glass-card">
-          <h2 class="section-title">Acesso ao Sistema</h2>
-          <p>
-            Entre nos ambientes operacionais e evolua a estrutura para rotinas de
-            governança institucional.
-          </p>
-
-          <div class="access-buttons">
-            <a class="btn btn-primary" href="login.html">Abrir Login Executivo</a>
-            <a class="btn btn-secondary" href="login.html">Abrir Login Legislativo</a>
-            <a class="btn btn-secondary" href="login.html">Abrir Login Controle</a>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <article class="info-card glass-card">
-          <h3>Marco Estratégico</h3>
-          <p>
-            O projeto visual integra topo institucional, leitura fiscal, governança
-            temática e camada analítica. Esta base já serve como núcleo inicial para
-            expansão de módulos oficiais, automações e painéis com dados reais.
-          </p>
-        </article>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container">
-      <p>
-        Curadoria estratégica: Décio Coelho • ExecutivoVilaBelaMT • Ecossistema de
-        Governança Inteligente • <span data-ano-atual></span>
-      </p>
-    </div>
-  </footer>
+    </footer>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="script.js"></script>
 </body>
-                </html>
+  </html>
