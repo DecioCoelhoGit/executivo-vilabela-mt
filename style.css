@@ -956,3 +956,239 @@ textarea:focus {
     min-width: 620px;
   }
   }
+
+/* ===== MODO CINEMA ===== */
+
+body.modo-cinema {
+  position: relative;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(0, 180, 255, 0.10), transparent 28%),
+    radial-gradient(circle at 80% 30%, rgba(255, 170, 0, 0.10), transparent 28%),
+    radial-gradient(circle at 50% 80%, rgba(0, 255, 170, 0.06), transparent 30%),
+    linear-gradient(180deg, #020817 0%, #04143a 55%, #020817 100%);
+}
+
+body.modo-cinema::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    linear-gradient(
+      115deg,
+      rgba(0, 180, 255, 0.04) 0%,
+      rgba(255, 170, 0, 0.03) 45%,
+      rgba(0, 255, 170, 0.03) 100%
+    );
+  animation: cinemaGradientMove 12s ease-in-out infinite alternate;
+}
+
+body.modo-cinema::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.22;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(255,255,255,0.65) 0 1px, transparent 2px),
+    radial-gradient(circle at 30% 80%, rgba(0,220,255,0.7) 0 1px, transparent 2px),
+    radial-gradient(circle at 70% 30%, rgba(255,190,80,0.7) 0 1px, transparent 2px),
+    radial-gradient(circle at 85% 65%, rgba(255,255,255,0.5) 0 1px, transparent 2px),
+    radial-gradient(circle at 55% 50%, rgba(0,255,170,0.6) 0 1px, transparent 2px);
+  animation: cinemaStars 16s linear infinite;
+}
+
+.site-shell,
+.site-header,
+.page-main,
+.footer-note,
+.hero-card,
+.card,
+.kpi-card,
+.glass-card,
+.menu-drawer,
+.main-nav,
+.section,
+.container {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-card,
+.card,
+.kpi-card,
+.glass-card,
+.menu-drawer {
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.04) inset,
+    0 10px 30px rgba(0,0,0,0.28),
+    0 0 24px rgba(0, 120, 255, 0.08);
+}
+
+.hero-card {
+  overflow: hidden;
+}
+
+.hero-card::before,
+.card::before,
+.kpi-card::before,
+.glass-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,0.06) 0%,
+      transparent 30%,
+      transparent 70%,
+      rgba(0,180,255,0.05) 100%
+    );
+}
+
+.hero-card::after {
+  content: "";
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  top: -50px;
+  right: -40px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,180,80,0.22), transparent 70%);
+  filter: blur(8px);
+  pointer-events: none;
+  animation: cinemaPulse 5s ease-in-out infinite;
+}
+
+.section-title,
+.page-title,
+.brand-title {
+  text-shadow:
+    0 0 12px rgba(255,255,255,0.04),
+    0 0 24px rgba(0,180,255,0.08);
+}
+
+.btn,
+.menu-toggle,
+.badge,
+.menu-link {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+}
+
+.btn:hover,
+.menu-toggle:hover,
+.menu-link:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.04) inset,
+    0 8px 24px rgba(140, 20, 0, 0.28),
+    0 0 18px rgba(255, 80, 0, 0.14);
+}
+
+.btn-secondary {
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.04) inset,
+    0 8px 24px rgba(0, 50, 120, 0.18),
+    0 0 18px rgba(0, 180, 255, 0.10);
+}
+
+.selo-global {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: 74px;
+  z-index: 30;
+  opacity: 0.92;
+}
+
+.selo-global img {
+  width: 100%;
+  display: block;
+  border-radius: 50%;
+  animation: cinemaSealSpin 14s linear infinite, cinemaSealGlow 3.4s ease-in-out infinite;
+}
+
+@keyframes cinemaGradientMove {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(0, -8px, 0) scale(1.03);
+  }
+}
+
+@keyframes cinemaStars {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(16px);
+  }
+}
+
+@keyframes cinemaPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.75;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+}
+
+@keyframes cinemaSealSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes cinemaSealGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 6px rgba(0,220,255,0.50))
+            drop-shadow(0 0 12px rgba(255,170,0,0.34));
+  }
+  50% {
+    filter: drop-shadow(0 0 12px rgba(0,220,255,0.75))
+            drop-shadow(0 0 22px rgba(255,170,0,0.50));
+  }
+}
+
+@media (max-width: 768px) {
+  body.modo-cinema::after {
+    opacity: 0.14;
+  }
+
+  .hero-card::after {
+    width: 120px;
+    height: 120px;
+    top: -30px;
+    right: -20px;
+  }
+
+  .selo-global {
+    width: 62px;
+    right: 12px;
+    bottom: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.modo-cinema::before,
+  body.modo-cinema::after,
+  .hero-card::after,
+  .selo-global img {
+    animation: none !important;
+  }
+  }
