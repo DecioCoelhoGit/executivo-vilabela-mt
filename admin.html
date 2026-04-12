@@ -3,159 +3,201 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Admin — ExecutivoVilaBelaMT</title>
+
   <meta
     name="description"
-    content="Painel administrativo local do ExecutivoVilaBelaMT para validação de sessão, limpeza de base local e contingência operacional."
+    content="Painel administrativo local do ExecutivoVilaBelaMT para validação de sessão, limpeza da base local e contingência operacional."
   />
   <meta name="theme-color" content="#04143a" />
+
+  <meta property="og:title" content="Admin — ExecutivoVilaBelaMT" />
+  <meta
+    property="og:description"
+    content="Painel administrativo local para apoio operacional e contingência do sistema."
+  />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="pt_BR" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet"
   />
 
   <link rel="stylesheet" href="style.css" />
 </head>
-<body data-page="admin">
-  <div class="site-bg-glow"></div>
+<body data-page="admin" class="page-admin">
+  <div class="site-shell">
+    <div class="bg-grid"></div>
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
 
-  <header class="topbar topbar--hero">
-    <div class="container topbar__inner">
-      <div class="brand-block">
-        <h1 class="brand-title">ExecutivoVilaBelaMT</h1>
-        <p class="brand-subtitle">Painel Administrativo Local</p>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <div class="brand">
+          <h1 class="brand-title">ExecutivoVilaBelaMT</h1>
+          <p class="brand-subtitle">Painel Administrativo Local</p>
+        </div>
+
+        <button
+          class="menu-toggle"
+          type="button"
+          aria-label="Abrir menu"
+          aria-expanded="false"
+          data-menu-toggle
+        >
+          <span class="bar"></span>
+        </button>
       </div>
 
-      <button
-        class="menu-toggle"
-        type="button"
-        aria-label="Abrir menu"
-        aria-expanded="false"
-        data-menu-toggle
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-    </div>
-  </header>
+      <nav class="main-nav container"></nav>
+    </header>
 
-  <div class="menu-overlay" data-menu-overlay data-menu-close></div>
+    <div class="menu-overlay" data-menu-overlay data-menu-close></div>
 
-  <aside class="menu-drawer" data-menu-drawer>
-    <div class="menu-drawer__head">
-      <strong>Menu institucional</strong>
-      <button class="menu-close" type="button" aria-label="Fechar menu" data-menu-close>×</button>
-    </div>
+    <aside class="menu-drawer" data-menu-drawer data-menu>
+      <p class="menu-title">Navegação institucional</p>
 
-    <nav class="menu-nav">
-      <a href="index.html">Início</a>
-      <a href="login.html">Login</a>
-      <a href="executivo.html">Executivo</a>
-      <a href="legislativo.html">Legislativo</a>
-      <a href="controle.html">Controle</a>
-      <a href="admin.html">Admin</a>
-    </nav>
-  </aside>
+      <div class="menu-grid">
+        <a class="menu-link" href="index.html">Início</a>
+        <a class="menu-link" href="login.html">Login</a>
+        <a class="menu-link" href="executivo.html">Executivo</a>
+        <a class="menu-link" href="legislativo.html">Legislativo</a>
+        <a class="menu-link" href="controle.html">Controle</a>
+        <a class="menu-link is-current" href="admin.html">Admin</a>
+      </div>
+    </aside>
 
-  <main>
-    <section class="section">
-      <div class="container">
-        <div class="page-shell">
-          <article class="glass-card">
-            <div class="hero-chip">Administração local</div>
+    <main class="page-main">
+      <section class="hero-cover">
+        <div class="hero-cover-inner container">
+          <article class="hero-card hero-compact">
+            <span class="badge gold">Administração local</span>
+
             <h2 class="page-title">Painel Administrativo</h2>
-            <p class="page-text">
-              Gerenciamento temporário das bases salvas no navegador. Esta área funciona
-              como ambiente administrativo local e de contingência.
-            </p>
-          </article>
 
-          <article class="glass-card">
-            <h3>Status do navegador</h3>
-            <div class="status-panel">
-              <div class="status-line">
-                <strong>Armazenamento local:</strong>
-                <span id="adminStorageStatus">verificando...</span>
-              </div>
-              <div class="status-line">
-                <strong>Sessão ativa:</strong>
-                <span id="adminSessionStatus">verificando...</span>
-              </div>
-              <div class="status-line">
-                <strong>Última atualização:</strong>
-                <span id="adminLastUpdate">--</span>
-              </div>
-            </div>
-          </article>
-
-          <article class="glass-card">
-            <h3>Estado atual das bases</h3>
-            <div id="adminBasesStatus" class="status-grid">
-              <div class="status-item">
-                <span class="status-item__label">Receitas locais</span>
-                <span class="status-pill status-pill--neutral" id="statusReceitasLocais">carregando...</span>
-              </div>
-              <div class="status-item">
-                <span class="status-item__label">Despesas locais</span>
-                <span class="status-pill status-pill--neutral" id="statusDespesasLocais">carregando...</span>
-              </div>
-              <div class="status-item">
-                <span class="status-item__label">Servidores locais</span>
-                <span class="status-pill status-pill--neutral" id="statusServidoresLocais">carregando...</span>
-              </div>
-              <div class="status-item">
-                <span class="status-item__label">Sessão ativa</span>
-                <span class="status-pill status-pill--neutral" id="statusSessaoAtiva">carregando...</span>
-              </div>
-            </div>
-          </article>
-
-          <article class="glass-card">
-            <h3>Ações administrativas</h3>
-            <p class="page-text">
-              Utilize esta área para testes locais, limpeza do navegador e retorno
-              rápido ao sistema.
+            <p class="page-desc">
+              Gerenciamento temporário das bases salvas no navegador. Este ambiente
+              funciona como área administrativa local, de testes e de contingência.
             </p>
 
-            <div class="action-stack">
-              <button type="button" class="btn btn-primary btn-block" id="btnLimparBaseLocal">
-                Limpar base local
-              </button>
-              <button type="button" class="btn btn-secondary btn-block" id="btnLimparSessao">
-                Limpar sessão
-              </button>
-              <a href="login.html" class="btn btn-secondary btn-block">Ir para login</a>
-              <a href="index.html" class="btn btn-secondary btn-block">Voltar ao portal</a>
+            <div class="page-actions">
+              <a class="btn btn-secondary" href="index.html">Voltar ao portal</a>
+              <a class="btn btn-secondary" href="login.html">Ir para login</a>
             </div>
-
-            <div id="adminMensagem" class="status-box status-box--hidden" aria-live="polite"></div>
-          </article>
-
-          <article class="glass-card">
-            <h3>Observação</h3>
-            <p class="page-text">
-              Enquanto o sistema opera sem banco externo, as informações podem ser
-              salvas e limpas diretamente do navegador para testes e validações.
-            </p>
           </article>
         </div>
-      </div>
-    </section>
-  </main>
+      </section>
 
-  <footer class="site-footer">
-    <div class="container">
-      <p>
+      <section class="section">
+        <div class="container">
+          <div class="info-grid">
+            <article class="card glass-card">
+              <span class="badge">Status do navegador</span>
+              <h3 class="section-title mt-2">Ambiente local</h3>
+
+              <div class="status-panel">
+                <div class="status-line">
+                  <strong>Armazenamento local:</strong>
+                  <span id="adminStorageStatus">verificando...</span>
+                </div>
+                <div class="status-line">
+                  <strong>Sessão ativa:</strong>
+                  <span id="adminSessionStatus">verificando...</span>
+                </div>
+                <div class="status-line">
+                  <strong>Última atualização:</strong>
+                  <span id="adminLastUpdate">--</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="card glass-card">
+              <span class="badge green">Bases locais</span>
+              <h3 class="section-title mt-2">Estado atual</h3>
+
+              <div class="status-grid">
+                <div class="status-item">
+                  <span class="status-item__label">Receitas locais</span>
+                  <span class="status-pill status-pill--neutral" id="statusReceitasLocais">carregando...</span>
+                </div>
+
+                <div class="status-item">
+                  <span class="status-item__label">Despesas locais</span>
+                  <span class="status-pill status-pill--neutral" id="statusDespesasLocais">carregando...</span>
+                </div>
+
+                <div class="status-item">
+                  <span class="status-item__label">Servidores locais</span>
+                  <span class="status-pill status-pill--neutral" id="statusServidoresLocais">carregando...</span>
+                </div>
+
+                <div class="status-item">
+                  <span class="status-item__label">Sessão ativa</span>
+                  <span class="status-pill status-pill--neutral" id="statusSessaoAtiva">carregando...</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="card glass-card">
+              <span class="badge">Ações administrativas</span>
+              <h3 class="section-title mt-2">Operações locais</h3>
+
+              <p class="section-subtitle">
+                Use esta área para testes, limpeza do navegador e retorno rápido
+                ao sistema.
+              </p>
+
+              <div class="form-actions mt-3">
+                <button type="button" class="btn btn-primary" id="btnLimparBaseLocal">
+                  Limpar base local
+                </button>
+
+                <button type="button" class="btn btn-secondary" id="btnLimparSessao">
+                  Limpar sessão
+                </button>
+
+                <a href="login.html" class="btn btn-secondary">Ir para login</a>
+                <a href="index.html" class="btn btn-secondary">Voltar ao portal</a>
+              </div>
+
+              <div id="adminMensagem" class="status-box status-box--hidden" aria-live="polite"></div>
+            </article>
+
+            <article class="card glass-card">
+              <span class="badge gold">Observação</span>
+              <h3 class="section-title mt-2">Contingência operacional</h3>
+
+              <p class="section-subtitle">
+                Enquanto o sistema opera sem banco externo, as informações podem ser
+                armazenadas localmente no navegador para testes, simulações,
+                homologação visual e validações institucionais.
+              </p>
+
+              <ul class="list-clean mt-3">
+                <li>Base local por JSON no navegador</li>
+                <li>Sessão simulada para perfis institucionais</li>
+                <li>Compatível com futura evolução para API e Portal da Transparência</li>
+                <li>Preparado para uso em ambiente de demonstração e protótipo</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer-note">
+      <div class="container">
         ExecutivoVilaBelaMT • Administração local e contingência •
         <span data-ano-atual></span>
-      </p>
-    </div>
-  </footer>
+      </div>
+    </footer>
+  </div>
 
   <script src="script.js"></script>
 </body>
-                </html>
+  </html>
