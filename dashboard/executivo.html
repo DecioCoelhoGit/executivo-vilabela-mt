@@ -3,205 +3,275 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Painel Executivo | ExecutivoVilaBelaMT</title>
+
+  <title>Painel Executivo — ExecutivoVilaBelaMT</title>
+
   <meta
     name="description"
     content="Painel Executivo do ExecutivoVilaBelaMT com leitura consolidada de receita, despesa, saldo, execução e insights estratégicos."
   />
-  <meta name="theme-color" content="#03112b" />
+  <meta name="theme-color" content="#04143a" />
 
-  <link rel="icon" type="image/png" href="favicon.png" />
+  <meta property="og:title" content="Painel Executivo — ExecutivoVilaBelaMT" />
+  <meta
+    property="og:description"
+    content="Leitura executiva consolidada com apoio institucional, indicadores e visão estratégica."
+  />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="pt_BR" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  />
+
   <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="executivo" class="page-executivo">
+  <div class="site-shell">
+    <div class="bg-grid"></div>
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
+
+    <header class="site-header">
+      <div class="site-header__inner">
+        <div class="brand">
+          <h1 class="brand-title">ExecutivoVilaBelaMT</h1>
+          <p class="brand-subtitle">Painel Executivo</p>
+        </div>
+
+        <button
+          class="menu-toggle"
+          type="button"
+          aria-label="Abrir menu"
+          aria-expanded="false"
+          data-menu-toggle
+        >
+          <span class="bar"></span>
+        </button>
+      </div>
+
+      <nav class="main-nav container"></nav>
+    </header>
+
+    <div class="menu-overlay" data-menu-overlay data-menu-close></div>
+
+    <aside class="menu-drawer" data-menu-drawer data-menu>
+      <p class="menu-title">Navegação institucional</p>
+
+      <div class="menu-grid">
+        <a class="menu-link" href="index.html">Início</a>
+        <a class="menu-link" href="login.html">Login</a>
+        <a class="menu-link is-current" href="executivo.html">Executivo</a>
+        <a class="menu-link" href="legislativo.html">Legislativo</a>
+        <a class="menu-link" href="controle.html">Controle</a>
+        <a class="menu-link" href="admin.html">Admin</a>
+        <a class="menu-link is-muted" href="#" data-logout>Sair</a>
+      </div>
+    </aside>
+
+    <main class="page-main">
+      <section class="hero-cover">
+        <div class="hero-cover-inner container">
+          <article class="hero-card hero-compact">
+            <span class="badge gold" data-sessao-perfil>Prefeito / Executivo</span>
+
+            <h2 class="page-title">Painel Executivo</h2>
+
+            <p class="page-desc">
+              Leitura consolidada de receita, despesa, saldo, execução e insights
+              estratégicos para apoio à decisão institucional.
+            </p>
+
+            <div class="inline-stats mt-3">
+              <div class="inline-stat">
+                <div class="label">Usuário</div>
+                <div class="value" data-sessao-usuario>Visitante</div>
+              </div>
+
+              <div class="inline-stat">
+                <div class="label">Atualizado em</div>
+                <div class="value" id="executivoAtualizadoEm">--/--/----</div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="kpis-grid">
+            <article class="kpi-card">
+              <p class="kpi-label">Receita Total</p>
+              <h3 class="kpi-value" id="executivoReceitaTotal">R$ 0,00</h3>
+              <p class="kpi-note">Base consolidada do período</p>
+            </article>
+
+            <article class="kpi-card">
+              <p class="kpi-label">Despesa Total</p>
+              <h3 class="kpi-value" id="executivoDespesaTotal">R$ 0,00</h3>
+              <p class="kpi-note">Execução registrada</p>
+            </article>
+
+            <article class="kpi-card">
+              <p class="kpi-label">Saldo</p>
+              <h3 class="kpi-value" id="executivoSaldoTotal">R$ 0,00</h3>
+              <p class="kpi-note">Situação apurada</p>
+            </article>
+
+            <article class="kpi-card">
+              <p class="kpi-label">Servidores</p>
+              <h3 class="kpi-value" id="executivoServidores">0</h3>
+              <p class="kpi-note">Quantidade informada</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="info-grid">
+            <article class="card glass-card">
+              <span class="badge">Filtro</span>
+              <h3 class="section-title mt-2">Filtro por Secretaria</h3>
+              <div class="form-row">
+                <label for="filtroSecretaria">Secretaria</label>
+                <select id="filtroSecretaria" class="select">
+                  <option value="todas">Todas as Secretarias</option>
+                </select>
+                <div class="form-help">
+                  Use o filtro para focar a leitura executiva em uma secretaria específica.
+                </div>
+              </div>
+            </article>
+
+            <article class="card glass-card">
+              <span class="badge green">Exportação</span>
+              <h3 class="section-title mt-2">Relatório</h3>
+              <p class="section-subtitle">
+                Gere versão pronta para impressão ou PDF direto pelo navegador.
+              </p>
+              <div class="form-actions mt-3">
+                <button class="btn btn-primary" id="btnExportarRelatorio" type="button">
+                  Exportar relatório
+                </button>
+              </div>
+            </article>
+
+            <article class="card glass-card">
+              <span class="badge">Base local</span>
+              <h3 class="section-title mt-2">Atualização por JSON</h3>
+              <p class="section-subtitle">
+                Carregue uma base local em JSON para testes, demonstrações e validações.
+              </p>
+              <div class="form-row mt-3">
+                <label for="uploadJson">Arquivo JSON</label>
+                <input id="uploadJson" class="input" type="file" accept=".json,application/json" />
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <h2 class="section-title">Alertas Executivos</h2>
+          <div class="alert-list" id="executivoAlertas"></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <article class="card glass-card">
+            <h2 class="section-title">Execução por Secretaria</h2>
+
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Secretaria</th>
+                    <th>Receita</th>
+                    <th>Despesa</th>
+                    <th>Saldo</th>
+                    <th>Execução</th>
+                  </tr>
+                </thead>
+                <tbody id="tabelaExecutivoBody"></tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="info-grid">
+            <article class="card glass-card">
+              <span class="badge">Resumo</span>
+              <h3 class="section-title mt-2">Resumo Estratégico</h3>
+              <div id="executivoResumo" class="section-subtitle"></div>
+            </article>
+
+            <article class="card glass-card">
+              <span class="badge gold">IA</span>
+              <h3 class="section-title mt-2">Insights da IA</h3>
+              <div id="executivoInsights" class="section-subtitle"></div>
+            </article>
+
+            <article class="card glass-card">
+              <span class="badge">Governança</span>
+              <h3 class="section-title mt-2">Leitura Institucional</h3>
+              <ul class="list-clean">
+                <li>Monitoramento consolidado por secretaria.</li>
+                <li>Acompanhamento de saldo, despesa e execução.</li>
+                <li>Base visual para planejamento preventivo.</li>
+                <li>Ponto de evolução para dados reais por API.</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <h2 class="section-title">Dashboard Analítico</h2>
+
+          <div class="charts-grid">
+            <article class="chart-card">
+              <h3>Receita x Despesa</h3>
+              <canvas id="chartReceitaDespesa"></canvas>
+            </article>
+
+            <article class="chart-card">
+              <h3>Saldo</h3>
+              <canvas id="chartSaldo"></canvas>
+            </article>
+
+            <article class="chart-card">
+              <h3>Execução</h3>
+              <canvas id="chartExecucao"></canvas>
+            </article>
+
+            <article class="chart-card">
+              <h3>Risco</h3>
+              <canvas id="chartRisco"></canvas>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer-note">
+      <div class="container">
+        ExecutivoVilaBelaMT • Painel Executivo • <span data-ano-atual></span>
+      </div>
+    </footer>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body data-require-session="true">
-  <header class="site-header ultra-shell">
-    <div class="container header-inner">
-      <div class="brand-block">
-        <h1 class="site-brand">ExecutivoVilaBelaMT</h1>
-        <p class="site-subtitle">Painel Executivo</p>
-      </div>
-
-      <button
-        class="menu-toggle"
-        type="button"
-        aria-label="Abrir menu"
-        aria-expanded="false"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-
-      <nav class="main-nav">
-        <a href="index.html" data-nav="index.html">Início</a>
-        <a href="login.html" data-nav="login.html">Login</a>
-        <a href="executivo.html" data-nav="executivo.html">Executivo</a>
-        <a href="legislativo.html" data-nav="legislativo.html">Legislativo</a>
-        <a href="controle.html" data-nav="controle.html">Controle</a>
-        <a href="admin.html" data-nav="admin.html">Admin</a>
-        <a href="#" data-logout>Sair</a>
-      </nav>
-    </div>
-  </header>
-
-  <main>
-    <section class="section ultra-shell">
-      <div class="container">
-
-        <div class="hero-topline" data-session-label>
-          Perfil Executivo
-        </div>
-
-        <h2 class="section-title">Painel Executivo</h2>
-        <p class="section-text">
-          Leitura consolidada de receita, despesa, saldo, execução e insights estratégicos com apoio de IA.
-        </p>
-
-        <div class="status-bar">
-          Atualizado em: <strong data-atualizado-em>--/--/----</strong>
-        </div>
-
-      </div>
-    </section>
-
-    <section class="section ultra-shell">
-      <div class="container">
-        <div class="stats-grid">
-
-          <article class="stat-card glass-card">
-            <span>Receita Total</span>
-            <strong data-receita-total>R$ 0,00</strong>
-            <small>Base consolidada do período</small>
-          </article>
-
-          <article class="stat-card glass-card">
-            <span>Despesa Total</span>
-            <strong data-despesa-total>R$ 0,00</strong>
-            <small>Execução registrada</small>
-          </article>
-
-          <article class="stat-card glass-card">
-            <span>Saldo</span>
-            <strong data-saldo-total>R$ 0,00</strong>
-            <small>Situação apurada</small>
-          </article>
-
-          <article class="stat-card glass-card">
-            <span>Execução Média</span>
-            <strong data-execucao-media>0%</strong>
-            <small>Indicador geral</small>
-          </article>
-
-        </div>
-      </div>
-    </section>
-
-    <section class="section ultra-shell">
-      <div class="container">
-        <div class="filter-card glass-card">
-          <h3>Filtro por Secretaria</h3>
-          <select id="filtroSecretaria"></select>
-          <p>Utilize o filtro para focar a análise em uma secretaria específica.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section ultra-shell">
-      <div class="container">
-        <div class="actions-grid">
-          <button class="btn btn-primary" data-export-relatorio>
-            Exportar Relatório (PDF)
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <section class="section ultra-shell">
-      <div class="container">
-        <h3 class="section-title">Alertas Executivos</h3>
-        <div class="alerts-grid" data-alertas></div>
-      </div>
-    </section>
-
-    <section class="section ultra-shell">
-      <div class="container">
-        <h3 class="section-title">Execução por Secretaria</h3>
-
-        <div class="table-container glass-card">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Secretaria</th>
-                <th>Receita</th>
-                <th>Despesa</th>
-                <th>Saldo</th>
-                <th>Execução</th>
-                <th>Risco</th>
-              </tr>
-            </thead>
-            <tbody data-execucao-secretarias></tbody>
-          </table>
-        </div>
-
-      </div>
-    </section>
-
-    <section class="section ultra-shell">
-      <div class="container grid-2">
-
-        <div class="info-card glass-card">
-          <h3>Resumo Estratégico</h3>
-          <div data-leitura-governanca></div>
-        </div>
-
-        <div class="info-card glass-card">
-          <h3>Insights da IA</h3>
-          <div data-insights-ia></div>
-        </div>
-
-      </div>
-    </section>
-
-    <section class="section ultra-shell">
-      <div class="container">
-        <h3 class="section-title">Dashboard Analítico</h3>
-
-        <div class="charts-grid">
-
-          <div class="chart-card glass-card">
-            <h4>Receita x Despesa</h4>
-            <canvas id="chartReceitaDespesa"></canvas>
-          </div>
-
-          <div class="chart-card glass-card">
-            <h4>Saldo</h4>
-            <canvas id="chartSaldo"></canvas>
-          </div>
-
-          <div class="chart-card glass-card">
-            <h4>Execução</h4>
-            <canvas id="chartExecucao"></canvas>
-          </div>
-
-          <div class="chart-card glass-card">
-            <h4>Risco</h4>
-            <canvas id="chartRisco"></canvas>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <footer class="site-footer ultra-shell">
-    <div class="container">
-      <p>ExecutivoVilaBelaMT • Painel Executivo</p>
-    </div>
-  </footer>
-
   <script src="script.js"></script>
 </body>
-          </html>
+  </html>
