@@ -1192,3 +1192,152 @@ body.modo-cinema::after {
     animation: none !important;
   }
   }
+/* =========================
+   AJUSTE MOBILE PROFISSIONAL
+========================= */
+
+.container {
+  padding: 16px;
+}
+
+.section {
+  padding: 24px 0;
+}
+
+.section-tight {
+  padding: 12px 0;
+}
+
+/* =========================
+   GRID RESPONSIVO REAL
+========================= */
+
+.grid-single {
+  display: grid;
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .grid-single {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-single {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* =========================
+   KPI GRID MELHORADO
+========================= */
+
+.kpi-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (min-width: 768px) {
+  .kpi-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* =========================
+   CARDS AJUSTADOS
+========================= */
+
+.card,
+.kpi-card,
+.hero-card {
+  padding: 16px;
+  border-radius: 18px;
+  min-height: auto;
+}
+
+.card {
+  line-height: 1.4;
+}
+
+/* =========================
+   TEXTO RESPONSIVO
+========================= */
+
+.page-title {
+  font-size: 1.6rem;
+}
+
+.page-subtitle {
+  font-size: 0.95rem;
+}
+
+@media (min-width: 768px) {
+  .page-title {
+    font-size: 2rem;
+  }
+}
+
+/* =========================
+   BOTÕES MELHORADOS
+========================= */
+
+.btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 0.95rem;
+}
+
+/* =========================
+   EVITAR "TELA ESTICADA"
+========================= */
+
+.page-main {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* =========================
+   PRINT / PDF PROFISSIONAL
+========================= */
+
+@media print {
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .menu-toggle,
+  .menu-drawer,
+  .menu-overlay,
+  .floating-theme-toggle,
+  .btn {
+    display: none !important;
+  }
+
+  .card,
+  .kpi-card,
+  .hero-card {
+    background: #ffffff !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    border: 1px solid #ddd;
+    page-break-inside: avoid;
+  }
+
+  .section {
+    page-break-inside: avoid;
+  }
+
+  .container {
+    max-width: 100%;
+    padding: 10px;
+  }
+
+  footer {
+    text-align: center;
+    font-size: 10px;
+  }
+}
