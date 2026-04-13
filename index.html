@@ -3,379 +3,125 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>ExecutivoVilaBelaMT — Governança Pública Inteligente</title>
-
-  <meta
-    name="description"
-    content="Plataforma estratégica para integração entre Secretarias, Poder Legislativo e Órgãos de Controle, com monitoramento fiscal, governança visual e apoio institucional por IA."
-  />
-  <meta name="theme-color" content="#04143a" />
-
-  <meta property="og:title" content="ExecutivoVilaBelaMT — Governança Pública Inteligente" />
-  <meta
-    property="og:description"
-    content="Marco Inicial da Governança Pública Inteligente em Vila Bela da Santíssima Trindade - MT."
-  />
-  <meta property="og:type" content="website" />
-  <meta property="og:locale" content="pt_BR" />
-  <meta property="og:image" content="assets/og-executivo.jpg" />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-    rel="stylesheet"
-  />
-
+  <title>ExecutivoVilaBelaMT</title>
+  <meta name="description" content="Marco inicial da governança pública inteligente com integração entre secretarias, legislativo e controle." />
+  <link rel="icon" type="image/png" href="favicon.png" />
   <link rel="stylesheet" href="style.css" />
 </head>
-<body data-page="home">
+<body data-page="index" class="page-home modo-cinema theme-dark">
   <div class="site-shell">
-    <div class="bg-grid"></div>
-    <div class="bg-orb orb-1"></div>
-    <div class="bg-orb orb-2"></div>
-    <div class="bg-orb orb-3"></div>
-
     <header class="site-header">
-      <div class="site-header__inner">
-        <div class="brand">
-          <h1 class="brand-title">ExecutivoVilaBelaMT</h1>
+      <div class="container header-inner">
+        <div class="brand-block">
+          <a href="index.html" class="brand-link">
+            <h1 class="brand-title">ExecutivoVilaBelaMT</h1>
+          </a>
           <p class="brand-subtitle">Marco Inicial da Governança Pública Inteligente</p>
         </div>
-
-        <button
-          class="menu-toggle"
-          type="button"
-          aria-label="Abrir menu"
-          aria-expanded="false"
-          data-menu-toggle
-        >
-          <span class="bar"></span>
-        </button>
+        <div class="header-actions">
+          <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" data-menu-toggle>☰</button>
+        </div>
       </div>
-
-      <nav class="main-nav container"></nav>
     </header>
 
-    <div class="menu-overlay" data-menu-overlay data-menu-close></div>
+    <div class="menu-overlay" data-menu-overlay></div>
 
-    <aside class="menu-drawer" data-menu-drawer data-menu>
-      <p class="menu-title">Navegação institucional</p>
-
-      <div class="menu-grid">
-        <a class="menu-link is-current" href="index.html">Início</a>
-        <a class="menu-link" href="login.html">Login</a>
-        <a class="menu-link" href="executivo.html">Executivo</a>
-        <a class="menu-link" href="legislativo.html">Legislativo</a>
-        <a class="menu-link" href="controle.html">Controle</a>
-        <a class="menu-link" href="admin.html">Admin</a>
-      </div>
-    </aside>
+    <nav class="menu-drawer" data-menu-drawer aria-label="Menu principal">
+      <div class="menu-drawer-header"><strong>Navegação institucional</strong></div>
+      <a class="menu-link active" href="index.html">Início</a>
+      <a class="menu-link" href="login.html">Login</a>
+      <a class="menu-link" href="dashboard/executivo.html">Executivo</a>
+      <a class="menu-link" href="dashboard/legislativo.html">Legislativo</a>
+      <a class="menu-link" href="dashboard/controle.html">Controle</a>
+      <a class="menu-link" href="admin.html">Admin</a>
+      <hr class="menu-separator" />
+      <button class="theme-toggle" type="button" data-theme-toggle>
+        <span class="theme-toggle-icon">🌓</span>
+        <span>Tema</span>
+      </button>
+    </nav>
 
     <main class="page-main">
-      <section class="hero-cover">
-        <div class="hero-cover-inner container">
-          <div class="hero-grid">
-            <article class="hero-card hologram-card">
-              <span class="badge gold">Vila Bela • 1ª Capital de MT</span>
-
-              <h2 class="hero-title">
-                Integração entre Secretarias, Legislativo e Controle
-              </h2>
-
-              <p class="hero-text">
-                Plataforma estratégica para gestão municipal, transparência,
-                planejamento, monitoramento fiscal e apoio com IA. Estrutura criada
-                para leitura institucional, acompanhamento executivo, fiscalização
-                temática e conformidade preventiva.
-              </p>
-
-              <div class="hero-actions">
-                <a class="btn btn-primary" href="login.html">Entrar no Sistema</a>
-                <a class="btn btn-secondary" href="#fontes-oficiais">Ver Governança Visual</a>
-              </div>
-            </article>
-
-            <article class="card glass-card">
-              <span class="badge">Visão institucional</span>
-              <h3 class="section-title mt-2">Síntese Estratégica</h3>
-              <p class="section-subtitle">
-                Estrutura pensada para contemplar todas as Secretarias Municipais,
-                entidades correlatas e integrações com Câmara, TCE-MT, TCU e AMM.
-              </p>
-
-              <div class="inline-stats mt-3">
-                <div class="inline-stat">
-                  <div class="label">Receita total</div>
-                  <div class="value" id="homeReceitaTotal">R$ 0,00</div>
-                </div>
-                <div class="inline-stat">
-                  <div class="label">Despesa total</div>
-                  <div class="value" id="homeDespesaTotal">R$ 0,00</div>
-                </div>
-                <div class="inline-stat">
-                  <div class="label">Saldo</div>
-                  <div class="value" id="homeSaldoTotal">R$ 0,00</div>
-                </div>
-                <div class="inline-stat">
-                  <div class="label">Execução média</div>
-                  <div class="value" id="homeExecucaoMedia">0,0%</div>
-                </div>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
       <section class="section">
         <div class="container">
-          <h2 class="section-title">Resumo Fiscal do Município</h2>
-
-          <div class="kpis-grid">
-            <article class="kpi-card">
-              <p class="kpi-label">Receita total</p>
-              <h3 class="kpi-value" id="homeReceitaTotal">R$ 0,00</h3>
-              <p class="kpi-note">Arrecadação consolidada do período</p>
-            </article>
-
-            <article class="kpi-card">
-              <p class="kpi-label">Despesa paga</p>
-              <h3 class="kpi-value" id="homeDespesaTotal">R$ 0,00</h3>
-              <p class="kpi-note">Execução financeira registrada</p>
-            </article>
-
-            <article class="kpi-card">
-              <p class="kpi-label">Saldo apurado</p>
-              <h3 class="kpi-value" id="homeSaldoTotal">R$ 0,00</h3>
-              <p class="kpi-note">Resultado do período</p>
-            </article>
-
-            <article class="kpi-card">
-              <p class="kpi-label">Execução média</p>
-              <h3 class="kpi-value" id="homeExecucaoMedia">0,0%</h3>
-              <p class="kpi-note">Leitura média por secretaria</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="container">
-          <div class="info-grid">
-            <article class="card glass-card">
-              <span class="badge">Governança visual</span>
-              <h3 class="section-title mt-2">Inteligência Institucional</h3>
-              <ul class="list-clean">
-                <li>Leitura integrada das secretarias e áreas finalísticas.</li>
-                <li>Resumo executivo com foco em receita, despesa, saldo e risco.</li>
-                <li>Base para decisões orientadas por dados.</li>
-                <li>Compatível com evolução para dados oficiais.</li>
-              </ul>
-            </article>
-
-            <article class="card glass-card">
-              <span class="badge">Legislativo</span>
-              <h3 class="section-title mt-2">Fiscalização Temática</h3>
-              <ul class="list-clean">
-                <li>Acompanhamento por secretaria e área temática.</li>
-                <li>Base para comissões, requerimentos e leitura em plenário.</li>
-                <li>Identificação de alertas de execução e saldo.</li>
-                <li>Visão consolidada para atividade parlamentar.</li>
-              </ul>
-            </article>
-
-            <article class="card glass-card">
-              <span class="badge">Controle</span>
-              <h3 class="section-title mt-2">Conformidade Preventiva</h3>
-              <ul class="list-clean">
-                <li>Suporte para auditoria preventiva.</li>
-                <li>Foco em execução crítica, desequilíbrio e risco fiscal.</li>
-                <li>Organização institucional da leitura por órgão.</li>
-                <li>Pronto para evolução com indicadores formais.</li>
-              </ul>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="container">
-          <h2 class="section-title">Monitoramento por Secretaria</h2>
-          <div class="monitor-grid" id="monitoramentoSecretarias"></div>
-        </div>
-      </section>
-
-      <section class="section" id="fontes-oficiais">
-        <div class="container">
-          <article class="card glass-card hologram-card">
-            <span class="badge gold">Fontes oficiais e parcerias</span>
-            <h2 class="section-title mt-2">Holograma de Camadas Institucionais</h2>
-            <p class="section-subtitle">
-              Estrutura conceitual para integrar fontes públicas, dados padronizados,
-              inteligência institucional e governança visual.
-            </p>
-
-            <div class="layers-grid mt-3">
-              <div class="layer-item">
-                <p class="layer-kicker">Camada 1</p>
-                <h3 class="layer-title">Fontes Oficiais</h3>
-                <p class="layer-text">
-                  Portal da Transparência Municipal, site oficial da Prefeitura,
-                  folha de pagamento, licitações, legislação e publicações.
-                </p>
-              </div>
-
-              <div class="layer-item">
-                <p class="layer-kicker">Camada 2</p>
-                <h3 class="layer-title">Coleta e Padronização</h3>
-                <p class="layer-text">
-                  Estruturação por JSON, padronização por secretaria, leitura por
-                  período e compatibilidade com integrações futuras por API.
-                </p>
-              </div>
-
-              <div class="layer-item">
-                <p class="layer-kicker">Camada 3</p>
-                <h3 class="layer-title">Inteligência Institucional</h3>
-                <p class="layer-text">
-                  Painéis Executivo, Legislativo e Controle com leitura gerencial,
-                  fiscalização temática, conformidade e alertas.
-                </p>
-              </div>
-
-              <div class="layer-item">
-                <p class="layer-kicker">Camada 4</p>
-                <h3 class="layer-title">Governança Visual</h3>
-                <p class="layer-text">
-                  Cards, gráficos, mapas de risco, relatórios, visão comparativa e
-                  navegação institucional por contexto.
-                </p>
-              </div>
+          <article class="hero-card">
+            <div class="section-kicker">Vila Bela • 1ª Capital de MT</div>
+            <h2 class="page-title">Integração entre Secretarias, Legislativo e Controle</h2>
+            <p class="page-subtitle">Plataforma estratégica para gestão municipal, transparência, planejamento, monitoramento fiscal e apoio com IA. Estrutura criada para leitura institucional, acompanhamento executivo, fiscalização temática e conformidade preventiva.</p>
+            <div class="hero-actions">
+              <a href="login.html" class="btn btn-primary">Entrar no Sistema</a>
+              <a href="#governanca" class="btn btn-secondary">Ver Governança Visual</a>
+            </div>
+            <div class="assinatura-capa">
+              <span>Powered by</span><br />
+              OpenAI • ChatGPT • Núcleo de Inovação &amp; IA Generativa • Curadoria Viracopos Global<br />
+              GitHub • Git • Termux • Notion
             </div>
           </article>
         </div>
       </section>
 
-      <section class="section">
+      <section class="section section-tight">
         <div class="container">
-          <div class="partners-grid">
-            <article class="partner-card card glass-card">
-              <span class="badge">Institucional</span>
-              <h3 class="section-title mt-2">Parcerias Institucionais</h3>
-              <div id="listaParceriasInstitucionais"></div>
-            </article>
-
-            <article class="partner-card card glass-card">
-              <span class="badge">Tecnológica</span>
-              <h3 class="section-title mt-2">Parcerias Tecnológicas</h3>
-              <div id="listaParceriasTecnologicas"></div>
-            </article>
+          <div class="kpi-grid">
+            <article class="kpi-card"><div class="kpi-label">Receita total</div><div class="kpi-value">R$ 1.903.900,00</div><div class="kpi-note">Arrecadação consolidada do período</div></article>
+            <article class="kpi-card"><div class="kpi-label">Despesa paga</div><div class="kpi-value">R$ 2.019.900,00</div><div class="kpi-note">Execução financeira registrada</div></article>
+            <article class="kpi-card"><div class="kpi-label">Saldo apurado</div><div class="kpi-value">-R$ 116.000,00</div><div class="kpi-note">Resultado do período</div></article>
+            <article class="kpi-card"><div class="kpi-label">Execução média</div><div class="kpi-value">101,0%</div><div class="kpi-note">Leitura média por secretaria</div></article>
           </div>
         </div>
       </section>
 
-      <section class="section">
-        <div class="container">
-          <div class="sources-grid">
-            <article class="source-card card glass-card">
-              <span class="badge">Dados</span>
-              <h3 class="section-title mt-2">Fontes Oficiais de Evolução</h3>
-              <ul>
-                <li>Portal da Transparência Municipal</li>
-                <li>Prefeitura Municipal de Vila Bela</li>
-                <li>Folha de Pagamento / Gestão de Pessoas</li>
-                <li>Licitações, contratos e convênios</li>
-                <li>Leis, decretos e portarias</li>
-              </ul>
-            </article>
-
-            <article class="source-card card glass-card">
-              <span class="badge">Expansão</span>
-              <h3 class="section-title mt-2">Integrações Futuras</h3>
-              <ul>
-                <li>TCE-MT</li>
-                <li>TCU</li>
-                <li>AMM</li>
-                <li>Portal da Transparência da União</li>
-                <li>APIs, proxies e rotinas de atualização automática</li>
-              </ul>
-            </article>
-          </div>
+      <section id="governanca" class="section section-tight">
+        <div class="container grid-single">
+          <article class="card"><div class="section-kicker">Visão institucional</div><h3 class="card-title">Síntese Estratégica</h3><ul class="info-list"><li>Leitura integrada das secretarias e áreas finalísticas.</li><li>Resumo executivo com foco em receita, despesa, saldo e risco.</li><li>Base para decisões orientadas por dados.</li><li>Compatível com evolução para dados oficiais.</li></ul></article>
+          <article class="card"><div class="section-kicker">Poder Legislativo</div><h3 class="card-title">Fiscalização temática</h3><ul class="info-list"><li>Acompanhamento por secretaria.</li><li>Base para requerimentos, comissões e fiscalização.</li><li>Identificação de alertas de execução e saldo.</li><li>Visão consolidada para atividade parlamentar.</li></ul></article>
+          <article class="card"><div class="section-kicker">Conformidade</div><h3 class="card-title">Controle preventivo</h3><ul class="info-list"><li>Suporte para auditoria preventiva.</li><li>Foco em execução crítica, desequilíbrio e risco fiscal.</li><li>Organização institucional da leitura por órgão.</li><li>Ponto para expansão com indicadores formais.</li></ul></article>
+          <article class="card"><div class="section-kicker">IA Generativa</div><h3 class="card-title">Gestão Pública</h3><ul class="info-list"><li>Insights automáticos para leitura executiva.</li><li>Priorização de áreas com maior atenção.</li><li>Apoio a pareceres, notas e resumos gerenciais.</li><li>Camada estratégica de interpretação institucional.</li></ul></article>
         </div>
       </section>
 
-      <section class="section">
+      <section class="section section-tight">
         <div class="container">
-          <h2 class="section-title">Dashboard Analítico</h2>
-
-          <div class="charts-grid">
-            <article class="chart-card">
-              <h3>Receita x Despesa por Secretaria</h3>
-              <canvas id="chartReceitaDespesa"></canvas>
-            </article>
-
-            <article class="chart-card">
-              <h3>Saldo por Secretaria</h3>
-              <canvas id="chartSaldo"></canvas>
-            </article>
-
-            <article class="chart-card">
-              <h3>Execução por Secretaria</h3>
-              <canvas id="chartExecucao"></canvas>
-            </article>
-
-            <article class="chart-card">
-              <h3>Mapa de Risco Institucional</h3>
-              <canvas id="chartRisco"></canvas>
-            </article>
-          </div>
+          <article class="card">
+            <div class="section-kicker">Monitoramento por Secretaria</div>
+            <h3 class="card-title">Leitura resumida</h3>
+            <div class="monitor-grid">
+              <article class="monitor-card"><h3>Administração</h3><p><strong>Receita:</strong> R$ 180.000,00</p><p><strong>Despesa:</strong> R$ 120.000,00</p><p><strong>Saldo:</strong> R$ 60.000,00</p><p><strong>Execução:</strong> 66,7%</p><span class="status-badge status-stable">Estável</span></article>
+              <article class="monitor-card"><h3>Finanças</h3><p><strong>Receita:</strong> R$ 150.000,00</p><p><strong>Despesa:</strong> R$ 98.000,00</p><p><strong>Saldo:</strong> R$ 52.000,00</p><p><strong>Execução:</strong> 65,3%</p><span class="status-badge status-stable">Estável</span></article>
+              <article class="monitor-card"><h3>Saúde</h3><p><strong>Receita:</strong> R$ 300.000,00</p><p><strong>Despesa:</strong> R$ 345.000,00</p><p><strong>Saldo:</strong> -R$ 45.000,00</p><p><strong>Execução:</strong> 115,0%</p><span class="status-badge status-critical">Risco alto</span></article>
+              <article class="monitor-card"><h3>Educação</h3><p><strong>Receita:</strong> R$ 330.000,00</p><p><strong>Despesa:</strong> R$ 310.000,00</p><p><strong>Saldo:</strong> R$ 20.000,00</p><p><strong>Execução:</strong> 93,9%</p><span class="status-badge status-stable">Estável</span></article>
+              <article class="monitor-card"><h3>Assistência Social</h3><p><strong>Receita:</strong> R$ 125.000,00</p><p><strong>Despesa:</strong> R$ 110.000,00</p><p><strong>Saldo:</strong> R$ 15.000,00</p><p><strong>Execução:</strong> 88,0%</p><span class="status-badge status-stable">Estável</span></article>
+              <article class="monitor-card"><h3>Obras</h3><p><strong>Receita:</strong> R$ 210.000,00</p><p><strong>Despesa:</strong> R$ 295.000,00</p><p><strong>Saldo:</strong> -R$ 85.000,00</p><p><strong>Execução:</strong> 140,5%</p><span class="status-badge status-critical">Risco alto</span></article>
+              <article class="monitor-card"><h3>Cultura</h3><p><strong>Receita:</strong> R$ 32.000,00</p><p><strong>Despesa:</strong> R$ 26.000,00</p><p><strong>Saldo:</strong> R$ 6.000,00</p><p><strong>Execução:</strong> 81,3%</p><span class="status-badge status-stable">Estável</span></article>
+              <article class="monitor-card"><h3>Turismo</h3><p><strong>Receita:</strong> R$ 30.000,00</p><p><strong>Despesa:</strong> R$ 27.000,00</p><p><strong>Saldo:</strong> R$ 3.000,00</p><p><strong>Execução:</strong> 90,0%</p><span class="status-badge status-stable">Estável</span></article>
+              <article class="monitor-card"><h3>Meio Ambiente</h3><p><strong>Receita:</strong> R$ 46.000,00</p><p><strong>Despesa:</strong> R$ 47.000,00</p><p><strong>Saldo:</strong> -R$ 1.000,00</p><p><strong>Execução:</strong> 102,2%</p><span class="status-badge status-critical">Risco alto</span></article>
+              <article class="monitor-card"><h3>Agricultura</h3><p><strong>Receita:</strong> R$ 72.000,00</p><p><strong>Despesa:</strong> R$ 89.000,00</p><p><strong>Saldo:</strong> -R$ 17.000,00</p><p><strong>Execução:</strong> 123,6%</p><span class="status-badge status-critical">Risco alto</span></article>
+              <article class="monitor-card"><h3>Planejamento</h3><p><strong>Receita:</strong> R$ 428.900,00</p><p><strong>Despesa:</strong> R$ 552.900,00</p><p><strong>Saldo:</strong> -R$ 124.000,00</p><p><strong>Execução:</strong> 128,9%</p><span class="status-badge status-critical">Risco alto</span></article>
+            </div>
+          </article>
         </div>
       </section>
 
-      <section class="section">
-        <div class="container">
-          <div class="portal-links">
-            <article class="portal-card">
-              <span class="badge green">Executivo</span>
-              <h3>Acesso ao Painel Executivo</h3>
-              <p>
-                Leitura consolidada para gestão, monitoramento de saldo, execução e apoio decisório.
-              </p>
-              <a class="btn btn-primary" href="login.html">Abrir Login Executivo</a>
-            </article>
-
-            <article class="portal-card">
-              <span class="badge">Legislativo</span>
-              <h3>Acesso ao Painel Legislativo</h3>
-              <p>
-                Fiscalização temática, leitura dos números, comparação por secretaria e acompanhamento institucional.
-              </p>
-              <a class="btn btn-secondary" href="login.html">Abrir Login Legislativo</a>
-            </article>
-
-            <article class="portal-card">
-              <span class="badge">Controle</span>
-              <h3>Acesso ao Painel de Controle</h3>
-              <p>
-                Conformidade, criticidade, risco fiscal e apoio preventivo à leitura dos dados.
-              </p>
-              <a class="btn btn-secondary" href="login.html">Abrir Login Controle</a>
-            </article>
-          </div>
+      <section class="section section-tight">
+        <div class="container grid-single">
+          <article class="card"><div class="section-kicker">Quadro institucional</div><h3 class="card-title">Leitura integrada</h3><p class="card-text">Estrutura integrada para Executivo, Legislativo e Controle, com potencial de conexão futura com Prefeitura, Câmara Municipal, TCE-MT, TCU e AMM.</p></article>
+          <article class="card"><div class="section-kicker">Parcerias institucionais</div><h3 class="card-title">Base de evolução</h3><ul class="info-list"><li>Portal da Transparência</li><li>TCE-MT</li><li>TCU</li><li>AMM</li></ul></article>
+          <article class="card"><div class="section-kicker">Parcerias tecnológicas</div><h3 class="card-title">Infraestrutura</h3><ul class="info-list"><li>OpenAI + ChatGPT</li><li>GitHub + Git</li><li>Termux</li><li>Notion</li></ul></article>
         </div>
       </section>
 
-      <section class="section">
+      <section class="section section-tight">
         <div class="container">
-          <article class="card glass-card">
-            <span class="badge gold">Marco estratégico</span>
-            <h2 class="section-title mt-2">Plataforma-base para evolução institucional</h2>
-            <p class="section-subtitle">
-              O projeto integra identidade pública, leitura fiscal, governança temática,
-              inteligência institucional e caminho preparado para dados reais via JSON,
-              APIs e Portais da Transparência.
-            </p>
+          <article class="card">
+            <div class="section-kicker">Acesso ao Sistema</div>
+            <h3 class="card-title">Ambientes operacionais</h3>
+            <p class="card-text">Entre nos ambientes operacionais e evolua a estrutura para rotinas de governança institucional.</p>
+            <div class="form-actions stacked">
+              <a href="login.html" class="btn btn-primary">Abrir Login Executivo</a>
+              <a href="dashboard/legislativo.html" class="btn btn-secondary">Abrir Login Legislativo</a>
+              <a href="dashboard/controle.html" class="btn btn-secondary">Abrir Login Controle</a>
+            </div>
           </article>
         </div>
       </section>
@@ -383,12 +129,15 @@
 
     <footer class="footer-note">
       <div class="container">
-        Curadoria estratégica: Décio Coelho • ExecutivoVilaBelaMT • Ecossistema de Governança Inteligente •
-        <span data-ano-atual></span>
+        <p>Curadoria estratégica: Décio Coelho • ExecutivoVilaBelaMT • Ecossistema de Governança Inteligente</p>
       </div>
     </footer>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <div class="floating-theme-toggle">
+    <button type="button" data-theme-toggle aria-label="Alternar tema"><span>🌓</span><span>Tema</span></button>
+  </div>
+
   <script src="script.js"></script>
-<body data-page="index" class="page-home modo-cinema">
+</body>
+                                                                                                             </html>
