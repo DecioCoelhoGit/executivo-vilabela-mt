@@ -1,954 +1,721 @@
-/* =========================================================
-   EXECUTIVOVILABELAMT — SCRIPT.JS TOTAL | 2º PACOTE COMPLETO
-   ========================================================= */
+(function () {
+  const STORAGE_THEME_KEY = "evbmt-theme";
+  const STORAGE_SESSION_KEY = "evbmt-session";
+  const STORAGE_ATUALIZACAO_KEY = "evbmt-updated-at";
+  const STORAGE_RECEITAS_KEY = "evbmt-receitas";
+  const STORAGE_DESPESAS_KEY = "evbmt-despesas";
+  const STORAGE_SERVIDORES_KEY = "evbmt-servidores";
 
-(() => {
-  "use strict";
+  const body = document.body;
+  const root = document.documentElement;
 
-  const STORAGE = {
-    SESSION: "evbmt_session",
-    DATA: "evbmt_data",
-    THEME: "evbmt_theme"
-  };
+  const page = body?.dataset?.page || "";
 
-  const ROUTES = {
-    executivo: "executivo.html",
-    legislativo: "legislativo.html",
-    controle: "controle.html",
-    admin: "admin.html"
-  };
+  const themeButtons = document.querySelectorAll("[data-theme-toggle]");
+  const menuToggle = document.querySelector("[data-menu-toggle]");
+  const menuDrawer = document.querySelector("[data-menu-drawer]");
+  const menuOverlay = document.querySelector("[data-menu-overlay]");
 
-  const DEFAULT_DATA = {
-    atualizadoEm: "2026-01-31",
-    parceriasInstitucionais: [
-      "Prefeitura Municipal",
-      "Câmara Municipal",
-      "TCE-MT",
-      "TCU",
-      "AMM"
-    ],
-    parceriasTecnologicas: [
-      "GitHub Pages",
-      "Termux",
-      "Git",
-      "Notion",
-      "OpenAI / ChatGPT"
-    ],
-    secretarias: [
-      { nome: "Administração", receita: 180000, despesa: 120000, servidores: 22 },
-      { nome: "Finanças", receita: 150000, despesa: 98000, servidores: 10 },
-      { nome: "Saúde", receita: 300000, despesa: 345000, servidores: 140 },
-      { nome: "Educação", receita: 330000, despesa: 310000, servidores: 115 },
-      { nome: "Assistência Social", receita: 125000, despesa: 110000, servidores: 26 },
-      { nome: "Obras", receita: 210000, despesa: 295000, servidores: 34 },
-      { nome: "Cultura", receita: 45000, despesa: 50000, servidores: 6 },
-      { nome: "Turismo", receita: 40000, despesa: 40000, servidores: 5 },
-      { nome: "Meio Ambiente", receita: 46000, despesa: 47000, servidores: 7 },
-      { nome: "Agricultura", receita: 72000, despesa: 89000, servidores: 12 },
-      { nome: "Planejamento", receita: 428900, despesa: 552900, servidores: 9 }
-    ]
-  };
+  const dadosSecretariasBase = [
+    { nome: "Administração", receita: 180000, despesa: 120000 },
+    { nome: "Finanças", receita: 150000, despesa: 98000 },
+    { nome: "Saúde", receita: 300000, despesa: 345000 },
+    { nome: "Educação", receita: 330000, despesa: 310000 },
+    { nome: "Assistência Social", receita: 125000, despesa: 110000 },
+    { nome: "Obras", receita: 210000, despesa: 295000 },
+    { nome: "Cultura", receita: 32000, despesa: 26000 },
+    { nome: "Turismo", receita: 30000, despesa: 27000 },
+    { nome: "Meio Ambiente", receita: 46000, despesa: 47000 },
+    { nome: "Agricultura", receita: 72000, despesa: 89000 },
+    { nome: "Planejamento", receita: 428900, despesa: 552900 }
+  ];
 
-  document.addEventListener("DOMContentLoaded", () => {
-    ensureData();
-    initTheme();
-    initMenu();
-    initYear();
-    initLogoutLinks();
-    initLoginPage();
-    initAdminPage();
-    renderPage();
-  });
+  function enrichData(item) {
+    const saldo = item.receita - item.despesa;
+    const execucao = item.receita > 0 ? (item.despesa / item.receita) * 100 : 0;
 
-  /* =========================================================
-     HELPERS
-     ========================================================= */
+    let status = "Estável";
+    if (execucao > 100 || saldo < 0) {
+      status = "Risco alto";
+    } else if (execucao >= 95) {
+      status = "Atenção";
+    }
 
-  function $(selector, scope = document) {
-    return scope.querySelector(selector);
+    return {
+      ...item,
+      saldo,
+      execucao,
+      status
+    };
   }
 
-  function $all(selector, scope = document) {
-    return Array.from(scope.querySelectorAll(selector));
-  }
+  const dataset = dadosSecretariasBase.map(enrichData);
 
-  function pageName() {
-    return document.body?.dataset?.page || "";
-  }
-
-  function setText(selector, value) {
-    const el = $(selector);
-    if (el) el.textContent = value;
-  }
-
-  function setHTML(selector, value) {
-    const el = $(selector);
-    if (el) el.innerHTML = value;
-  }
-
-  function fmtMoney(value) {
-    return Number(value || 0).toLocaleString("pt-BR", {
+  function formatMoney(value) {
+    return new Intl.NumberFormat("pt-BR", {
       style: "currency",
       currency: "BRL"
-    });
+    }).format(value);
   }
 
-  function fmtPercent(value) {
-    return `${Number(value || 0).toLocaleString("pt-BR", {
+  function formatPercent(value) {
+    return value.toLocaleString("pt-BR", {
       minimumFractionDigits: 1,
       maximumFractionDigits: 1
-    })}%`;
+    }) + "%";
   }
 
-  function fmtDate(value) {
-    if (!value) return "--/--/----";
-    const d = new Date(value);
-    if (Number.isNaN(d.getTime())) return value;
-    return d.toLocaleDateString("pt-BR");
+  function formatDate(isoString) {
+    if (!isoString) return "--";
+    const date = new Date(isoString);
+    if (Number.isNaN(date.getTime())) return "--";
+    return date.toLocaleString("pt-BR");
   }
 
-  function clone(obj) {
-    return JSON.parse(JSON.stringify(obj));
+  function getStatusClass(status) {
+    if (status === "Risco alto") return "status-critical";
+    if (status === "Atenção") return "status-warning";
+    return "status-stable";
   }
 
-  /* =========================================================
-     THEME
-     ========================================================= */
+  function setUpdatedAt() {
+    localStorage.setItem(STORAGE_ATUALIZACAO_KEY, new Date().toISOString());
+  }
+
+  function applyTheme(theme) {
+    body.classList.remove("theme-light", "theme-dark");
+    body.classList.add(theme === "light" ? "theme-light" : "theme-dark");
+    root.setAttribute("data-theme", theme === "light" ? "light" : "dark");
+    localStorage.setItem(STORAGE_THEME_KEY, theme);
+  }
 
   function initTheme() {
-    const saved = localStorage.getItem(STORAGE.THEME);
-    if (saved === "light") {
-      document.body.classList.add("light-mode");
-    }
-
-    let btn = $(".toggle-theme");
-
-    if (!btn) {
-      btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "toggle-theme";
-      btn.setAttribute("aria-label", "Alternar tema");
-      btn.innerHTML = "🌗 <span>Tema</span>";
-      document.body.appendChild(btn);
-    }
-
-    btn.addEventListener("click", () => {
-      document.body.classList.toggle("light-mode");
-      const theme = document.body.classList.contains("light-mode") ? "light" : "dark";
-      localStorage.setItem(STORAGE.THEME, theme);
-    });
+    const savedTheme = localStorage.getItem(STORAGE_THEME_KEY) || "dark";
+    applyTheme(savedTheme);
   }
 
-  /* =========================================================
-     MENU BLINDADO
-     ========================================================= */
+  function toggleTheme() {
+    const current = body.classList.contains("theme-light") ? "light" : "dark";
+    applyTheme(current === "light" ? "dark" : "light");
+  }
 
-  function initMenu() {
-    const toggle =
-      $("[data-menu-toggle]") ||
-      $(".menu-toggle");
+  themeButtons.forEach((button) => {
+    button.addEventListener("click", toggleTheme);
+  });
 
-    const drawer =
-      $("[data-menu-drawer]") ||
-      $(".menu-drawer");
+  function openMenu() {
+    if (!menuDrawer || !menuOverlay || !menuToggle) return;
+    menuDrawer.classList.add("active");
+    menuOverlay.classList.add("active");
+    menuToggle.setAttribute("aria-expanded", "true");
+  }
 
-    const overlay =
-      $("[data-menu-overlay]") ||
-      $(".menu-overlay");
+  function closeMenu() {
+    if (!menuDrawer || !menuOverlay || !menuToggle) return;
+    menuDrawer.classList.remove("active");
+    menuOverlay.classList.remove("active");
+    menuToggle.setAttribute("aria-expanded", "false");
+  }
 
-    if (!toggle || !drawer) return;
-
-    const closeTargets = [
-      ...$all("[data-menu-close]"),
-      ...$all(".menu-close"),
-      ...(overlay ? [overlay] : [])
-    ];
-
-    function openMenu() {
-      drawer.classList.add("is-open");
-      toggle.classList.add("is-active");
-      toggle.setAttribute("aria-expanded", "true");
-      if (overlay) overlay.classList.add("is-open");
-      document.body.classList.add("menu-open");
-    }
-
-    function closeMenu() {
-      drawer.classList.remove("is-open");
-      toggle.classList.remove("is-active");
-      toggle.setAttribute("aria-expanded", "false");
-      if (overlay) overlay.classList.remove("is-open");
-      document.body.classList.remove("menu-open");
-    }
-
-    function toggleMenu() {
-      if (drawer.classList.contains("is-open")) {
+  if (menuToggle) {
+    menuToggle.addEventListener("click", function () {
+      const isOpen = menuDrawer && menuDrawer.classList.contains("active");
+      if (isOpen) {
         closeMenu();
       } else {
         openMenu();
       }
-    }
-
-    toggle.addEventListener("click", toggleMenu);
-
-    closeTargets.forEach((el) => {
-      el.addEventListener("click", closeMenu);
-    });
-
-    $all("a", drawer).forEach((link) => {
-      link.addEventListener("click", closeMenu);
-    });
-
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") closeMenu();
     });
   }
 
-  /* =========================================================
-     SESSION
-     ========================================================= */
+  if (menuOverlay) {
+    menuOverlay.addEventListener("click", closeMenu);
+  }
 
-  function getSession() {
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+      closeMenu();
+    }
+  });
+
+  function safeParse(json) {
     try {
-      const raw = localStorage.getItem(STORAGE.SESSION);
-      return raw ? JSON.parse(raw) : null;
-    } catch {
+      return JSON.parse(json);
+    } catch (error) {
       return null;
     }
   }
 
-  function saveSession(session) {
-    localStorage.setItem(STORAGE.SESSION, JSON.stringify(session));
+  function getSession() {
+    return safeParse(localStorage.getItem(STORAGE_SESSION_KEY));
   }
 
-  function clearSession() {
-    localStorage.removeItem(STORAGE.SESSION);
-  }
+  function renderSessionBadges(selectors) {
+    const session = getSession();
+    const updatedAt = localStorage.getItem(STORAGE_ATUALIZACAO_KEY);
 
-  function initLogoutLinks() {
-    $all("[data-logout]").forEach((link) => {
-      link.addEventListener("click", (event) => {
-        event.preventDefault();
-        clearSession();
-        window.location.href = "login.html";
-      });
-    });
-  }
-
-  /* =========================================================
-     DATA
-     ========================================================= */
-
-  function normalizeData(data) {
-    const base = clone(DEFAULT_DATA);
-    if (!data || typeof data !== "object") return base;
-
-    const merged = {
-      atualizadoEm: data.atualizadoEm || base.atualizadoEm,
-      parceriasInstitucionais: Array.isArray(data.parceriasInstitucionais)
-        ? data.parceriasInstitucionais
-        : base.parceriasInstitucionais,
-      parceriasTecnologicas: Array.isArray(data.parceriasTecnologicas)
-        ? data.parceriasTecnologicas
-        : base.parceriasTecnologicas,
-      secretarias: Array.isArray(data.secretarias) ? data.secretarias : base.secretarias
-    };
-
-    merged.secretarias = merged.secretarias.map((item) => ({
-      nome: item.nome || "Secretaria",
-      receita: Number(item.receita || 0),
-      despesa: Number(item.despesa || 0),
-      servidores: Number(item.servidores || 0)
-    }));
-
-    merged.secretarias = splitCulturaTurismo(merged.secretarias);
-
-    return merged;
-  }
-
-  function splitCulturaTurismo(secretarias) {
-    const result = [];
-
-    secretarias.forEach((item) => {
-      if (String(item.nome).trim().toLowerCase() === "cultura e turismo") {
-        result.push(
-          { nome: "Cultura", receita: 45000, despesa: 50000, servidores: 6 },
-          { nome: "Turismo", receita: 40000, despesa: 40000, servidores: 5 }
-        );
-      } else {
-        result.push(item);
+    if (selectors.userBadge) {
+      const el = document.getElementById(selectors.userBadge);
+      if (el) {
+        el.textContent = session?.username ? `Sessão: ${session.username}` : "Sem sessão ativa";
       }
-    });
-
-    const hasCultura = result.some((s) => s.nome === "Cultura");
-    const hasTurismo = result.some((s) => s.nome === "Turismo");
-
-    if (!hasCultura) {
-      result.push({ nome: "Cultura", receita: 45000, despesa: 50000, servidores: 6 });
-    }
-    if (!hasTurismo) {
-      result.push({ nome: "Turismo", receita: 40000, despesa: 40000, servidores: 5 });
     }
 
-    return result.filter((item, index, arr) => {
-      return arr.findIndex((x) => x.nome === item.nome) === index;
-    });
-  }
+    if (selectors.statusSessao) {
+      const el = document.getElementById(selectors.statusSessao);
+      if (el) {
+        el.textContent = session ? "ativa" : "inativa";
+      }
+    }
 
-  function ensureData() {
-    const current = getData();
-    if (!current) {
-      localStorage.setItem(STORAGE.DATA, JSON.stringify(DEFAULT_DATA));
-    } else {
-      localStorage.setItem(STORAGE.DATA, JSON.stringify(normalizeData(current)));
+    if (selectors.statusPerfil) {
+      const el = document.getElementById(selectors.statusPerfil);
+      if (el) {
+        el.textContent = session?.profile || "--";
+      }
+    }
+
+    if (selectors.statusAtualizacao) {
+      const el = document.getElementById(selectors.statusAtualizacao);
+      if (el) {
+        el.textContent = formatDate(updatedAt);
+      }
     }
   }
-
-  function getData() {
-    try {
-      const raw = localStorage.getItem(STORAGE.DATA);
-      return raw ? normalizeData(JSON.parse(raw)) : null;
-    } catch {
-      return normalizeData(DEFAULT_DATA);
-    }
-  }
-
-  function saveData(data) {
-    localStorage.setItem(STORAGE.DATA, JSON.stringify(normalizeData(data)));
-  }
-
-  function calcExecucao(item) {
-    if (!Number(item.receita)) return 0;
-    return (Number(item.despesa) / Number(item.receita)) * 100;
-  }
-
-  function calcSaldo(item) {
-    return Number(item.receita) - Number(item.despesa);
-  }
-
-  function classifyRisk(item) {
-    const exec = calcExecucao(item);
-    const saldo = calcSaldo(item);
-
-    if (exec > 100 || saldo < 0) return "Risco alto";
-    if (exec >= 90) return "Atenção";
-    return "Estável";
-  }
-
-  function riskClassName(label) {
-    if (label === "Risco alto") return "risk";
-    if (label === "Atenção") return "attention";
-    return "stable";
-  }
-
-  function summary(data) {
-    const totalReceita = data.secretarias.reduce((acc, item) => acc + Number(item.receita), 0);
-    const totalDespesa = data.secretarias.reduce((acc, item) => acc + Number(item.despesa), 0);
-    const totalServidores = data.secretarias.reduce((acc, item) => acc + Number(item.servidores), 0);
-    const saldo = totalReceita - totalDespesa;
-    const mediaExecucao =
-      data.secretarias.length > 0
-        ? data.secretarias.reduce((acc, item) => acc + calcExecucao(item), 0) / data.secretarias.length
-        : 0;
-
-    return {
-      totalReceita,
-      totalDespesa,
-      totalServidores,
-      saldo,
-      mediaExecucao
-    };
-  }
-
-  /* =========================================================
-     LOGIN PAGE
-     ========================================================= */
 
   function initLoginPage() {
-    if (pageName() !== "login") return;
+    const loginForm = document.getElementById("loginForm");
+    const perfil = document.getElementById("perfil");
+    const usuario = document.getElementById("usuario");
+    const senha = document.getElementById("senha");
+    const loginMensagem = document.getElementById("loginMensagem");
+    const cancelarLogin = document.getElementById("cancelarLogin");
 
-    const form = $("#loginForm");
-    const statusBox = $("#loginMensagem");
-    const usuario = $("#usuario");
-    const senha = $("#senha");
-    const perfil = $("#perfil");
+    if (!loginForm || !perfil || !usuario || !senha || !loginMensagem) return;
 
-    if (!form) return;
+    function showMessage(message, type) {
+      loginMensagem.textContent = message || "";
+      loginMensagem.className = "status-message";
+      if (type) {
+        loginMensagem.classList.add(type);
+      }
+    }
 
-    form.addEventListener("submit", (event) => {
+    function getRedirectByProfile(profileValue) {
+      const redirects = {
+        executivo: "dashboard/executivo.html",
+        legislativo: "dashboard/legislativo.html",
+        controle: "dashboard/controle.html",
+        admin: "admin.html"
+      };
+      return redirects[profileValue] || "index.html";
+    }
+
+    if (cancelarLogin) {
+      cancelarLogin.addEventListener("click", function () {
+        loginForm.reset();
+        showMessage("", "");
+      });
+    }
+
+    loginForm.addEventListener("submit", function (event) {
       event.preventDefault();
 
-      const perfilValue = String(perfil?.value || "").trim().toLowerCase();
-      const usuarioValue = String(usuario?.value || "").trim();
-      const senhaValue = String(senha?.value || "").trim();
+      const perfilValue = (perfil.value || "").trim();
+      const usuarioValue = (usuario.value || "").trim();
+      const senhaValue = (senha.value || "").trim();
 
       if (!perfilValue || !usuarioValue || !senhaValue) {
-        showStatus(statusBox, "Preencha perfil, usuário e senha.", "erro");
+        showMessage("Preencha perfil, usuário e senha.", "error");
         return;
       }
 
-      const authMap = {
-        executivo: "1234",
-        legislativo: "1234",
-        controle: "1234",
-        admin: "1234"
-      };
-
-      if (senhaValue !== authMap[perfilValue]) {
-        showStatus(statusBox, "Senha inválida. Use 1234.", "erro");
+      if (senhaValue !== "1234") {
+        showMessage("Senha inválida. Use 1234 para os testes locais.", "error");
         return;
       }
 
-      const perfilNomeMap = {
-        executivo: "Prefeito / Executivo",
-        legislativo: "Vereador / Legislativo",
-        controle: "Controle / Órgãos de Controle",
-        admin: "Administração local"
+      const sessionData = {
+        profile: perfilValue,
+        username: usuarioValue,
+        loginAt: new Date().toISOString(),
+        authenticated: true
       };
 
-      saveSession({
-        usuario: usuarioValue,
-        perfil: perfilValue,
-        perfilNome: perfilNomeMap[perfilValue] || perfilValue,
-        loginEm: new Date().toISOString()
-      });
+      localStorage.setItem(STORAGE_SESSION_KEY, JSON.stringify(sessionData));
+      setUpdatedAt();
 
-      showStatus(statusBox, "Acesso liberado. Redirecionando...", "sucesso");
+      showMessage("Acesso autorizado. Redirecionando...", "success");
 
-      setTimeout(() => {
-        window.location.href = ROUTES[perfilValue] || "index.html";
-      }, 450);
+      const redirect = getRedirectByProfile(perfilValue);
+      window.location.href = redirect;
     });
   }
-
-  function showStatus(box, text, type) {
-    if (!box) return;
-    box.textContent = text;
-    box.className = `status-box ${type}`;
-  }
-
-  /* =========================================================
-     ADMIN PAGE
-     ========================================================= */
 
   function initAdminPage() {
-    if (pageName() !== "admin") return;
+    const statusStorage = document.getElementById("statusStorage");
+    const statusSessao = document.getElementById("statusSessao");
+    const statusAtualizacao = document.getElementById("statusAtualizacao");
 
-    const btnLimparBase = $("#btnLimparBaseLocal");
-    const btnLimparSessao = $("#btnLimparSessao");
-    const storageStatus = $("#adminStorageStatus");
-    const sessionStatus = $("#adminSessionStatus");
-    const lastUpdate = $("#adminLastUpdate");
-    const statusReceitas = $("#statusReceitasLocais");
-    const statusDespesas = $("#statusDespesasLocais");
-    const statusServidores = $("#statusServidoresLocais");
-    const statusSessao = $("#statusSessaoAtiva");
-    const msg = $("#adminMensagem");
+    const baseReceitas = document.getElementById("baseReceitas");
+    const baseDespesas = document.getElementById("baseDespesas");
+    const baseServidores = document.getElementById("baseServidores");
+    const baseSessao = document.getElementById("baseSessao");
 
-    const data = getData();
-    const sessao = getSession();
+    const limparBaseLocal = document.getElementById("limparBaseLocal");
+    const limparSessao = document.getElementById("limparSessao");
+    const adminMensagem = document.getElementById("adminMensagem");
 
-    if (storageStatus) storageStatus.textContent = storageAvailable() ? "ativo" : "indisponível";
-    if (sessionStatus) sessionStatus.textContent = sessao ? "ativa" : "inativa";
-    if (lastUpdate) lastUpdate.textContent = fmtDate(data?.atualizadoEm);
-
-    if (statusReceitas) setPill(statusReceitas, data ? "ativo" : "inativo");
-    if (statusDespesas) setPill(statusDespesas, data ? "ativo" : "inativo");
-    if (statusServidores) setPill(statusServidores, data ? "ativo" : "inativo");
-    if (statusSessao) setPill(statusSessao, sessao ? "ativo" : "inativo");
-
-    if (btnLimparBase) {
-      btnLimparBase.addEventListener("click", () => {
-        localStorage.removeItem(STORAGE.DATA);
-        ensureData();
-        showStatus(msg, "Base local removida com sucesso.", "sucesso");
-        setTimeout(() => window.location.reload(), 350);
-      });
-    }
-
-    if (btnLimparSessao) {
-      btnLimparSessao.addEventListener("click", () => {
-        clearSession();
-        showStatus(msg, "Sessão removida com sucesso.", "sucesso");
-        setTimeout(() => window.location.reload(), 350);
-      });
-    }
-  }
-
-  function storageAvailable() {
-    try {
-      localStorage.setItem("__evbmt_test__", "ok");
-      localStorage.removeItem("__evbmt_test__");
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  function setPill(el, text) {
-    if (!el) return;
-    el.textContent = text;
-    el.className = "status-pill";
-    if (text === "ativo") el.classList.add("stable");
-    else el.classList.add("attention");
-  }
-
-  /* =========================================================
-     PAGE RENDER
-     ========================================================= */
-
-  function renderPage() {
-    const page = pageName();
-    const data = getData();
-    const resumo = summary(data);
-
-    renderSessionHeader();
-
-    if (page === "home") {
-      renderHome(data, resumo);
-    }
-
-    if (page === "executivo") {
-      requireSession(["executivo", "admin"]);
-      renderExecutivo(data, resumo);
-    }
-
-    if (page === "legislativo") {
-      requireSession(["legislativo", "admin"]);
-      renderLegislativo(data, resumo);
-    }
-
-    if (page === "controle") {
-      requireSession(["controle", "admin"]);
-      renderControle(data, resumo);
-    }
-  }
-
-  function renderSessionHeader() {
-    const sessaoUsuario = $("[data-sessao-usuario]");
-    const sessaoPerfil = $("[data-sessao-perfil]");
-    const sessao = getSession();
-
-    if (sessaoUsuario) sessaoUsuario.textContent = sessao?.usuario || "Visitante";
-    if (sessaoPerfil) sessaoPerfil.textContent = sessao?.perfilNome || "Acesso institucional";
-  }
-
-  function requireSession(allowed) {
-    const sessao = getSession();
-    if (!sessao) {
-      window.location.href = "login.html";
-      return;
-    }
-
-    if (Array.isArray(allowed) && !allowed.includes(sessao.perfil)) {
-      window.location.href = "login.html";
-    }
-  }
-
-  /* =========================================================
-     HOME
-     ========================================================= */
-
-  function renderHome(data, resumo) {
-    setText("#homeReceitaTotal", fmtMoney(resumo.totalReceita));
-    setText("#homeDespesaTotal", fmtMoney(resumo.totalDespesa));
-    setText("#homeSaldoTotal", fmtMoney(resumo.saldo));
-    setText("#homeExecucaoMedia", fmtPercent(resumo.mediaExecucao));
-
-    renderSecretariasCards("#monitoramentoSecretarias", data.secretarias);
-    renderSimpleList("#listaParceriasInstitucionais", data.parceriasInstitucionais);
-    renderSimpleList("#listaParceriasTecnologicas", data.parceriasTecnologicas);
-
-    renderCharts(data.secretarias);
-  }
-
-  /* =========================================================
-     EXECUTIVO
-     ========================================================= */
-
-  function renderExecutivo(data, resumo) {
-    setText("#executivoAtualizadoEm", fmtDate(data.atualizadoEm));
-    setText("#executivoReceitaTotal", fmtMoney(resumo.totalReceita));
-    setText("#executivoDespesaTotal", fmtMoney(resumo.totalDespesa));
-    setText("#executivoSaldoTotal", fmtMoney(resumo.saldo));
-    setText("#executivoServidores", String(resumo.totalServidores));
-
-    const filtro = $("#filtroSecretaria");
-    const tabela = $("#tabelaExecutivoBody");
-    const alertas = $("#executivoAlertas");
-    const resumoBox = $("#executivoResumo");
-    const insights = $("#executivoInsights");
-    const exportBtn = $("#btnExportarRelatorio");
-    const uploadJson = $("#uploadJson");
-
-    if (filtro) {
-      fillFilter(filtro, data.secretarias);
-      filtro.addEventListener("change", () => {
-        updateExecutivoView(data.secretarias, filtro.value);
-      });
-    }
-
-    if (exportBtn) {
-      exportBtn.addEventListener("click", () => window.print());
-    }
-
-    if (uploadJson) {
-      uploadJson.addEventListener("change", (event) => {
-        const file = event.target.files?.[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          try {
-            const json = JSON.parse(String(e.target?.result || "{}"));
-            saveData(json);
-            window.location.reload();
-          } catch {
-            window.alert("Arquivo JSON inválido.");
-          }
-        };
-        reader.readAsText(file, "utf-8");
-      });
-    }
-
-    updateExecutivoView(data.secretarias, "todas");
-
-    function updateExecutivoView(secretarias, filtroNome) {
-      const lista =
-        filtroNome && filtroNome !== "todas"
-          ? secretarias.filter((item) => item.nome === filtroNome)
-          : secretarias;
-
-      if (tabela) {
-        tabela.innerHTML = lista
-          .map((item) => {
-            return `
-              <tr>
-                <td>${item.nome}</td>
-                <td>${fmtMoney(item.receita)}</td>
-                <td>${fmtMoney(item.despesa)}</td>
-                <td>${fmtMoney(calcSaldo(item))}</td>
-                <td>${fmtPercent(calcExecucao(item))}</td>
-              </tr>
-            `;
-          })
-          .join("");
+    function setMessage(message, type) {
+      if (!adminMensagem) return;
+      adminMensagem.textContent = message || "";
+      adminMensagem.className = "status-message";
+      if (type) {
+        adminMensagem.classList.add(type);
       }
+    }
 
-      if (alertas) {
-        const criticos = lista.filter((item) => classifyRisk(item) !== "Estável");
-        alertas.innerHTML =
-          criticos.length > 0
-            ? criticos
-                .map((item) => {
-                  return `
-                    <div class="alert-item">
-                      <strong>${item.nome}</strong><br>
-                      Execução de ${fmtPercent(calcExecucao(item))} e saldo de ${fmtMoney(calcSaldo(item))}.
-                    </div>
-                  `;
-                })
-                .join("")
-            : `<div class="alert-item ok">Nenhum alerta crítico foi identificado na leitura atual.</div>`;
+    function hasLocalStorage() {
+      try {
+        const testKey = "__evbmt_test__";
+        localStorage.setItem(testKey, "ok");
+        localStorage.removeItem(testKey);
+        return true;
+      } catch (error) {
+        return false;
       }
+    }
 
-      if (resumoBox) {
-        const parcial = summary({ secretarias: lista });
-        const criticas = lista.filter((item) => classifyRisk(item) === "Risco alto").length;
+    function getItemCount(key) {
+      const raw = localStorage.getItem(key);
+      if (!raw) return 0;
+      const parsed = safeParse(raw);
+      if (Array.isArray(parsed)) return parsed.length;
+      if (parsed && typeof parsed === "object") return 1;
+      return 0;
+    }
 
-        resumoBox.innerHTML = `
-          <strong>Execução geral:</strong> ${fmtPercent(parcial.mediaExecucao)}<br>
-          <strong>Receita consolidada:</strong> ${fmtMoney(parcial.totalReceita)}<br>
-          <strong>Despesa consolidada:</strong> ${fmtMoney(parcial.totalDespesa)}<br>
-          <strong>Saldo apurado:</strong> ${fmtMoney(parcial.saldo)}<br>
-          <strong>Secretarias críticas:</strong> ${criticas}
+    function refreshAdminStatus() {
+      const storageOk = hasLocalStorage();
+      const sessionRaw = localStorage.getItem(STORAGE_SESSION_KEY);
+      const updatedAt = localStorage.getItem(STORAGE_ATUALIZACAO_KEY);
+
+      if (statusStorage) statusStorage.textContent = storageOk ? "ativo" : "indisponível";
+      if (statusSessao) statusSessao.textContent = sessionRaw ? "ativa" : "inativa";
+      if (statusAtualizacao) statusAtualizacao.textContent = formatDate(updatedAt);
+
+      if (baseReceitas) baseReceitas.textContent = getItemCount(STORAGE_RECEITAS_KEY) > 0 ? `${getItemCount(STORAGE_RECEITAS_KEY)} registro(s)` : "inativo";
+      if (baseDespesas) baseDespesas.textContent = getItemCount(STORAGE_DESPESAS_KEY) > 0 ? `${getItemCount(STORAGE_DESPESAS_KEY)} registro(s)` : "inativo";
+      if (baseServidores) baseServidores.textContent = getItemCount(STORAGE_SERVIDORES_KEY) > 0 ? `${getItemCount(STORAGE_SERVIDORES_KEY)} registro(s)` : "inativo";
+      if (baseSessao) baseSessao.textContent = sessionRaw ? "ativo" : "inativo";
+    }
+
+    if (limparBaseLocal) {
+      limparBaseLocal.addEventListener("click", function () {
+        localStorage.removeItem(STORAGE_RECEITAS_KEY);
+        localStorage.removeItem(STORAGE_DESPESAS_KEY);
+        localStorage.removeItem(STORAGE_SERVIDORES_KEY);
+        localStorage.removeItem(STORAGE_ATUALIZACAO_KEY);
+        refreshAdminStatus();
+        setMessage("Base local removida com sucesso.", "success");
+      });
+    }
+
+    if (limparSessao) {
+      limparSessao.addEventListener("click", function () {
+        localStorage.removeItem(STORAGE_SESSION_KEY);
+        refreshAdminStatus();
+        setMessage("Sessão removida com sucesso.", "success");
+      });
+    }
+
+    refreshAdminStatus();
+  }
+
+  function initExecutivoPage() {
+    const executivoUsuario = document.getElementById("executivoUsuario");
+    const statusSessao = document.getElementById("statusSessao");
+    const statusAtualizacao = document.getElementById("statusAtualizacao");
+    const statusPerfil = document.getElementById("statusPerfil");
+
+    const kpiReceita = document.getElementById("kpiReceita");
+    const kpiDespesa = document.getElementById("kpiDespesa");
+    const kpiSaldo = document.getElementById("kpiSaldo");
+    const kpiExecucao = document.getElementById("kpiExecucao");
+
+    const filtroSecretaria = document.getElementById("filtroSecretaria");
+    const tabelaExecutivo = document.getElementById("tabelaExecutivo");
+    const listaAlertas = document.getElementById("listaAlertas");
+    const resumoExecutivo = document.getElementById("resumoExecutivo");
+    const insightsIA = document.getElementById("insightsIA");
+    const btnExportar = document.getElementById("btnExportar");
+
+    if (!tabelaExecutivo) return;
+
+    renderSessionBadges({
+      userBadge: "executivoUsuario",
+      statusSessao: "statusSessao",
+      statusPerfil: "statusPerfil",
+      statusAtualizacao: "statusAtualizacao"
+    });
+
+    if (filtroSecretaria) {
+      dataset.forEach((item) => {
+        const option = document.createElement("option");
+        option.value = item.nome;
+        option.textContent = item.nome;
+        filtroSecretaria.appendChild(option);
+      });
+    }
+
+    function getFilteredData() {
+      const selected = filtroSecretaria?.value || "todas";
+      if (selected === "todas") return dataset;
+      return dataset.filter((item) => item.nome === selected);
+    }
+
+    function renderKPIs(data) {
+      const totalReceita = data.reduce((sum, item) => sum + item.receita, 0);
+      const totalDespesa = data.reduce((sum, item) => sum + item.despesa, 0);
+      const totalSaldo = totalReceita - totalDespesa;
+      const mediaExecucao = data.length
+        ? data.reduce((sum, item) => sum + item.execucao, 0) / data.length
+        : 0;
+
+      if (kpiReceita) kpiReceita.textContent = formatMoney(totalReceita);
+      if (kpiDespesa) kpiDespesa.textContent = formatMoney(totalDespesa);
+      if (kpiSaldo) kpiSaldo.textContent = formatMoney(totalSaldo);
+      if (kpiExecucao) kpiExecucao.textContent = formatPercent(mediaExecucao);
+    }
+
+    function renderTable(data) {
+      tabelaExecutivo.innerHTML = "";
+      data.forEach((item) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td data-label="Secretaria">${item.nome}</td>
+          <td data-label="Receita">${formatMoney(item.receita)}</td>
+          <td data-label="Despesa">${formatMoney(item.despesa)}</td>
+          <td data-label="Saldo">${formatMoney(item.saldo)}</td>
+          <td data-label="Execução">${formatPercent(item.execucao)}</td>
+          <td data-label="Status"><span class="status-badge ${getStatusClass(item.status)}">${item.status}</span></td>
         `;
-      }
-
-      if (insights) {
-        const criticas = lista.filter((item) => classifyRisk(item) === "Risco alto").length;
-        const positivas = lista.filter((item) => calcSaldo(item) >= 0).length;
-
-        insights.innerHTML = `
-          <p>Há ${criticas} secretaria(s) com execução crítica, exigindo verificação imediata.</p>
-          <p>${positivas} secretaria(s) mantêm saldo positivo, favorecendo planejamento preventivo.</p>
-          <p>Sugestão de IA: consolidar relatórios mensais por secretaria e gerar parecer executivo automatizado.</p>
-        `;
-      }
-    }
-  }
-
-  /* =========================================================
-     LEGISLATIVO
-     ========================================================= */
-
-  function renderLegislativo(data, resumo) {
-    setText("#legAtualizadoEm", fmtDate(data.atualizadoEm));
-    setText("#legExecucaoMedia", fmtPercent(resumo.mediaExecucao));
-    setText("#legDespesaEmpenhada", fmtMoney(resumo.totalDespesa));
-    setText("#legSaldoApurado", fmtMoney(resumo.saldo));
-
-    const target = $("#legTemasFiscalizacao");
-    if (!target) return;
-
-    target.innerHTML = data.secretarias
-      .map((item) => {
-        const risco = classifyRisk(item);
-        return `
-          <article class="monitor-card">
-            <h3>${item.nome}</h3>
-            <p><strong>Receita:</strong> ${fmtMoney(item.receita)}</p>
-            <p><strong>Despesa:</strong> ${fmtMoney(item.despesa)}</p>
-            <p><strong>Saldo:</strong> ${fmtMoney(calcSaldo(item))}</p>
-            <p><strong>Execução:</strong> ${fmtPercent(calcExecucao(item))}</p>
-            <span class="label-chip ${riskClassName(risco)}">${risco}</span>
-          </article>
-        `;
-      })
-      .join("");
-  }
-
-  /* =========================================================
-     CONTROLE
-     ========================================================= */
-
-  function renderControle(data, resumo) {
-    setText("#controleAtualizadoEm", fmtDate(data.atualizadoEm));
-    setText("#controleReceitaTotal", fmtMoney(resumo.totalReceita));
-    setText("#controleDespesaTotal", fmtMoney(resumo.totalDespesa));
-    setText("#controleSaldoTotal", fmtMoney(resumo.saldo));
-    setText("#controleExecucaoMedia", fmtPercent(resumo.mediaExecucao));
-
-    const riscos = $("#controleRiscos");
-    const conformidade = $("#controleConformidade");
-
-    if (riscos) {
-      const criticos = data.secretarias.filter((item) => classifyRisk(item) !== "Estável");
-      riscos.innerHTML = criticos.length
-        ? `
-          <ul class="list-clean">
-            ${criticos
-              .map((item) => `<li>${item.nome}: execução ${fmtPercent(calcExecucao(item))} e saldo ${fmtMoney(calcSaldo(item))}.</li>`)
-              .join("")}
-          </ul>
-        `
-        : `<p class="muted">Nenhum risco crítico identificado.</p>`;
+        tabelaExecutivo.appendChild(tr);
+      });
     }
 
-    if (conformidade) {
-      conformidade.innerHTML = `
-        <ul class="list-clean">
-          <li>Base pronta para auditoria preventiva.</li>
-          <li>Leitura consolidada por secretaria.</li>
-          <li>Estrutura inicial compatível com Portal da Transparência, TCE-MT e TCU.</li>
-          <li>Ponto de expansão para API oficial e trilha de evidências.</li>
-        </ul>
+    function renderAlerts(data) {
+      if (!listaAlertas) return;
+      listaAlertas.innerHTML = "";
+
+      const alerts = [];
+      data.forEach((item) => {
+        if (item.status === "Risco alto") {
+          alerts.push(`Alerta: ${item.nome} com execução de ${formatPercent(item.execucao)} e saldo de ${formatMoney(item.saldo)}.`);
+        } else if (item.status === "Atenção") {
+          alerts.push(`Atenção: ${item.nome} opera com execução de ${formatPercent(item.execucao)}.`);
+        }
+      });
+
+      if (!alerts.length) {
+        alerts.push("Nenhuma criticidade relevante foi identificada na leitura atual.");
+      }
+
+      alerts.forEach((text) => {
+        const div = document.createElement("div");
+        div.className = "info-item";
+        div.textContent = text;
+        listaAlertas.appendChild(div);
+      });
+    }
+
+    function renderSummary(data) {
+      if (!resumoExecutivo) return;
+      resumoExecutivo.innerHTML = "";
+
+      const totalReceita = data.reduce((sum, item) => sum + item.receita, 0);
+      const totalDespesa = data.reduce((sum, item) => sum + item.despesa, 0);
+      const totalSaldo = totalReceita - totalDespesa;
+      const criticas = data.filter((item) => item.status === "Risco alto").length;
+
+      [
+        `Receita consolidada: ${formatMoney(totalReceita)}.`,
+        `Despesa consolidada: ${formatMoney(totalDespesa)}.`,
+        `Saldo apurado: ${formatMoney(totalSaldo)}.`,
+        `Secretarias críticas: ${criticas}.`
+      ].forEach((text) => {
+        const div = document.createElement("div");
+        div.className = "info-item";
+        div.textContent = text;
+        resumoExecutivo.appendChild(div);
+      });
+    }
+
+    function renderInsights(data) {
+      if (!insightsIA) return;
+      insightsIA.innerHTML = "";
+
+      const negatives = data.filter((item) => item.saldo < 0);
+      const positive = data.filter((item) => item.saldo >= 0);
+
+      const lines = [];
+      if (negatives.length) {
+        lines.push(`Há ${negatives.length} secretaria(s) com saldo negativo, exigindo atenção imediata em empenho, liquidação e equilíbrio orçamentário.`);
+      }
+      if (positive.length) {
+        lines.push(`${positive.length} secretaria(s) mantêm saldo positivo, o que favorece planejamento preventivo.`);
+      }
+      lines.push("Sugestão de IA: consolidar relatórios mensais por secretaria e gerar parecer executivo automatizado.");
+
+      lines.forEach((text) => {
+        const div = document.createElement("div");
+        div.className = "info-item";
+        div.textContent = text;
+        insightsIA.appendChild(div);
+      });
+    }
+
+    function renderAll() {
+      const filtered = getFilteredData();
+      renderKPIs(filtered);
+      renderTable(filtered);
+      renderAlerts(filtered);
+      renderSummary(filtered);
+      renderInsights(filtered);
+    }
+
+    if (filtroSecretaria) {
+      filtroSecretaria.addEventListener("change", renderAll);
+    }
+
+    if (btnExportar) {
+      btnExportar.addEventListener("click", function () {
+        window.print();
+      });
+    }
+
+    renderAll();
+  }
+
+  function initLegislativoPage() {
+    const kpiExecucaoMedia = document.getElementById("kpiExecucaoMedia");
+    const kpiDespesaTotal = document.getElementById("kpiDespesaTotal");
+    const kpiSaldoTotal = document.getElementById("kpiSaldoTotal");
+    const kpiAreasCriticas = document.getElementById("kpiAreasCriticas");
+
+    const legTemasFiscalizacao = document.getElementById("legTemasFiscalizacao");
+    const pontosAtencaoLegislativo = document.getElementById("pontosAtencaoLegislativo");
+    const sinteseLegislativa = document.getElementById("sinteseLegislativa");
+    const btnExportar = document.getElementById("btnExportar");
+
+    if (!legTemasFiscalizacao) return;
+
+    renderSessionBadges({
+      userBadge: "legislativoUsuario",
+      statusSessao: "statusSessao",
+      statusPerfil: "statusPerfil",
+      statusAtualizacao: "statusAtualizacao"
+    });
+
+    const totalDespesa = dataset.reduce((sum, item) => sum + item.despesa, 0);
+    const totalSaldo = dataset.reduce((sum, item) => sum + item.saldo, 0);
+    const mediaExecucao = dataset.reduce((sum, item) => sum + item.execucao, 0) / dataset.length;
+    const criticas = dataset.filter((item) => item.status === "Risco alto").length;
+
+    if (kpiExecucaoMedia) kpiExecucaoMedia.textContent = formatPercent(mediaExecucao);
+    if (kpiDespesaTotal) kpiDespesaTotal.textContent = formatMoney(totalDespesa);
+    if (kpiSaldoTotal) kpiSaldoTotal.textContent = formatMoney(totalSaldo);
+    if (kpiAreasCriticas) kpiAreasCriticas.textContent = String(criticas);
+
+    legTemasFiscalizacao.innerHTML = "";
+    dataset.forEach((item) => {
+      const card = document.createElement("article");
+      card.className = "monitor-card";
+      card.innerHTML = `
+        <h3>${item.nome}</h3>
+        <p><strong>Receita:</strong> ${formatMoney(item.receita)}</p>
+        <p><strong>Despesa:</strong> ${formatMoney(item.despesa)}</p>
+        <p><strong>Saldo:</strong> ${formatMoney(item.saldo)}</p>
+        <p><strong>Execução:</strong> ${formatPercent(item.execucao)}</p>
+        <span class="status-badge ${getStatusClass(item.status)}">${item.status}</span>
       `;
+      legTemasFiscalizacao.appendChild(card);
+    });
+
+    if (pontosAtencaoLegislativo) {
+      pontosAtencaoLegislativo.innerHTML = "";
+      [
+        `Há ${criticas} secretaria(s) em risco alto, com potencial impacto na fiscalização temática.`,
+        "Secretarias com saldo negativo merecem acompanhamento prioritário.",
+        "Execução acima de 100% exige leitura orçamentária cuidadosa.",
+        "Comparações entre receita, despesa e saldo fortalecem a fiscalização institucional."
+      ].forEach((texto) => {
+        const div = document.createElement("div");
+        div.className = "info-item";
+        div.textContent = texto;
+        pontosAtencaoLegislativo.appendChild(div);
+      });
+    }
+
+    if (sinteseLegislativa) {
+      sinteseLegislativa.innerHTML = "";
+      [
+        "O painel legislativo organiza a leitura comparativa das áreas de governo.",
+        "A base visual pode subsidiar requerimentos, pareceres e debates em plenário.",
+        "A estrutura temática favorece comissões, acompanhamento setorial e leitura institucional.",
+        "O ecossistema está preparado para evolução futura com dados reais via JSON e APIs."
+      ].forEach((texto) => {
+        const div = document.createElement("div");
+        div.className = "info-item";
+        div.textContent = texto;
+        sinteseLegislativa.appendChild(div);
+      });
+    }
+
+    if (btnExportar) {
+      btnExportar.addEventListener("click", function () {
+        window.print();
+      });
     }
   }
 
-  /* =========================================================
-     RENDER AUXILIAR
-     ========================================================= */
+  function initControlePage() {
+    const kpiReceitaTotal = document.getElementById("kpiReceitaTotal");
+    const kpiDespesaTotal = document.getElementById("kpiDespesaTotal");
+    const kpiSaldoTotal = document.getElementById("kpiSaldoTotal");
+    const kpiExecucaoMedia = document.getElementById("kpiExecucaoMedia");
 
-  function renderSecretariasCards(selector, secretarias) {
-    const container = $(selector);
-    if (!container) return;
+    const controleRiscos = document.getElementById("controleRiscos");
+    const controleConformidade = document.getElementById("controleConformidade");
+    const controleSecretarias = document.getElementById("controleSecretarias");
+    const pontosAuditoria = document.getElementById("pontosAuditoria");
+    const btnExportar = document.getElementById("btnExportar");
 
-    container.innerHTML = secretarias
-      .map((item) => {
-        const risco = classifyRisk(item);
-        return `
-          <article class="monitor-card">
-            <h3>${item.nome}</h3>
-            <p>Receita: <strong>${fmtMoney(item.receita)}</strong></p>
-            <p>Despesa: <strong>${fmtMoney(item.despesa)}</strong></p>
-            <p>Saldo: <strong>${fmtMoney(calcSaldo(item))}</strong></p>
-            <p>Execução: <strong>${fmtPercent(calcExecucao(item))}</strong></p>
-            <span class="label-chip ${riskClassName(risco)}">${risco}</span>
-          </article>
-        `;
-      })
-      .join("");
-  }
+    if (!controleSecretarias) return;
 
-  function renderSimpleList(selector, items) {
-    const container = $(selector);
-    if (!container) return;
-    container.innerHTML = `
-      <ul>
-        ${items.map((item) => `<li>${item}</li>`).join("")}
-      </ul>
-    `;
-  }
-
-  function fillFilter(select, secretarias) {
-    select.innerHTML = `
-      <option value="todas">Todas as Secretarias</option>
-      ${secretarias.map((item) => `<option value="${item.nome}">${item.nome}</option>`).join("")}
-    `;
-  }
-
-  function initYear() {
-    $all("[data-ano-atual]").forEach((el) => {
-      el.textContent = String(new Date().getFullYear());
+    renderSessionBadges({
+      userBadge: "controleUsuario",
+      statusSessao: "statusSessao",
+      statusPerfil: "statusPerfil",
+      statusAtualizacao: "statusAtualizacao"
     });
-  }
 
-  /* =========================================================
-     CHARTS
-     ========================================================= */
+    const totalReceita = dataset.reduce((sum, item) => sum + item.receita, 0);
+    const totalDespesa = dataset.reduce((sum, item) => sum + item.despesa, 0);
+    const totalSaldo = dataset.reduce((sum, item) => sum + item.saldo, 0);
+    const mediaExecucao = dataset.reduce((sum, item) => sum + item.execucao, 0) / dataset.length;
 
-  function renderCharts(secretarias) {
-    if (typeof Chart === "undefined") return;
+    if (kpiReceitaTotal) kpiReceitaTotal.textContent = formatMoney(totalReceita);
+    if (kpiDespesaTotal) kpiDespesaTotal.textContent = formatMoney(totalDespesa);
+    if (kpiSaldoTotal) kpiSaldoTotal.textContent = formatMoney(totalSaldo);
+    if (kpiExecucaoMedia) kpiExecucaoMedia.textContent = formatPercent(mediaExecucao);
 
-    buildChartReceitaDespesa(secretarias);
-    buildChartSaldo(secretarias);
-    buildChartExecucao(secretarias);
-    buildChartRisco(secretarias);
-  }
-
-  function destroyChart(id) {
-    const existing = Chart.getChart(id);
-    if (existing) existing.destroy();
-  }
-
-  function defaultChartOptions() {
-    return {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        x: {
-          ticks: { color: "#dbe7ff" },
-          grid: { color: "rgba(255,255,255,0.08)" }
-        },
-        y: {
-          ticks: { color: "#dbe7ff" },
-          grid: { color: "rgba(255,255,255,0.08)" }
-        }
-      },
-      plugins: {
-        legend: {
-          labels: {
-            color: "#eaf2ff"
-          }
-        }
+    if (controleRiscos) {
+      controleRiscos.innerHTML = "";
+      const criticos = dataset.filter((item) => item.status !== "Estável");
+      if (!criticos.length) {
+        const div = document.createElement("div");
+        div.className = "info-item";
+        div.textContent = "Nenhum risco crítico identificado na leitura atual.";
+        controleRiscos.appendChild(div);
+      } else {
+        criticos.forEach((item) => {
+          const div = document.createElement("div");
+          div.className = "info-item";
+          div.textContent = `${item.nome}: execução ${formatPercent(item.execucao)} e saldo ${formatMoney(item.saldo)}.`;
+          controleRiscos.appendChild(div);
+        });
       }
-    };
+    }
+
+    if (controleConformidade) {
+      controleConformidade.innerHTML = "";
+      [
+        "Base pronta para auditoria preventiva.",
+        "Leitura consolidada por secretaria.",
+        "Estrutura inicial compatível com Portal da Transparência, TCE-MT e TCU.",
+        "Ponto de expansão para APIs e trilhas formais de evidência."
+      ].forEach((texto) => {
+        const div = document.createElement("div");
+        div.className = "info-item";
+        div.textContent = texto;
+        controleConformidade.appendChild(div);
+      });
+    }
+
+    controleSecretarias.innerHTML = "";
+    dataset.forEach((item) => {
+      const card = document.createElement("article");
+      card.className = "monitor-card";
+      card.innerHTML = `
+        <h3>${item.nome}</h3>
+        <p><strong>Receita:</strong> ${formatMoney(item.receita)}</p>
+        <p><strong>Despesa:</strong> ${formatMoney(item.despesa)}</p>
+        <p><strong>Saldo:</strong> ${formatMoney(item.saldo)}</p>
+        <p><strong>Execução:</strong> ${formatPercent(item.execucao)}</p>
+        <span class="status-badge ${getStatusClass(item.status)}">${item.status}</span>
+      `;
+      controleSecretarias.appendChild(card);
+    });
+
+    if (pontosAuditoria) {
+      pontosAuditoria.innerHTML = "";
+      [
+        "Secretarias com saldo negativo exigem rastreio preventivo.",
+        "Execução acima de 100% sugere criticidade ou necessidade de leitura complementar.",
+        "O confronto entre receita, despesa e saldo fortalece a análise técnica.",
+        "A base local prepara a evolução futura para leitura por API e dados oficiais."
+      ].forEach((texto) => {
+        const div = document.createElement("div");
+        div.className = "info-item";
+        div.textContent = texto;
+        pontosAuditoria.appendChild(div);
+      });
+    }
+
+    if (btnExportar) {
+      btnExportar.addEventListener("click", function () {
+        window.print();
+      });
+    }
   }
 
-  function buildChartReceitaDespesa(secretarias) {
-    const canvas = $("#chartReceitaDespesa");
-    if (!canvas) return;
-
-    destroyChart("chartReceitaDespesa");
-
-    new Chart(canvas, {
-      type: "bar",
-      data: {
-        labels: secretarias.map((item) => item.nome),
-        datasets: [
-          {
-            label: "Receita",
-            data: secretarias.map((item) => item.receita),
-            backgroundColor: "#28c7fa"
-          },
-          {
-            label: "Despesa",
-            data: secretarias.map((item) => item.despesa),
-            backgroundColor: "#c0392b"
-          }
-        ]
-      },
-      options: defaultChartOptions()
-    });
+  function initHomePage() {
+    if (!localStorage.getItem(STORAGE_RECEITAS_KEY)) {
+      localStorage.setItem(STORAGE_RECEITAS_KEY, JSON.stringify(dataset.map((item) => ({ nome: item.nome, valor: item.receita }))));
+    }
+    if (!localStorage.getItem(STORAGE_DESPESAS_KEY)) {
+      localStorage.setItem(STORAGE_DESPESAS_KEY, JSON.stringify(dataset.map((item) => ({ nome: item.nome, valor: item.despesa }))));
+    }
+    if (!localStorage.getItem(STORAGE_SERVIDORES_KEY)) {
+      localStorage.setItem(STORAGE_SERVIDORES_KEY, JSON.stringify(dataset.map((item, index) => ({ nome: item.nome, quantidade: (index + 1) * 3 }))));
+    }
+    if (!localStorage.getItem(STORAGE_ATUALIZACAO_KEY)) {
+      setUpdatedAt();
+    }
   }
 
-  function buildChartSaldo(secretarias) {
-    const canvas = $("#chartSaldo");
-    if (!canvas) return;
+  initTheme();
+  closeMenu();
+  initHomePage();
 
-    destroyChart("chartSaldo");
-
-    new Chart(canvas, {
-      type: "line",
-      data: {
-        labels: secretarias.map((item) => item.nome),
-        datasets: [
-          {
-            label: "Saldo",
-            data: secretarias.map((item) => calcSaldo(item)),
-            borderColor: "#52ff7a",
-            backgroundColor: "rgba(82,255,122,0.15)",
-            fill: true,
-            tension: 0.35
-          }
-        ]
-      },
-      options: defaultChartOptions()
-    });
-  }
-
-  function buildChartExecucao(secretarias) {
-    const canvas = $("#chartExecucao");
-    if (!canvas) return;
-
-    destroyChart("chartExecucao");
-
-    new Chart(canvas, {
-      type: "bar",
-      data: {
-        labels: secretarias.map((item) => item.nome),
-        datasets: [
-          {
-            label: "Execução (%)",
-            data: secretarias.map((item) => Number(calcExecucao(item).toFixed(1))),
-            backgroundColor: secretarias.map((item) => {
-              const risco = classifyRisk(item);
-              if (risco === "Risco alto") return "#e74c3c";
-              if (risco === "Atenção") return "#f1c40f";
-              return "#2ecc71";
-            })
-          }
-        ]
-      },
-      options: defaultChartOptions()
-    });
-  }
-
-  function buildChartRisco(secretarias) {
-    const canvas = $("#chartRisco");
-    if (!canvas) return;
-
-    destroyChart("chartRisco");
-
-    const estavel = secretarias.filter((item) => classifyRisk(item) === "Estável").length;
-    const atencao = secretarias.filter((item) => classifyRisk(item) === "Atenção").length;
-    const riscoAlto = secretarias.filter((item) => classifyRisk(item) === "Risco alto").length;
-
-    new Chart(canvas, {
-      type: "doughnut",
-      data: {
-        labels: ["Estável", "Atenção", "Risco alto"],
-        datasets: [
-          {
-            data: [estavel, atencao, riscoAlto],
-            backgroundColor: ["#2ecc71", "#f1c40f", "#e74c3c"],
-            borderWidth: 0
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            labels: { color: "#eaf2ff" }
-          }
-        }
-      }
-    });
+  switch (page) {
+    case "login":
+      initLoginPage();
+      break;
+    case "admin":
+      initAdminPage();
+      break;
+    case "executivo":
+      initExecutivoPage();
+      break;
+    case "legislativo":
+      initLegislativoPage();
+      break;
+    case "controle":
+      initControlePage();
+      break;
+    default:
+      break;
   }
 })();
-function toggleTema() {
-  document.body.classList.toggle("light");
-}
