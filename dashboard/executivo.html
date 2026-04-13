@@ -3,16 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Painel Legislativo | ExecutivoVilaBelaMT</title>
-  <meta name="description" content="Painel Legislativo do ExecutivoVilaBelaMT." />
+  <title>Painel Executivo | ExecutivoVilaBelaMT</title>
+  <meta name="description" content="Painel Executivo do ExecutivoVilaBelaMT." />
   <link rel="icon" type="image/png" href="../favicon.png" />
   <link rel="stylesheet" href="../style.css" />
 </head>
-<body data-page="legislativo" class="page-legislativo modo-cinema theme-dark">
+<body data-page="executivo" class="page-executivo modo-cinema theme-dark">
   <div class="site-shell">
     <header class="site-header">
       <div class="container header-inner">
-        <div class="brand-block"><a href="../index.html" class="brand-link"><h1 class="brand-title">ExecutivoVilaBelaMT</h1></a><p class="brand-subtitle">Painel Legislativo</p></div>
+        <div class="brand-block">
+          <a href="../index.html" class="brand-link"><h1 class="brand-title">ExecutivoVilaBelaMT</h1></a>
+          <p class="brand-subtitle">Painel Executivo</p>
+        </div>
         <div class="header-actions"><button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" data-menu-toggle>☰</button></div>
       </div>
     </header>
@@ -22,8 +25,8 @@
       <div class="menu-drawer-header"><strong>Navegação institucional</strong></div>
       <a class="menu-link" href="../index.html">Início</a>
       <a class="menu-link" href="../login.html">Login</a>
-      <a class="menu-link" href="executivo.html">Executivo</a>
-      <a class="menu-link active" href="legislativo.html">Legislativo</a>
+      <a class="menu-link active" href="executivo.html">Executivo</a>
+      <a class="menu-link" href="legislativo.html">Legislativo</a>
       <a class="menu-link" href="controle.html">Controle</a>
       <a class="menu-link" href="../admin.html">Admin</a>
       <hr class="menu-separator" />
@@ -33,20 +36,21 @@
     <main class="page-main">
       <section class="section">
         <div class="container grid-single">
-          <article class="hero-card"><div class="section-kicker">Fiscalização temática e acompanhamento institucional</div><h2 class="page-title">Painel Legislativo</h2><p class="page-subtitle">Base para leitura temática das secretarias, fiscalização parlamentar, acompanhamento comparativo e apoio estratégico às atividades legislativas.</p><div class="hero-meta"><span class="meta-badge">Perfil Legislativo</span><span class="meta-badge" id="legislativoUsuario">Sessão local</span></div></article>
-          <div class="kpi-grid"><article class="kpi-card"><div class="kpi-label">Execução Média</div><div class="kpi-value" id="kpiExecucaoMedia">0,0%</div><div class="kpi-note">Panorama geral do período</div></article><article class="kpi-card"><div class="kpi-label">Despesa Consolidada</div><div class="kpi-value" id="kpiDespesaTotal">R$ 0,00</div><div class="kpi-note">Base para fiscalização</div></article><article class="kpi-card"><div class="kpi-label">Saldo Consolidado</div><div class="kpi-value" id="kpiSaldoTotal">R$ 0,00</div><div class="kpi-note">Resultado comparativo</div></article><article class="kpi-card"><div class="kpi-label">Áreas Críticas</div><div class="kpi-value" id="kpiAreasCriticas">0</div><div class="kpi-note">Secretarias em maior atenção</div></article></div>
-          <article class="card"><div class="section-kicker">Foco legislativo</div><h3 class="card-title">Direcionamento da leitura</h3><p class="card-text">Este painel organiza a leitura por secretaria para apoiar requerimentos, comissões, debates em plenário e acompanhamento institucional temático.</p></article>
-          <article class="card"><div class="section-kicker">Status institucional</div><h3 class="card-title">Sessão e atualização</h3><div class="admin-status-list"><p><strong>Sessão:</strong> <span id="statusSessao">--</span></p><p><strong>Última atualização:</strong> <span id="statusAtualizacao">--</span></p><p><strong>Perfil:</strong> <span id="statusPerfil">--</span></p></div></article>
-          <article class="card"><div class="section-kicker">Exportação</div><h3 class="card-title">Relatório legislativo</h3><p class="card-text">Gere uma versão pronta para impressão ou PDF para reuniões, consultas parlamentares e atividades de fiscalização.</p><div class="form-actions"><button type="button" class="btn btn-primary" id="btnExportar">Exportar relatório</button></div></article>
-          <article class="card"><div class="section-kicker">Temas para fiscalização</div><h3 class="card-title">Leitura por secretaria</h3><div id="legTemasFiscalizacao" class="monitor-grid"></div></article>
-          <article class="card"><div class="section-kicker">Leitura legislativa</div><h3 class="card-title">Pontos de atenção</h3><div id="pontosAtencaoLegislativo" class="info-list"></div></article>
-          <article class="card"><div class="section-kicker">Síntese institucional</div><h3 class="card-title">Apoio parlamentar</h3><div id="sinteseLegislativa" class="info-list"></div></article>
+          <article class="hero-card"><div class="section-kicker">Gestão integrada das secretarias</div><h2 class="page-title">Painel Executivo</h2><p class="page-subtitle">Leitura consolidada de receita, despesa, saldo, execução e insights por IA para apoio gerencial e tomada de decisão.</p><div class="hero-meta"><span class="meta-badge">Perfil Executivo</span><span class="meta-badge" id="executivoUsuario">Sessão local</span></div></article>
+          <div class="kpi-grid"><article class="kpi-card"><div class="kpi-label">Receita Total</div><div class="kpi-value" id="kpiReceita">R$ 0,00</div><div class="kpi-note">Base consolidada do período</div></article><article class="kpi-card"><div class="kpi-label">Despesa Total</div><div class="kpi-value" id="kpiDespesa">R$ 0,00</div><div class="kpi-note">Execução registrada</div></article><article class="kpi-card"><div class="kpi-label">Saldo</div><div class="kpi-value" id="kpiSaldo">R$ 0,00</div><div class="kpi-note">Situação apurada</div></article><article class="kpi-card"><div class="kpi-label">Execução Média</div><div class="kpi-value" id="kpiExecucao">0,0%</div><div class="kpi-note">Leitura média por secretaria</div></article></div>
+          <article class="card"><div class="section-kicker">Filtro por secretaria</div><h3 class="card-title">Leitura focal</h3><div class="form-group"><label for="filtroSecretaria">Secretaria</label><select id="filtroSecretaria"><option value="todas">Todas as Secretarias</option></select><small class="form-help">Use o filtro para focar a leitura executiva em uma secretaria específica.</small></div></article>
+          <article class="card"><div class="section-kicker">Exportação</div><h3 class="card-title">Relatório rápido</h3><p class="card-text">Gere uma leitura pronta para impressão ou PDF pelo navegador.</p><div class="form-actions"><button type="button" class="btn btn-primary" id="btnExportar">Exportar relatório</button></div></article>
+          <article class="card"><div class="section-kicker">Atualização local</div><h3 class="card-title">Sincronismo do navegador</h3><div class="admin-status-list"><p><strong>Sessão:</strong> <span id="statusSessao">--</span></p><p><strong>Última atualização:</strong> <span id="statusAtualizacao">--</span></p><p><strong>Perfil:</strong> <span id="statusPerfil">--</span></p></div></article>
+          <article class="card"><div class="section-kicker">Alertas</div><h3 class="card-title">Criticidades detectadas</h3><div id="listaAlertas" class="info-list"></div></article>
+          <article class="card"><div class="section-kicker">Execução por Secretaria</div><h3 class="card-title">Quadro consolidado</h3><div class="table-wrap"><table class="data-table"><thead><tr><th>Secretaria</th><th>Receita</th><th>Despesa</th><th>Saldo</th><th>Execução</th><th>Status</th></tr></thead><tbody id="tabelaExecutivo"></tbody></table></div></article>
+          <article class="card"><div class="section-kicker">Resumo Estratégico</div><h3 class="card-title">Leitura executiva</h3><div id="resumoExecutivo" class="info-list"></div></article>
+          <article class="card"><div class="section-kicker">Insights de IA</div><h3 class="card-title">Síntese automatizada</h3><div id="insightsIA" class="info-list"></div></article>
           <article class="card assinatura-card"><div class="section-kicker">Parceria Estratégica</div><p class="assinatura-admin">OpenAI + ChatGPT + Núcleo de Inovação &amp; IA Generativa + Curadoria Viracopos Global + GitHub + Git + Termux + Notion</p></article>
         </div>
       </section>
     </main>
 
-    <footer class="footer-note"><div class="container"><p>ExecutivoVilaBelaMT • Painel Legislativo • Ecossistema de Governança Inteligente • 2026</p></div></footer>
+    <footer class="footer-note"><div class="container"><p>ExecutivoVilaBelaMT • Painel Executivo • Ecossistema de Governança Inteligente • 2026</p></div></footer>
   </div>
 
   <div class="floating-theme-toggle">
@@ -55,4 +59,4 @@
 
   <script src="../script.js"></script>
 </body>
-                                                                                                                                                                                                                                                                                                               </html>n̈
+</html>
