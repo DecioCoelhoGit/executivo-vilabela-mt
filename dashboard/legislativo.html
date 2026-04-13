@@ -3,193 +3,169 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>Painel Legislativo — ExecutivoVilaBelaMT</title>
-
+  <title>Painel Legislativo | ExecutivoVilaBelaMT</title>
   <meta
     name="description"
-    content="Painel Legislativo do ExecutivoVilaBelaMT com leitura temática, fiscalização institucional, execução por secretaria e apoio estratégico."
+    content="Painel Legislativo do ExecutivoVilaBelaMT com leitura temática, fiscalização institucional, acompanhamento por secretaria e apoio estratégico."
   />
-  <meta name="theme-color" content="#04143a" />
-
-  <meta property="og:title" content="Painel Legislativo — ExecutivoVilaBelaMT" />
-  <meta
-    property="og:description"
-    content="Leitura legislativa consolidada com foco em fiscalização temática, acompanhamento institucional e apoio estratégico."
-  />
-  <meta property="og:type" content="website" />
-  <meta property="og:locale" content="pt_BR" />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-    rel="stylesheet"
-  />
-
-  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="../favicon.png" />
+  <link rel="stylesheet" href="../style.css" />
 </head>
-<body data-page="legislativo" class="page-legislativo">
+<body data-page="legislativo" class="page-legislativo modo-cinema">
   <div class="site-shell">
-    <div class="bg-grid"></div>
-    <div class="bg-orb orb-1"></div>
-    <div class="bg-orb orb-2"></div>
-    <div class="bg-orb orb-3"></div>
-
     <header class="site-header">
-      <div class="site-header__inner">
-        <div class="brand">
-          <h1 class="brand-title">ExecutivoVilaBelaMT</h1>
+      <div class="container header-inner">
+        <div class="brand-block">
+          <a href="../index.html" class="brand-link">
+            <h1 class="brand-title">ExecutivoVilaBelaMT</h1>
+          </a>
           <p class="brand-subtitle">Painel Legislativo</p>
         </div>
 
-        <button
-          class="menu-toggle"
-          type="button"
-          aria-label="Abrir menu"
-          aria-expanded="false"
-          data-menu-toggle
-        >
-          <span class="bar"></span>
-        </button>
+        <div class="header-actions">
+          <button
+            class="menu-toggle"
+            type="button"
+            aria-label="Abrir menu"
+            aria-expanded="false"
+            data-menu-toggle
+          >
+            ☰
+          </button>
+        </div>
       </div>
-
-      <nav class="main-nav container"></nav>
     </header>
 
-    <div class="menu-overlay" data-menu-overlay data-menu-close></div>
+    <div class="menu-overlay" data-menu-overlay></div>
 
-    <aside class="menu-drawer" data-menu-drawer data-menu>
-      <p class="menu-title">Navegação institucional</p>
-
-      <div class="menu-grid">
-        <a class="menu-link" href="index.html">Início</a>
-        <a class="menu-link" href="login.html">Login</a>
-        <a class="menu-link" href="executivo.html">Executivo</a>
-        <a class="menu-link is-current" href="legislativo.html">Legislativo</a>
-        <a class="menu-link" href="controle.html">Controle</a>
-        <a class="menu-link" href="admin.html">Admin</a>
-        <a class="menu-link is-muted" href="#" data-logout>Sair</a>
+    <nav class="menu-drawer" data-menu-drawer aria-label="Menu principal">
+      <div class="menu-drawer-header">
+        <strong>Navegação institucional</strong>
       </div>
-    </aside>
+
+      <a class="menu-link" href="../index.html">Início</a>
+      <a class="menu-link" href="../login.html">Login</a>
+      <a class="menu-link" href="executivo.html">Executivo</a>
+      <a class="menu-link active" href="legislativo.html">Legislativo</a>
+      <a class="menu-link" href="controle.html">Controle</a>
+      <a class="menu-link" href="../admin.html">Admin</a>
+
+      <hr class="menu-separator" />
+
+      <button class="theme-toggle" type="button" data-theme-toggle>
+        <span class="theme-toggle-icon">🌓</span>
+        <span>Tema</span>
+      </button>
+    </nav>
 
     <main class="page-main">
-      <section class="hero-cover">
-        <div class="hero-cover-inner container">
-          <article class="hero-card hero-compact">
-            <span class="badge gold" data-sessao-perfil>Vereador / Legislativo</span>
-
+      <section class="section">
+        <div class="container">
+          <article class="hero-card">
+            <div class="section-kicker">Fiscalização temática e acompanhamento institucional</div>
             <h2 class="page-title">Painel Legislativo</h2>
-
-            <p class="page-desc">
-              Base para acompanhamento, fiscalização temática, leitura executiva dos
-              números e apoio às atividades parlamentares.
+            <p class="page-subtitle">
+              Base para leitura temática das secretarias, fiscalização parlamentar,
+              acompanhamento comparativo e apoio estratégico às atividades legislativas.
             </p>
 
-            <div class="inline-stats mt-3">
-              <div class="inline-stat">
-                <div class="label">Usuário</div>
-                <div class="value" data-sessao-usuario>Visitante</div>
-              </div>
-
-              <div class="inline-stat">
-                <div class="label">Atualizado em</div>
-                <div class="value" id="legAtualizadoEm">--/--/----</div>
-              </div>
+            <div class="hero-meta">
+              <span class="meta-badge">Perfil Legislativo</span>
+              <span class="meta-badge" id="legislativoUsuario">Sessão local</span>
             </div>
           </article>
         </div>
       </section>
 
-      <section class="section">
+      <section class="section section-tight">
         <div class="container">
-          <div class="kpis-grid">
+          <div class="kpi-grid">
             <article class="kpi-card">
-              <p class="kpi-label">Execução Média</p>
-              <h3 class="kpi-value" id="legExecucaoMedia">0,0%</h3>
-              <p class="kpi-note">Panorama do período</p>
+              <div class="kpi-label">Execução Média</div>
+              <div class="kpi-value" id="kpiExecucaoMedia">0,0%</div>
+              <div class="kpi-note">Panorama geral do período</div>
             </article>
 
             <article class="kpi-card">
-              <p class="kpi-label">Despesa Consolidada</p>
-              <h3 class="kpi-value" id="legDespesaEmpenhada">R$ 0,00</h3>
-              <p class="kpi-note">Leitura para fiscalização</p>
+              <div class="kpi-label">Despesa Consolidada</div>
+              <div class="kpi-value" id="kpiDespesaTotal">R$ 0,00</div>
+              <div class="kpi-note">Base para fiscalização</div>
             </article>
 
             <article class="kpi-card">
-              <p class="kpi-label">Saldo Apurado</p>
-              <h3 class="kpi-value" id="legSaldoApurado">R$ 0,00</h3>
-              <p class="kpi-note">Resultado consolidado</p>
+              <div class="kpi-label">Saldo Consolidado</div>
+              <div class="kpi-value" id="kpiSaldoTotal">R$ 0,00</div>
+              <div class="kpi-note">Resultado comparativo</div>
             </article>
 
             <article class="kpi-card">
-              <p class="kpi-label">Foco Institucional</p>
-              <h3 class="kpi-value">Temático</h3>
-              <p class="kpi-note">Leitura orientada por secretaria</p>
+              <div class="kpi-label">Áreas Críticas</div>
+              <div class="kpi-value" id="kpiAreasCriticas">0</div>
+              <div class="kpi-note">Secretarias em maior atenção</div>
             </article>
           </div>
         </div>
       </section>
 
-      <section class="section">
-        <div class="container">
-          <div class="info-grid">
-            <article class="card glass-card">
-              <span class="badge">Fiscalização</span>
-              <h3 class="section-title mt-2">Leitura para o Poder Legislativo</h3>
-              <ul class="list-clean">
-                <li>Acompanhamento temático por secretaria.</li>
-                <li>Base para comissões, requerimentos e leitura em plenário.</li>
-                <li>Identificação de alertas de execução e saldo.</li>
-                <li>Suporte à interpretação institucional dos números.</li>
-              </ul>
-            </article>
+      <section class="section section-tight">
+        <div class="container grid-single">
+          <article class="card">
+            <div class="section-kicker">Foco legislativo</div>
+            <h3 class="card-title">Direcionamento da leitura</h3>
+            <p class="card-text">
+              Este painel organiza a leitura por secretaria para apoiar requerimentos,
+              comissões, debates em plenário e acompanhamento institucional temático.
+            </p>
+          </article>
 
-            <article class="card glass-card">
-              <span class="badge gold">Observação</span>
-              <h3 class="section-title mt-2">Função estratégica</h3>
-              <p class="section-subtitle">
-                Este painel está orientado para fiscalização institucional,
-                acompanhamento comparativo e leitura temática das áreas de governo.
-              </p>
-            </article>
+          <article class="card">
+            <div class="section-kicker">Status institucional</div>
+            <h3 class="card-title">Sessão e atualização</h3>
+            <div class="admin-status-list">
+              <p><strong>Sessão:</strong> <span id="statusSessao">--</span></p>
+              <p><strong>Última atualização:</strong> <span id="statusAtualizacao">--</span></p>
+              <p><strong>Perfil:</strong> <span id="statusPerfil">--</span></p>
+            </div>
+          </article>
 
-            <article class="card glass-card">
-              <span class="badge green">Exportação</span>
-              <h3 class="section-title mt-2">Relatório</h3>
-              <p class="section-subtitle">
-                Gere uma versão pronta para impressão ou PDF para uso em reuniões,
-                comissões e consultas parlamentares.
-              </p>
-              <div class="form-actions mt-3">
-                <button class="btn btn-primary" type="button" data-export-relatorio>
-                  Exportar relatório
-                </button>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
+          <article class="card">
+            <div class="section-kicker">Exportação</div>
+            <h3 class="card-title">Relatório legislativo</h3>
+            <p class="card-text">
+              Gere uma versão pronta para impressão ou PDF para reuniões,
+              consultas parlamentares e atividades de fiscalização.
+            </p>
+            <div class="form-actions">
+              <button type="button" class="btn btn-primary" id="btnExportar">
+                Exportar relatório
+              </button>
+            </div>
+          </article>
 
-      <section class="section">
-        <div class="container">
-          <h2 class="section-title">Temas para Fiscalização</h2>
-          <div id="legTemasFiscalizacao" class="monitor-grid"></div>
-        </div>
-      </section>
+          <article class="card">
+            <div class="section-kicker">Temas para fiscalização</div>
+            <h3 class="card-title">Leitura por secretaria</h3>
+            <div id="legTemasFiscalizacao" class="monitor-grid"></div>
+          </article>
 
-      <section class="section">
-        <div class="container">
-          <article class="card glass-card">
-            <span class="badge">Leitura institucional</span>
-            <h2 class="section-title mt-2">Pontos de atenção legislativa</h2>
+          <article class="card">
+            <div class="section-kicker">Leitura legislativa</div>
+            <h3 class="card-title">Pontos de atenção</h3>
+            <div id="pontosAtencaoLegislativo" class="info-list"></div>
+          </article>
 
-            <ul class="list-clean">
-              <li>Secretarias com saldo negativo merecem leitura prioritária.</li>
-              <li>Execução acima de 100% exige interpretação orçamentária cuidadosa.</li>
-              <li>Comparações entre receita, despesa e saldo fortalecem a fiscalização temática.</li>
-              <li>A base visual pode subsidiar requerimentos, pareceres e debates em plenário.</li>
-            </ul>
+          <article class="card">
+            <div class="section-kicker">Síntese institucional</div>
+            <h3 class="card-title">Apoio parlamentar</h3>
+            <div id="sinteseLegislativa" class="info-list"></div>
+          </article>
+
+          <article class="card assinatura-card">
+            <div class="section-kicker">Parceria Estratégica</div>
+            <p class="assinatura-admin">
+              OpenAI + ChatGPT + Núcleo de Inovação &amp; IA Generativa +
+              Curadoria Viracopos Global + GitHub + Git + Termux + Notion
+            </p>
           </article>
         </div>
       </section>
@@ -197,11 +173,279 @@
 
     <footer class="footer-note">
       <div class="container">
-        ExecutivoVilaBelaMT • Painel Legislativo • <span data-ano-atual></span>
+        <p>
+          ExecutivoVilaBelaMT • Painel Legislativo • Ecossistema de Governança Inteligente • 2026
+        </p>
       </div>
     </footer>
   </div>
 
-  <script src="script.js"></script>
+  <div class="floating-theme-toggle">
+    <button type="button" data-theme-toggle aria-label="Alternar tema">
+      <span>🌓</span>
+      <span>Tema</span>
+    </button>
+  </div>
+
+  <script>
+    (function () {
+      const body = document.body;
+      const root = document.documentElement;
+
+      const STORAGE_THEME_KEY = "evbmt-theme";
+      const STORAGE_SESSION_KEY = "evbmt-session";
+      const STORAGE_ATUALIZACAO_KEY = "evbmt-updated-at";
+
+      const themeButtons = document.querySelectorAll("[data-theme-toggle]");
+      const menuToggle = document.querySelector("[data-menu-toggle]");
+      const menuDrawer = document.querySelector("[data-menu-drawer]");
+      const menuOverlay = document.querySelector("[data-menu-overlay]");
+
+      const legislativoUsuario = document.getElementById("legislativoUsuario");
+      const statusSessao = document.getElementById("statusSessao");
+      const statusAtualizacao = document.getElementById("statusAtualizacao");
+      const statusPerfil = document.getElementById("statusPerfil");
+
+      const kpiExecucaoMedia = document.getElementById("kpiExecucaoMedia");
+      const kpiDespesaTotal = document.getElementById("kpiDespesaTotal");
+      const kpiSaldoTotal = document.getElementById("kpiSaldoTotal");
+      const kpiAreasCriticas = document.getElementById("kpiAreasCriticas");
+
+      const legTemasFiscalizacao = document.getElementById("legTemasFiscalizacao");
+      const pontosAtencaoLegislativo = document.getElementById("pontosAtencaoLegislativo");
+      const sinteseLegislativa = document.getElementById("sinteseLegislativa");
+      const btnExportar = document.getElementById("btnExportar");
+
+      const dadosSecretarias = [
+        { nome: "Administração", receita: 180000, despesa: 120000 },
+        { nome: "Finanças", receita: 150000, despesa: 98000 },
+        { nome: "Saúde", receita: 300000, despesa: 345000 },
+        { nome: "Educação", receita: 330000, despesa: 310000 },
+        { nome: "Assistência Social", receita: 125000, despesa: 110000 },
+        { nome: "Obras", receita: 210000, despesa: 295000 },
+        { nome: "Cultura", receita: 32000, despesa: 26000 },
+        { nome: "Turismo", receita: 30000, despesa: 27000 },
+        { nome: "Meio Ambiente", receita: 46000, despesa: 47000 },
+        { nome: "Agricultura", receita: 72000, despesa: 89000 },
+        { nome: "Planejamento", receita: 428900, despesa: 552900 }
+      ];
+
+      function applyTheme(theme) {
+        body.classList.remove("theme-light", "theme-dark");
+        body.classList.add(theme === "light" ? "theme-light" : "theme-dark");
+        root.setAttribute("data-theme", theme === "light" ? "light" : "dark");
+        localStorage.setItem(STORAGE_THEME_KEY, theme);
+      }
+
+      function initTheme() {
+        const savedTheme = localStorage.getItem(STORAGE_THEME_KEY) || "dark";
+        applyTheme(savedTheme);
+      }
+
+      function toggleTheme() {
+        const current = body.classList.contains("theme-light") ? "light" : "dark";
+        applyTheme(current === "light" ? "dark" : "light");
+      }
+
+      themeButtons.forEach((button) => {
+        button.addEventListener("click", toggleTheme);
+      });
+
+      function openMenu() {
+        if (!menuDrawer || !menuOverlay || !menuToggle) return;
+        menuDrawer.classList.add("active");
+        menuOverlay.classList.add("active");
+        menuToggle.setAttribute("aria-expanded", "true");
+      }
+
+      function closeMenu() {
+        if (!menuDrawer || !menuOverlay || !menuToggle) return;
+        menuDrawer.classList.remove("active");
+        menuOverlay.classList.remove("active");
+        menuToggle.setAttribute("aria-expanded", "false");
+      }
+
+      if (menuToggle) {
+        menuToggle.addEventListener("click", function () {
+          const isOpen = menuDrawer && menuDrawer.classList.contains("active");
+          if (isOpen) closeMenu();
+          else openMenu();
+        });
+      }
+
+      if (menuOverlay) {
+        menuOverlay.addEventListener("click", closeMenu);
+      }
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") closeMenu();
+      });
+
+      function formatMoney(value) {
+        return new Intl.NumberFormat("pt-BR", {
+          style: "currency",
+          currency: "BRL"
+        }).format(value);
+      }
+
+      function formatPercent(value) {
+        return value.toLocaleString("pt-BR", {
+          minimumFractionDigits: 1,
+          maximumFractionDigits: 1
+        }) + "%";
+      }
+
+      function formatDate(isoString) {
+        if (!isoString) return "--";
+        const date = new Date(isoString);
+        if (Number.isNaN(date.getTime())) return "--";
+        return date.toLocaleString("pt-BR");
+      }
+
+      function enrichData(item) {
+        const saldo = item.receita - item.despesa;
+        const execucao = item.receita > 0 ? (item.despesa / item.receita) * 100 : 0;
+
+        let status = "Estável";
+        if (execucao > 100 || saldo < 0) {
+          status = "Risco alto";
+        } else if (execucao >= 95) {
+          status = "Atenção";
+        }
+
+        return {
+          ...item,
+          saldo,
+          execucao,
+          status
+        };
+      }
+
+      const dataset = dadosSecretarias.map(enrichData);
+
+      function getStatusClass(status) {
+        if (status === "Risco alto") return "status-critical";
+        if (status === "Atenção") return "status-warning";
+        return "status-stable";
+      }
+
+      function renderKPIs() {
+        const totalDespesa = dataset.reduce((sum, item) => sum + item.despesa, 0);
+        const totalSaldo = dataset.reduce((sum, item) => sum + item.saldo, 0);
+        const mediaExecucao = dataset.length
+          ? dataset.reduce((sum, item) => sum + item.execucao, 0) / dataset.length
+          : 0;
+        const criticas = dataset.filter((item) => item.status === "Risco alto").length;
+
+        kpiExecucaoMedia.textContent = formatPercent(mediaExecucao);
+        kpiDespesaTotal.textContent = formatMoney(totalDespesa);
+        kpiSaldoTotal.textContent = formatMoney(totalSaldo);
+        kpiAreasCriticas.textContent = String(criticas);
+      }
+
+      function renderTemasFiscalizacao() {
+        legTemasFiscalizacao.innerHTML = "";
+
+        dataset.forEach((item) => {
+          const card = document.createElement("article");
+          card.className = "monitor-card";
+          card.innerHTML = `
+            <h3>${item.nome}</h3>
+            <p><strong>Receita:</strong> ${formatMoney(item.receita)}</p>
+            <p><strong>Despesa:</strong> ${formatMoney(item.despesa)}</p>
+            <p><strong>Saldo:</strong> ${formatMoney(item.saldo)}</p>
+            <p><strong>Execução:</strong> ${formatPercent(item.execucao)}</p>
+            <span class="status-badge ${getStatusClass(item.status)}">${item.status}</span>
+          `;
+          legTemasFiscalizacao.appendChild(card);
+        });
+      }
+
+      function renderPontosAtencao() {
+        pontosAtencaoLegislativo.innerHTML = "";
+
+        const linhas = [];
+        const criticas = dataset.filter((item) => item.status === "Risco alto");
+        const atencao = dataset.filter((item) => item.status === "Atenção");
+
+        if (criticas.length) {
+          linhas.push(`Há ${criticas.length} secretaria(s) em risco alto, com potencial impacto na fiscalização temática.`);
+        }
+
+        if (atencao.length) {
+          linhas.push(`Há ${atencao.length} secretaria(s) em atenção, recomendando leitura legislativa reforçada.`);
+        }
+
+        linhas.push("Secretarias com saldo negativo merecem acompanhamento prioritário.");
+        linhas.push("Execução acima de 100% exige leitura orçamentária cuidadosa.");
+        linhas.push("Comparações entre receita, despesa e saldo fortalecem a fiscalização institucional.");
+
+        linhas.forEach((texto) => {
+          const div = document.createElement("div");
+          div.className = "info-item";
+          div.textContent = texto;
+          pontosAtencaoLegislativo.appendChild(div);
+        });
+      }
+
+      function renderSintese() {
+        sinteseLegislativa.innerHTML = "";
+
+        const linhas = [
+          "O painel legislativo organiza a leitura comparativa das áreas de governo.",
+          "A base visual pode subsidiar requerimentos, pareceres e debates em plenário.",
+          "A estrutura temática favorece comissões, acompanhamento setorial e leitura institucional.",
+          "O ecossistema está preparado para evolução futura com dados reais via JSON e APIs."
+        ];
+
+        linhas.forEach((texto) => {
+          const div = document.createElement("div");
+          div.className = "info-item";
+          div.textContent = texto;
+          sinteseLegislativa.appendChild(div);
+        });
+      }
+
+      function renderStatus() {
+        const sessionRaw = localStorage.getItem(STORAGE_SESSION_KEY);
+        const updatedAt = localStorage.getItem(STORAGE_ATUALIZACAO_KEY);
+
+        if (!sessionRaw) {
+          legislativoUsuario.textContent = "Sem sessão ativa";
+          statusSessao.textContent = "inativa";
+          statusPerfil.textContent = "--";
+        } else {
+          try {
+            const session = JSON.parse(sessionRaw);
+            legislativoUsuario.textContent = session.username
+              ? `Sessão: ${session.username}`
+              : "Sessão local";
+            statusSessao.textContent = "ativa";
+            statusPerfil.textContent = session.profile || "--";
+          } catch (error) {
+            legislativoUsuario.textContent = "Sessão local";
+            statusSessao.textContent = "instável";
+            statusPerfil.textContent = "--";
+          }
+        }
+
+        statusAtualizacao.textContent = formatDate(updatedAt);
+      }
+
+      if (btnExportar) {
+        btnExportar.addEventListener("click", function () {
+          window.print();
+        });
+      }
+
+      initTheme();
+      closeMenu();
+      renderStatus();
+      renderKPIs();
+      renderTemasFiscalizacao();
+      renderPontosAtencao();
+      renderSintese();
+    })();
+  </script>
 </body>
-  </html>
+</html>
