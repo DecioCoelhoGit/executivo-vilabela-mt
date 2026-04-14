@@ -45,14 +45,41 @@
         </div>
       </section>
     </main>
+<article class="card">
+  <div class="section-kicker">Dashboard Analítico</div>
+  <h3 class="card-title">Gráficos Legislativos</h3>
 
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h4>Execução por Secretaria</h4>
+      <canvas id="chartLegislativoExecucao"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <h4>Áreas Críticas</h4>
+      <canvas id="chartLegislativoCriticas"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <h4>Saldo Consolidado por Secretaria</h4>
+      <canvas id="chartLegislativoSaldo"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <h4>Ranking de Atenção Parlamentar</h4>
+      <canvas id="chartLegislativoRanking"></canvas>
+    </div>
+  </div>
+</article>
     <footer class="footer-note"><div class="container"><p>ExecutivoVilaBelaMT • Painel Legislativo • Ecossistema de Governança Inteligente • 2026</p></div></footer>
   </div>
 
   <div class="floating-theme-toggle">
     <button type="button" data-theme-toggle aria-label="Alternar tema"><span>🌓</span><span>Tema</span></button>
   </div>
-
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
   <script src="../script.js"></script>
 </body>
             </html>
