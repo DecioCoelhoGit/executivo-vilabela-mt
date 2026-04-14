@@ -718,4 +718,267 @@
     default:
       break;
   }
+  function getChartLabels(data) {
+    return data.map((item) => item.nome);
+  }
+
+  function getChartTextColor() {
+    return getComputedStyle(document.body).getPropertyValue("--text-secondary").trim() || "#c5d0e6";
+  }
+
+  function getChartGridColor() {
+    return "rgba(255,255,255,0.08)";
+  }
+
+  function destroyIfExists(canvasId) {
+    const existing = Chart.getChart(canvasId);
+    if (existing) {
+      existing.destroy();
+    }
+  }
+
+  function buildBaseChartOptions() {
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: {
+            color: getChartTextColor()
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: getChartTextColor() },
+          grid: { color: getChartGridColor() }
+        },
+        y: {
+          ticks: { color: getChartTextColor() },
+          grid: { color: getChartGridColor() }
+        }
+      }
+    };
+  }
+
+  function initExecutivoCharts() {
+    if (typeof Chart === "undefined") return;
+    if (!document.getElementById("chartExecutivoReceitaDespesa")) return;
+
+    const labels = getChartLabels(dataset);
+
+    destroyIfExists("chartExecutivoReceitaDespesa");
+    new Chart(document.getElementById("chartExecutivoReceitaDespesa"), {
+      type: "bar",
+      data: {
+        labels,
+        datasets: [
+          { label: "Receita", data: dataset.map((i) => i.receita) },
+          { label: "Despesa", data: dataset.map((i) => i.despesa) }
+        ]
+      },
+      options: buildBaseChartOptions()
+    });
+
+    destroyIfExists("chartExecutivoSaldo");
+    new Chart(document.getElementById("chartExecutivoSaldo"), {
+      type: "line",
+      data: {
+        labels,
+        datasets: [
+          { label: "Saldo", data: dataset.map((i) => i.saldo), tension: 0.3, fill: false }
+        ]
+      },
+      options: buildBaseChartOptions()
+    });
+
+    destroyIfExists("chartExecutivoExecucao");
+    new Chart(document.getElementById("chartExecutivoExecucao"), {
+      type: "bar",
+      data: {
+        labels,
+        datasets: [
+          { label: "Execução %", data: dataset.map((i) => Number(i.execucao.toFixed(1))) }
+        ]
+      },
+      options: buildBaseChartOptions()
+    });
+
+    const riscoCritico = dataset.filter((i) => i.status === "Risco alto").length;
+    const riscoAtencao = dataset.filter((i) => i.status === "Atenção").length;
+    const riscoEstavel = dataset.filter((i) => i.status === "Estável").length;
+
+    destroyIfExists("chartExecutivoRisco");
+    new Chart(document.getElementById("chartExecutivoRisco"), {
+      type: "doughnut",
+      data: {
+        labels: ["Risco alto", "Atenção", "Estável"],
+        datasets: [
+          {
+            data: [riscoCritico, riscoAtencao, riscoEstavel]
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            labels: {
+              color: getChartTextColor()
+            }
+          }
+        }
+      }
+    });
+  }
+
+  function initLegislativoCharts() {
+    if (typeof Chart === "undefined") return;
+    if (!document.getElementById("chartLegislativoExecucao")) return;
+
+    const labels = getChartLabels(dataset);
+
+    destroyIfExists("chartLegislativoExecucao");
+    new Chart(document.getElementById("chartLegislativoExecucao"), {
+      type: "bar",
+      data: {
+        labels,
+        datasets: [
+          { label: "Execução %", data: dataset.map((i) => Number(i.execucao.toFixed(1))) }
+        ]
+      },
+      options: buildBaseChartOptions()
+    });
+
+    destroyIfExists("chartLegislativoCriticas");
+    new Chart(document.getElementById("chartLegislativoCriticas"), {
+      type: "bar",
+      data: {
+        labels,
+        datasets: [
+          {
+            label: "Áreas críticas",
+            data: dataset.map((i) => (i.status === "Risco alto" ? 1 : 0))
+          }
+        ]
+      },
+      options: buildBaseChartOptions()
+    });
+
+    destroyIfExists("chartLegislativoSaldo");
+    new Chart(document.getElementById("chartLegislativoSaldo"), {
+      type: "line",
+      data: {
+        labels,
+        datasets: [
+          { label: "Saldo", data: dataset.map((i) => i.saldo), tension: 0.25, fill: false }
+        ]
+      },
+      options: buildBaseChartOptions()
+    });
+
+    const ranking = [...dataset].sort((a, b) => b.execucao - a.execucao);
+
+    destroyIfExists("chartLegislativoRanking");
+    new Chart(document.getElementById("chartLegislativoRanking"), {
+      type: "bar",
+      data: {
+        labels: ranking.map((i) => i.nome),
+        datasets: [
+          {
+            label: "Ranking de atenção",
+            data: ranking.map((i) => Number(i.execucao.toFixed(1)))
+          }
+        ]
+      },
+      options: buildBaseChartOptions()
+    });
+  }
+
+  function initControleCharts() {
+    if (typeof Chart === "undefined") return;
+    if (!document.getElementById("chartControleCriticidade")) return;
+
+    const labels = getChartLabels(dataset);
+
+    destroyIfExists("chartControleCriticidade");
+    new Chart(document.getElementById("chartControleCriticidade"), {
+      type: "bar",
+      data: {
+        labels,
+        datasets: [
+          {
+            label: "Criticidade",
+            data: dataset.map((i) => {
+              if (i.status === "Risco alto") return 3;
+              if (i.status === "Atenção") return 2;
+              return 1;
+            })
+          }
+        ]
+      },
+      options: buildBaseChartOptions()
+    });
+
+    const acima100 = dataset.filter((i) => i.execucao > 100);
+    destroyIfExists("chartControleExecucao");
+    new Chart(document.getElementById("chartControleExecucao"), {
+      type: "bar",
+      data: {
+        labels: acima100.map((i) => i.nome),
+        datasets: [
+          {
+            label: "Execução acima de 100%",
+            data: acima100.map((i) => Number(i.execucao.toFixed(1)))
+          }
+        ]
+      },
+      options: buildBaseChartOptions()
+    });
+
+    const saldoNegativo = dataset.filter((i) => i.saldo < 0);
+    destroyIfExists("chartControleSaldoNegativo");
+    new Chart(document.getElementById("chartControleSaldoNegativo"), {
+      type: "bar",
+      data: {
+        labels: saldoNegativo.map((i) => i.nome),
+        datasets: [
+          {
+            label: "Saldo negativo",
+            data: saldoNegativo.map((i) => i.saldo)
+          }
+        ]
+      },
+      options: buildBaseChartOptions()
+    });
+
+    const riscoCritico = dataset.filter((i) => i.status === "Risco alto").length;
+    const riscoAtencao = dataset.filter((i) => i.status === "Atenção").length;
+    const riscoEstavel = dataset.filter((i) => i.status === "Estável").length;
+
+    destroyIfExists("chartControleStatus");
+    new Chart(document.getElementById("chartControleStatus"), {
+      type: "pie",
+      data: {
+        labels: ["Risco alto", "Atenção", "Estável"],
+        datasets: [
+          {
+            data: [riscoCritico, riscoAtencao, riscoEstavel]
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            labels: {
+              color: getChartTextColor()
+            }
+          }
+        }
+      }
+    });
+  }
 })();
