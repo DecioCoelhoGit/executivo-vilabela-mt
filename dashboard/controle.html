@@ -46,14 +46,39 @@
         </div>
       </section>
     </main>
+<article class="card">
+  <div class="section-kicker">Dashboard Analítico</div>
+  <h3 class="card-title">Gráficos de Controle</h3>
 
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h4>Criticidade por Secretaria</h4>
+      <canvas id="chartControleCriticidade"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <h4>Execução Acima de 100%</h4>
+      <canvas id="chartControleExecucao"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <h4>Secretarias com Saldo Negativo</h4>
+      <canvas id="chartControleSaldoNegativo"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <h4>Distribuição de Status</h4>
+      <canvas id="chartControleStatus"></canvas>
+    </div>
+  </div>
+</article>
     <footer class="footer-note"><div class="container"><p>ExecutivoVilaBelaMT • Painel de Controle • Ecossistema de Governança Inteligente • 2026</p></div></footer>
   </div>
 
   <div class="floating-theme-toggle">
     <button type="button" data-theme-toggle aria-label="Alternar tema"><span>🌓</span><span>Tema</span></button>
   </div>
-
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="../script.js"></script>
 </body>
   </html>
