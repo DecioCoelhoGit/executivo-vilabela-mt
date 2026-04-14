@@ -8,7 +8,6 @@
 
   const body = document.body;
   const root = document.documentElement;
-
   const page = body?.dataset?.page || "";
 
   const themeButtons = document.querySelectorAll("[data-theme-toggle]");
@@ -82,6 +81,18 @@
     localStorage.setItem(STORAGE_ATUALIZACAO_KEY, new Date().toISOString());
   }
 
+  function safeParse(json) {
+    try {
+      return JSON.parse(json);
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function getSession() {
+    return safeParse(localStorage.getItem(STORAGE_SESSION_KEY));
+  }
+
   function applyTheme(theme) {
     body.classList.remove("theme-light", "theme-dark");
     body.classList.add(theme === "light" ? "theme-light" : "theme-dark");
@@ -96,7 +107,16 @@
 
   function toggleTheme() {
     const current = body.classList.contains("theme-light") ? "light" : "dark";
-    applyTheme(current === "light" ? "dark" : "light");
+    const next = current === "light" ? "dark" : "light";
+    applyTheme(next);
+
+    if (page === "executivo") {
+      initExecutivoCharts();
+    } else if (page === "legislativo") {
+      initLegislativoCharts();
+    } else if (page === "controle") {
+      initControleCharts();
+    }
   }
 
   themeButtons.forEach((button) => {
@@ -138,18 +158,6 @@
     }
   });
 
-  function safeParse(json) {
-    try {
-      return JSON.parse(json);
-    } catch (error) {
-      return null;
-    }
-  }
-
-  function getSession() {
-    return safeParse(localStorage.getItem(STORAGE_SESSION_KEY));
-  }
-
   function renderSessionBadges(selectors) {
     const session = getSession();
     const updatedAt = localStorage.getItem(STORAGE_ATUALIZACAO_KEY);
@@ -180,6 +188,33 @@
       if (el) {
         el.textContent = formatDate(updatedAt);
       }
+    }
+  }
+
+  function initHomePage() {
+    if (!localStorage.getItem(STORAGE_RECEITAS_KEY)) {
+      localStorage.setItem(
+        STORAGE_RECEITAS_KEY,
+        JSON.stringify(dataset.map((item) => ({ nome: item.nome, valor: item.receita })))
+      );
+    }
+
+    if (!localStorage.getItem(STORAGE_DESPESAS_KEY)) {
+      localStorage.setItem(
+        STORAGE_DESPESAS_KEY,
+        JSON.stringify(dataset.map((item) => ({ nome: item.nome, valor: item.despesa })))
+      );
+    }
+
+    if (!localStorage.getItem(STORAGE_SERVIDORES_KEY)) {
+      localStorage.setItem(
+        STORAGE_SERVIDORES_KEY,
+        JSON.stringify(dataset.map((item, index) => ({ nome: item.nome, quantidade: (index + 1) * 3 })))
+      );
+    }
+
+    if (!localStorage.getItem(STORAGE_ATUALIZACAO_KEY)) {
+      setUpdatedAt();
     }
   }
 
@@ -304,10 +339,27 @@
       if (statusSessao) statusSessao.textContent = sessionRaw ? "ativa" : "inativa";
       if (statusAtualizacao) statusAtualizacao.textContent = formatDate(updatedAt);
 
-      if (baseReceitas) baseReceitas.textContent = getItemCount(STORAGE_RECEITAS_KEY) > 0 ? `${getItemCount(STORAGE_RECEITAS_KEY)} registro(s)` : "inativo";
-      if (baseDespesas) baseDespesas.textContent = getItemCount(STORAGE_DESPESAS_KEY) > 0 ? `${getItemCount(STORAGE_DESPESAS_KEY)} registro(s)` : "inativo";
-      if (baseServidores) baseServidores.textContent = getItemCount(STORAGE_SERVIDORES_KEY) > 0 ? `${getItemCount(STORAGE_SERVIDORES_KEY)} registro(s)` : "inativo";
-      if (baseSessao) baseSessao.textContent = sessionRaw ? "ativo" : "inativo";
+      if (baseReceitas) {
+        baseReceitas.textContent = getItemCount(STORAGE_RECEITAS_KEY) > 0
+          ? `${getItemCount(STORAGE_RECEITAS_KEY)} registro(s)`
+          : "inativo";
+      }
+
+      if (baseDespesas) {
+        baseDespesas.textContent = getItemCount(STORAGE_DESPESAS_KEY) > 0
+          ? `${getItemCount(STORAGE_DESPESAS_KEY)} registro(s)`
+          : "inativo";
+      }
+
+      if (baseServidores) {
+        baseServidores.textContent = getItemCount(STORAGE_SERVIDORES_KEY) > 0
+          ? `${getItemCount(STORAGE_SERVIDORES_KEY)} registro(s)`
+          : "inativo";
+      }
+
+      if (baseSessao) {
+        baseSessao.textContent = sessionRaw ? "ativo" : "inativo";
+      }
     }
 
     if (limparBaseLocal) {
@@ -333,11 +385,6 @@
   }
 
   function initExecutivoPage() {
-    const executivoUsuario = document.getElementById("executivoUsuario");
-    const statusSessao = document.getElementById("statusSessao");
-    const statusAtualizacao = document.getElementById("statusAtualizacao");
-    const statusPerfil = document.getElementById("statusPerfil");
-
     const kpiReceita = document.getElementById("kpiReceita");
     const kpiDespesa = document.getElementById("kpiDespesa");
     const kpiSaldo = document.getElementById("kpiSaldo");
@@ -359,7 +406,7 @@
       statusAtualizacao: "statusAtualizacao"
     });
 
-    if (filtroSecretaria) {
+    if (filtroSecretaria && filtroSecretaria.options.length <= 1) {
       dataset.forEach((item) => {
         const option = document.createElement("option");
         option.value = item.nome;
@@ -482,6 +529,7 @@
       renderAlerts(filtered);
       renderSummary(filtered);
       renderInsights(filtered);
+      initExecutivoCharts(filtered);
     }
 
     if (filtroSecretaria) {
@@ -680,44 +728,6 @@
     }
   }
 
-  function initHomePage() {
-    if (!localStorage.getItem(STORAGE_RECEITAS_KEY)) {
-      localStorage.setItem(STORAGE_RECEITAS_KEY, JSON.stringify(dataset.map((item) => ({ nome: item.nome, valor: item.receita }))));
-    }
-    if (!localStorage.getItem(STORAGE_DESPESAS_KEY)) {
-      localStorage.setItem(STORAGE_DESPESAS_KEY, JSON.stringify(dataset.map((item) => ({ nome: item.nome, valor: item.despesa }))));
-    }
-    if (!localStorage.getItem(STORAGE_SERVIDORES_KEY)) {
-      localStorage.setItem(STORAGE_SERVIDORES_KEY, JSON.stringify(dataset.map((item, index) => ({ nome: item.nome, quantidade: (index + 1) * 3 }))));
-    }
-    if (!localStorage.getItem(STORAGE_ATUALIZACAO_KEY)) {
-      setUpdatedAt();
-    }
-  }
-
-  initTheme();
-  closeMenu();
-  initHomePage();
-
-  switch (page) {
-    case "login":
-      initLoginPage();
-      break;
-    case "admin":
-      initAdminPage();
-      break;
-    case "executivo":
-      initExecutivoPage();
-      break;
-    case "legislativo":
-      initLegislativoPage();
-      break;
-    case "controle":
-      initControlePage();
-      break;
-    default:
-      break;
-  }
   function getChartLabels(data) {
     return data.map((item) => item.nome);
   }
@@ -727,10 +737,36 @@
   }
 
   function getChartGridColor() {
+    if (body.classList.contains("theme-light")) {
+      return "rgba(16, 32, 56, 0.10)";
+    }
     return "rgba(255,255,255,0.08)";
   }
 
+  function getChartPalette() {
+    if (body.classList.contains("theme-light")) {
+      return {
+        green: "rgba(0, 127, 50, 0.78)",
+        blue: "rgba(30, 100, 220, 0.72)",
+        red: "rgba(185, 53, 53, 0.72)",
+        yellow: "rgba(173, 122, 0, 0.72)",
+        teal: "rgba(5, 124, 110, 0.72)",
+        purple: "rgba(116, 86, 196, 0.72)"
+      };
+    }
+
+    return {
+      green: "rgba(102, 255, 102, 0.72)",
+      blue: "rgba(64, 156, 255, 0.72)",
+      red: "rgba(255, 105, 105, 0.72)",
+      yellow: "rgba(255, 210, 77, 0.72)",
+      teal: "rgba(102, 255, 204, 0.72)",
+      purple: "rgba(170, 120, 255, 0.72)"
+    };
+  }
+
   function destroyIfExists(canvasId) {
+    if (typeof Chart === "undefined") return;
     const existing = Chart.getChart(canvasId);
     if (existing) {
       existing.destroy();
@@ -761,11 +797,12 @@
     };
   }
 
-  function initExecutivoCharts() {
+  function initExecutivoCharts(data = dataset) {
     if (typeof Chart === "undefined") return;
     if (!document.getElementById("chartExecutivoReceitaDespesa")) return;
 
-    const labels = getChartLabels(dataset);
+    const palette = getChartPalette();
+    const labels = getChartLabels(data);
 
     destroyIfExists("chartExecutivoReceitaDespesa");
     new Chart(document.getElementById("chartExecutivoReceitaDespesa"), {
@@ -773,8 +810,18 @@
       data: {
         labels,
         datasets: [
-          { label: "Receita", data: dataset.map((i) => i.receita) },
-          { label: "Despesa", data: dataset.map((i) => i.despesa) }
+          {
+            label: "Receita",
+            data: data.map((i) => i.receita),
+            backgroundColor: palette.green,
+            borderColor: palette.green
+          },
+          {
+            label: "Despesa",
+            data: data.map((i) => i.despesa),
+            backgroundColor: palette.blue,
+            borderColor: palette.blue
+          }
         ]
       },
       options: buildBaseChartOptions()
@@ -786,7 +833,14 @@
       data: {
         labels,
         datasets: [
-          { label: "Saldo", data: dataset.map((i) => i.saldo), tension: 0.3, fill: false }
+          {
+            label: "Saldo",
+            data: data.map((i) => i.saldo),
+            tension: 0.3,
+            fill: false,
+            borderColor: palette.yellow,
+            backgroundColor: palette.yellow
+          }
         ]
       },
       options: buildBaseChartOptions()
@@ -798,15 +852,20 @@
       data: {
         labels,
         datasets: [
-          { label: "Execução %", data: dataset.map((i) => Number(i.execucao.toFixed(1))) }
+          {
+            label: "Execução %",
+            data: data.map((i) => Number(i.execucao.toFixed(1))),
+            backgroundColor: palette.teal,
+            borderColor: palette.teal
+          }
         ]
       },
       options: buildBaseChartOptions()
     });
 
-    const riscoCritico = dataset.filter((i) => i.status === "Risco alto").length;
-    const riscoAtencao = dataset.filter((i) => i.status === "Atenção").length;
-    const riscoEstavel = dataset.filter((i) => i.status === "Estável").length;
+    const riscoCritico = data.filter((i) => i.status === "Risco alto").length;
+    const riscoAtencao = data.filter((i) => i.status === "Atenção").length;
+    const riscoEstavel = data.filter((i) => i.status === "Estável").length;
 
     destroyIfExists("chartExecutivoRisco");
     new Chart(document.getElementById("chartExecutivoRisco"), {
@@ -815,7 +874,9 @@
         labels: ["Risco alto", "Atenção", "Estável"],
         datasets: [
           {
-            data: [riscoCritico, riscoAtencao, riscoEstavel]
+            data: [riscoCritico, riscoAtencao, riscoEstavel],
+            backgroundColor: [palette.red, palette.yellow, palette.green],
+            borderColor: [palette.red, palette.yellow, palette.green]
           }
         ]
       },
@@ -837,6 +898,7 @@
     if (typeof Chart === "undefined") return;
     if (!document.getElementById("chartLegislativoExecucao")) return;
 
+    const palette = getChartPalette();
     const labels = getChartLabels(dataset);
 
     destroyIfExists("chartLegislativoExecucao");
@@ -845,7 +907,12 @@
       data: {
         labels,
         datasets: [
-          { label: "Execução %", data: dataset.map((i) => Number(i.execucao.toFixed(1))) }
+          {
+            label: "Execução %",
+            data: dataset.map((i) => Number(i.execucao.toFixed(1))),
+            backgroundColor: palette.green,
+            borderColor: palette.green
+          }
         ]
       },
       options: buildBaseChartOptions()
@@ -859,7 +926,9 @@
         datasets: [
           {
             label: "Áreas críticas",
-            data: dataset.map((i) => (i.status === "Risco alto" ? 1 : 0))
+            data: dataset.map((i) => (i.status === "Risco alto" ? 1 : 0)),
+            backgroundColor: palette.red,
+            borderColor: palette.red
           }
         ]
       },
@@ -872,7 +941,14 @@
       data: {
         labels,
         datasets: [
-          { label: "Saldo", data: dataset.map((i) => i.saldo), tension: 0.25, fill: false }
+          {
+            label: "Saldo",
+            data: dataset.map((i) => i.saldo),
+            tension: 0.25,
+            fill: false,
+            borderColor: palette.yellow,
+            backgroundColor: palette.yellow
+          }
         ]
       },
       options: buildBaseChartOptions()
@@ -888,7 +964,9 @@
         datasets: [
           {
             label: "Ranking de atenção",
-            data: ranking.map((i) => Number(i.execucao.toFixed(1)))
+            data: ranking.map((i) => Number(i.execucao.toFixed(1))),
+            backgroundColor: palette.purple,
+            borderColor: palette.purple
           }
         ]
       },
@@ -900,6 +978,7 @@
     if (typeof Chart === "undefined") return;
     if (!document.getElementById("chartControleCriticidade")) return;
 
+    const palette = getChartPalette();
     const labels = getChartLabels(dataset);
 
     destroyIfExists("chartControleCriticidade");
@@ -914,7 +993,9 @@
               if (i.status === "Risco alto") return 3;
               if (i.status === "Atenção") return 2;
               return 1;
-            })
+            }),
+            backgroundColor: palette.red,
+            borderColor: palette.red
           }
         ]
       },
@@ -922,6 +1003,7 @@
     });
 
     const acima100 = dataset.filter((i) => i.execucao > 100);
+
     destroyIfExists("chartControleExecucao");
     new Chart(document.getElementById("chartControleExecucao"), {
       type: "bar",
@@ -930,7 +1012,9 @@
         datasets: [
           {
             label: "Execução acima de 100%",
-            data: acima100.map((i) => Number(i.execucao.toFixed(1)))
+            data: acima100.map((i) => Number(i.execucao.toFixed(1))),
+            backgroundColor: palette.yellow,
+            borderColor: palette.yellow
           }
         ]
       },
@@ -938,6 +1022,7 @@
     });
 
     const saldoNegativo = dataset.filter((i) => i.saldo < 0);
+
     destroyIfExists("chartControleSaldoNegativo");
     new Chart(document.getElementById("chartControleSaldoNegativo"), {
       type: "bar",
@@ -946,7 +1031,9 @@
         datasets: [
           {
             label: "Saldo negativo",
-            data: saldoNegativo.map((i) => i.saldo)
+            data: saldoNegativo.map((i) => i.saldo),
+            backgroundColor: palette.blue,
+            borderColor: palette.blue
           }
         ]
       },
@@ -964,7 +1051,9 @@
         labels: ["Risco alto", "Atenção", "Estável"],
         datasets: [
           {
-            data: [riscoCritico, riscoAtencao, riscoEstavel]
+            data: [riscoCritico, riscoAtencao, riscoEstavel],
+            backgroundColor: [palette.red, palette.yellow, palette.green],
+            borderColor: [palette.red, palette.yellow, palette.green]
           }
         ]
       },
@@ -980,5 +1069,31 @@
         }
       }
     });
+  }
+
+  initTheme();
+  closeMenu();
+  initHomePage();
+
+  switch (page) {
+    case "login":
+      initLoginPage();
+      break;
+    case "admin":
+      initAdminPage();
+      break;
+    case "executivo":
+      initExecutivoPage();
+      break;
+    case "legislativo":
+      initLegislativoPage();
+      initLegislativoCharts();
+      break;
+    case "controle":
+      initControlePage();
+      initControleCharts();
+      break;
+    default:
+      break;
   }
 })();
