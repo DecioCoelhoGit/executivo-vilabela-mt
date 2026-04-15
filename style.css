@@ -931,6 +931,7 @@ textarea:focus {
     text-decoration: none !important;
   }
 }
+
 .chart-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -944,6 +945,9 @@ textarea:focus {
   border-radius: 18px;
   padding: 14px;
   box-shadow: var(--shadow-soft);
+  min-height: 320px;
+  height: 320px;
+  overflow: hidden;
 }
 
 .chart-card h4 {
@@ -954,16 +958,58 @@ textarea:focus {
 }
 
 .chart-card canvas {
+  display: block;
   width: 100% !important;
+  height: 240px !important;
   max-width: 100%;
-  min-height: 260px;
 }
 
 @media (min-width: 980px) {
   .chart-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .chart-card {
+    min-height: 340px;
+    height: 340px;
+  }
+
+  .chart-card canvas {
+    height: 250px !important;
+  }
 }
+
+@media (max-width: 640px) {
+  .chart-card {
+    min-height: 280px;
+    height: 280px;
+    padding: 12px;
+  }
+
+  .chart-card h4 {
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+  }
+
+  .chart-card canvas {
+    height: 210px !important;
+  }
+}
+
+@media print {
+  .chart-card {
+    background: #fff !important;
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+    page-break-inside: avoid;
+    min-height: 260px;
+    height: 260px;
+  }
+
+  .chart-card canvas {
+    height: 180px !important;
+  }
+      }
 
 @media print {
   .chart-card {
