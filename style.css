@@ -1019,3 +1019,43 @@ textarea:focus {
     page-break-inside: avoid;
   }
 }
+
+.image-card,
+.hologram-card {
+  position: relative;
+  overflow: hidden;
+}
+
+[data-hologram-img] {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 18px;
+  opacity: 0;
+  transform: translateY(8px) scale(0.985);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+[data-hologram-img].is-loaded {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+[data-hologram-img].is-error {
+  opacity: 0.35;
+}
+
+.image-fallback {
+  margin-top: 10px;
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+}
+
+.chart-card {
+  position: relative;
+}
+
+.chart-card canvas {
+  position: relative;
+  display: block;
+}
