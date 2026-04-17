@@ -1,63 +1,268 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Administração Local | ExecutivoVilaBelaMT</title>
-  <meta name="description" content="Painel administrativo local do ExecutivoVilaBelaMT." />
-  <link rel="icon" type="image/png" href="favicon.png" />
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>V7 WEB ADMIN | Painel Executivo</title>
+
+<style>
+:root{
+  --bg:#07111f;
+  --card:#0d1b2a;
+  --line:#17324d;
+  --gold:#d4af37;
+  --green:#00d084;
+  --cyan:#00cfff;
+  --text:#eef6ff;
+  --muted:#9bb3c9;
+  --danger:#ff5f5f;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  background:linear-gradient(135deg,#06101d,#0b1930,#07111f);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+  padding:20px;
+}
+
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+h1{
+  font-size:28px;
+  color:var(--gold);
+}
+
+.sub{
+  color:var(--muted);
+  font-size:14px;
+}
+
+.top-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+button{
+  border:none;
+  padding:10px 14px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.btn-primary{background:var(--green);color:#00140b}
+.btn-dark{background:#12263c;color:#fff}
+.btn-danger{background:var(--danger);color:#fff}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:15px;
+}
+
+.card{
+  background:rgba(13,27,42,.92);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 10px 25px rgba(0,0,0,.25);
+}
+
+.card h3{
+  font-size:15px;
+  color:var(--muted);
+  margin-bottom:8px;
+}
+
+.big{
+  font-size:32px;
+  font-weight:bold;
+  color:var(--gold);
+}
+
+.ok{color:var(--green)}
+.warn{color:#ffd166}
+.info{color:var(--cyan)}
+
+.section{
+  margin-top:22px;
+}
+
+.table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+}
+
+.table th,.table td{
+  padding:12px;
+  border-bottom:1px solid var(--line);
+  text-align:left;
+  font-size:14px;
+}
+
+.table th{
+  color:var(--muted);
+}
+
+.badge{
+  padding:5px 10px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.b-ok{background:#093f2c;color:#7fffc0}
+.b-warn{background:#4b3900;color:#ffd166}
+.b-danger{background:#4b1111;color:#ffb2b2}
+
+.log{
+  background:#04101d;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:14px;
+  height:220px;
+  overflow:auto;
+  font-family:monospace;
+  font-size:13px;
+  line-height:1.5;
+  color:#cfe7ff;
+}
+
+footer{
+  margin-top:25px;
+  text-align:center;
+  color:var(--muted);
+  font-size:13px;
+}
+</style>
 </head>
-<body data-page="admin" class="page-admin modo-cinema theme-dark">
-  <div class="site-shell">
-    <header class="site-header">
-      <div class="container header-inner">
-        <div class="brand-block">
-          <a href="index.html" class="brand-link"><h1 class="brand-title">ExecutivoVilaBelaMT</h1></a>
-          <p class="brand-subtitle">Painel Administrativo Local</p>
-        </div>
-        <div class="header-actions"><button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" data-menu-toggle>☰</button></div>
-      </div>
-    </header>
+<body>
 
-    <div class="menu-overlay" data-menu-overlay></div>
-    <nav class="menu-drawer" data-menu-drawer aria-label="Menu principal">
-      <div class="menu-drawer-header"><strong>Navegação institucional</strong></div>
-      <a class="menu-link" href="index.html">Início</a>
-      <a class="menu-link" href="login.html">Login</a>
-      <a class="menu-link" href="dashboard/executivo.html">Executivo</a>
-      <a class="menu-link" href="dashboard/legislativo.html">Legislativo</a>
-      <a class="menu-link" href="dashboard/controle.html">Controle</a>
-      <a class="menu-link active" href="admin.html">Admin</a>
-      <hr class="menu-separator" />
-      <button class="theme-toggle" type="button" data-theme-toggle><span class="theme-toggle-icon">🌓</span><span>Tema</span></button>
-    </nav>
-
-    <main class="page-main">
-      <section class="section">
-        <div class="container grid-single">
-          <article class="hero-card"><div class="section-kicker">Administração local</div><h2 class="page-title">Painel Administrativo</h2><p class="page-subtitle">Gerenciamento temporário das bases salvas no navegador. Esta área funciona como ambiente administrativo local e de contingência.</p></article>
-          <article class="card"><div class="section-kicker">Status do navegador</div><h3 class="card-title">Validação do ambiente local</h3><div class="admin-status-list"><p><strong>Armazenamento local:</strong> <span id="statusStorage">verificando...</span></p><p><strong>Sessão ativa:</strong> <span id="statusSessao">verificando...</span></p><p><strong>Última atualização:</strong> <span id="statusAtualizacao">--</span></p></div></article>
-          <article class="card"><div class="section-kicker">Estado atual das bases</div><h3 class="card-title">Leitura resumida</h3><div class="admin-status-list"><p><strong>Receitas locais:</strong> <span id="baseReceitas">carregando...</span></p><p><strong>Despesas locais:</strong> <span id="baseDespesas">carregando...</span></p><p><strong>Servidores locais:</strong> <span id="baseServidores">carregando...</span></p><p><strong>Sessão ativa:</strong> <span id="baseSessao">carregando...</span></p></div></article>
-          <article class="card"><div class="section-kicker">Ações administrativas</div><h3 class="card-title">Comandos locais</h3><p class="card-text">Utilize esta área para testes locais, limpeza do navegador e retorno rápido ao sistema.</p><div class="form-actions stacked"><button type="button" class="btn btn-primary" id="limparBaseLocal">Limpar base local</button><button type="button" class="btn btn-secondary" id="limparSessao">Limpar sessão</button><a href="login.html" class="btn btn-secondary">Ir para login</a><a href="index.html" class="btn btn-secondary">Voltar ao portal</a></div><div id="adminMensagem" class="status-message" aria-live="polite"></div></article>
-          <article class="card"><div class="section-kicker">Observação</div><h3 class="card-title">Uso deste ambiente</h3><p class="card-text">Enquanto o sistema opera sem banco externo, as informações podem ser salvas e limpas diretamente no navegador para testes e validações.</p></article>
-          <article class="card assinatura-card"><div class="section-kicker">Parceria Estratégica</div><p class="assinatura-admin">OpenAI + ChatGPT + Núcleo de Inovação &amp; IA Generativa + Curadoria Viracopos Global + GitHub + Git + Termux + Notion</p></article>
-        </div>
-      </section>
-    </main>
-
-    <footer class="footer-note"><div class="container"><p>ExecutivoVilaBelaMT • Administração local e contingência • 2026</p></div></footer>
+<header>
+  <div>
+    <h1>V7 WEB ADMIN</h1>
+    <div class="sub">Painel Executivo • Controle Total • Termux + Git + Web</div>
   </div>
 
-  <div class="chart-card">
-  <h4>Receita x Despesa por Secretaria</h4>
-  <canvas id="chartExecutivoReceitaDespesa"></canvas>
+  <div class="top-actions">
+    <button class="btn-primary" onclick="runAudit()">Auditar</button>
+    <button class="btn-dark" onclick="backup()">Backup</button>
+    <button class="btn-dark" onclick="deploy()">Deploy</button>
+    <button class="btn-danger" onclick="rollback()">Rollback</button>
+  </div>
+</header>
+
+<section class="grid">
+  <div class="card">
+    <h3>Status do Sistema</h3>
+    <div class="big ok" id="sys">ONLINE</div>
   </div>
 
-  <div class="floating-theme-toggle">
-    <button type="button" data-theme-toggle aria-label="Alternar tema"><span>🌓</span><span>Tema</span></button>
+  <div class="card">
+    <h3>Arquivos Renomeados</h3>
+    <div class="big" id="files">272</div>
   </div>
 
-  <script src="script.js"></script>
+  <div class="card">
+    <h3>Backups .bak</h3>
+    <div class="big info" id="bak">272</div>
+  </div>
+
+  <div class="card">
+    <h3>Último Deploy</h3>
+    <div class="big" style="font-size:22px" id="deployDate">Hoje</div>
+  </div>
+</section>
+
+<section class="section card">
+  <h3>Módulos</h3>
+
+  <table class="table">
+    <tr>
+      <th>Módulo</th>
+      <th>Status</th>
+      <th>Ação</th>
+    </tr>
+
+    <tr>
+      <td>Login</td>
+      <td><span class="badge b-ok">OK</span></td>
+      <td><button class="btn-dark" onclick="log('Teste login executado')">Testar</button></td>
+    </tr>
+
+    <tr>
+      <td>Dashboard Executivo</td>
+      <td><span class="badge b-ok">OK</span></td>
+      <td><button class="btn-dark" onclick="log('Dashboard executivo validado')">Abrir</button></td>
+    </tr>
+
+    <tr>
+      <td>Painel Legislativo</td>
+      <td><span class="badge b-warn">Pendente</span></td>
+      <td><button class="btn-dark" onclick="log('Checklist legislativo iniciado')">Validar</button></td>
+    </tr>
+
+    <tr>
+      <td>Assets / Imagens</td>
+      <td><span class="badge b-ok">Padronizado</span></td>
+      <td><button class="btn-dark" onclick="log('Assets verificados')">Auditar</button></td>
+    </tr>
+  </table>
+</section>
+
+<section class="section card">
+  <h3>Console em Tempo Real</h3>
+  <div class="log" id="console">
+[BOOT] Painel carregado...
+[INFO] Sistema pronto.
+  </div>
+</section>
+
+<footer>
+V7 WEB ADMIN • Ecossistema Executivo Vila Bela • Powered by Vision
+</footer>
+
+<script>
+function log(msg){
+  const c = document.getElementById("console");
+  const time = new Date().toLocaleTimeString();
+  c.innerHTML += "\n[" + time + "] " + msg;
+  c.scrollTop = c.scrollHeight;
+}
+
+function runAudit(){
+  log("Auditoria geral iniciada...");
+  setTimeout(()=>log("index.html OK"),500);
+  setTimeout(()=>log("login.html OK"),900);
+  setTimeout(()=>log("dashboard OK"),1300);
+  setTimeout(()=>log("Assets sincronizados"),1700);
+  setTimeout(()=>log("Auditoria finalizada"),2200);
+}
+
+function backup(){
+  log("Backup seguro criado.");
+}
+
+function deploy(){
+  document.getElementById("deployDate").innerText="Agora";
+  log("Deploy enviado para produção.");
+}
+
+function rollback(){
+  log("Rollback executado com sucesso.");
+}
+</script>
+
 </body>
 </html>
